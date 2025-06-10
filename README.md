@@ -1,12 +1,13 @@
 # AGRICOM
 A platform that enables a two-way communication between farmers, and farmers and VEOs.
 
-## ⚙ Tech Stack
+## ⚙️ Tech Stack
 + Laravel
 + Postgres
 
 ## 🚀 Project Setup
 ```
+composer global require laravel installer
 laravel new agricom
 composer install
 ```
