@@ -32,6 +32,7 @@ php artisan make:model FarmerProfile -m
 php artisan make:model Article -m
 php artisan make:model Comment -m
 php artisan make:model FarmerCrop -m
+php artisan make:model ChatConversation -m
 php artisan make:model ChatParticipant -m
 php artisan make:model ChatMessage -m
 ```
