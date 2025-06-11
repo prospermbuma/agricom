@@ -6,6 +6,16 @@ A web application enabling two-way communication between farmers and Village Ext
 + Postgres
 
 ## 🚀 Project Setup
+
+### FRONT-END SETUP
+Install frontend dependencies
+```
+npm install
+npm install pusher-js laravel-echo
+```
+
+### BACK-END SETUP
+Initialize project and Install backend dependencies
 ```
 composer global require laravel installer
 laravel new agricom
