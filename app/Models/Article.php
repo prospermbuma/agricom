@@ -41,6 +41,7 @@ class Article extends Model
             ->logOnlyDirty();
     }
 
+    // Relationships
     public function author()
     {
         return $this->belongsTo(User::class, 'author_id');
@@ -51,6 +52,7 @@ class Article extends Model
         return $this->hasMany(Comment::class);
     }
 
+    // Scopes
     public function scopePublished($query)
     {
         return $query->where('is_published', true);
