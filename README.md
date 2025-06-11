@@ -57,6 +57,7 @@ php artisan make:controller FarmerProfileController --resource
 php artisan make:controller ArticleController --resource
 php artisan make:controller CommentController --resource
 php artisan make:controller FarmerCropController --resource
+php artisan make:controller ChatConversationController --resource
 php artisan make:controller ChatParticipantController --resource
 php artisan make:controller ChatMessageController --resource
 ```
