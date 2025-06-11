@@ -43,10 +43,16 @@ php artisan ui bootstrap --auth
 
 ## Building Controllers
 ```
-php artisan make:controller PostController --resource
-php artisan make:controller ProfileController --resource
+php artisan make:controller UserController --resource
+php artisan make:controller RegionController --resource
+php artisan make:controller VillageController --resource
+php artisan make:controller CropController --resource
+php artisan make:controller FarmerProfileController --resource
+php artisan make:controller ArticleController --resource
 php artisan make:controller CommentController --resource
-php artisan make:controller LikeController --resource
+php artisan make:controller FarmerCropController --resource
+php artisan make:controller ChatParticipantController --resource
+php artisan make:controller ChatMessageController --resource
 ```
 
 ## Public Storage Link Creation
