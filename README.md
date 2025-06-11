@@ -35,6 +35,7 @@ php artisan make:model FarmerCrop -m
 php artisan make:model ChatConversation -m
 php artisan make:model ChatParticipant -m
 php artisan make:model ChatMessage -m
+php artisan make:model ActivityLog -m
 ```
 
 ## Laravel UI Installation
@@ -60,6 +61,7 @@ php artisan make:controller FarmerCropController --resource
 php artisan make:controller ChatConversationController --resource
 php artisan make:controller ChatParticipantController --resource
 php artisan make:controller ChatMessageController --resource
+php artisan make:controller ActivityLogController --resource
 ```
 
 ## Public Storage Link Creation
