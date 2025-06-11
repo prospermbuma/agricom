@@ -1,5 +1,5 @@
 # AGRICOM
-A platform that enables a two-way communication between farmers, and farmers and VEOs.
+A web application enabling two-way communication between farmers and Village Extension Officers (VEOs) in Tanzania's agriculture system.
 
 ## ⚙️ Tech Stack
 + Laravel
@@ -20,8 +20,11 @@ php artisan serve
 ## Models Creation
 ```
 php artisan make:model User -m
-php artisan make:model Post -m
-php artisan make:model Like -m
+php artisan make:model Region -m
+php artisan make:model Village -m
+php artisan make:model Crop -m
+php artisan make:model FarmerProfile -m
+php artisan make:model Article -m
 php artisan make:model Comment -m
 ```
 
