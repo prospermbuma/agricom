@@ -38,6 +38,22 @@ php artisan make:model ChatMessage -m
 php artisan make:model ActivityLog -m
 ```
 
+## Schema Creation (Migration)
+```
+php artisan make:migration create_users_table
+php artisan make:migration create_regions_table
+php artisan make:migration create_villages_table
+php artisan make:migration create_crops_table
+php artisan make:migration create_farmer_profiles_table
+php artisan make:migration create_articles_table
+php artisan make:migration create_comments_table
+php artisan make:migration create_farmer_crops_table
+php artisan make:migration create_chat_conversations_table
+php artisan make:migration create_chat_participants_table
+php artisan make:migration create_chat_messages_table
+php artisan make:migration create_activity_logs_table
+```
+
 ## Laravel UI Installation
 ```
 composer require laravel/ui
