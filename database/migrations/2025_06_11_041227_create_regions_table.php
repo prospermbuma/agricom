@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('regions', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('code', 10)->unique();
+            $table->string('name')->unique(); // Ensures no duplicate region names - (e.g., Kigoma, Mtwara)
+            $table->string('code', 10)->unique();  // Ensures each code is unique too - (e.g., MTW, KGM)
             $table->text('description')->nullable();
             $table->timestamps();
         });
