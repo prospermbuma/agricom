@@ -50,6 +50,7 @@ php artisan ui bootstrap --auth
 
 ## Building Controllers
 ```
+php artisan make:controller AuthController --resource
 php artisan make:controller UserController --resource
 php artisan make:controller RegionController --resource
 php artisan make:controller VillageController --resource
