@@ -13,6 +13,13 @@ return new class extends Migration
     {
         Schema::create('chat_messages', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('conversation_id')->constrained('chat_conversations')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->text('message');
+            $table->enum('type', ['text', 'image', 'file'])->default('text');
+            $table->string('file_path')->nullable();
+            $table->string('file_name')->nullable();
+            $table->boolean('is_read')->default(false);
             $table->timestamps();
         });
     }
