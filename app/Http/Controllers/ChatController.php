@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Chat;
-use App\Models\Message;
+use App\Models\ChatConversation;
+use App\Models\ChatMessage;
 use App\Models\User;
 use App\Services\ActivityLogService;
 use Illuminate\Http\Request;
@@ -44,7 +44,7 @@ class ChatController extends Controller
 
         // For private chats, check if chat already exists
         if ($request->type === 'private' && count($request->participants) === 1) {
-            $existingChat = Chat::where('type', 'private')
+            $existingChat = ChatConversation::where('type', 'private')
                 ->whereHas('participants', function ($query) use ($request) {
                     $query->where('user_id', $request->user()->id);
                 })
@@ -58,7 +58,7 @@ class ChatController extends Controller
             }
         }
 
-        $chat = Chat::create([
+        $chat = ChatConversation::create([
             'name' => $request->name,
             'type' => $request->type,
         ]);
@@ -77,7 +77,7 @@ class ChatController extends Controller
         return response()->json($chat->load(['participants', 'latestMessage']), 201);
     }
 
-    public function show(Request $request, Chat $chat)
+    public function show(Request $request, ChatConversation $chat)
     {
         // Check if user is participant
         if (!$chat->participants->contains($request->user()->id)) {
@@ -101,7 +101,7 @@ class ChatController extends Controller
         ]);
     }
 
-    public function sendMessage(Request $request, Chat $chat)
+    public function sendMessage(Request $request, ChatConversation $chat)
     {
         // Check if user is participant
         if (!$chat->participants->contains($request->user()->id)) {
@@ -133,7 +133,7 @@ class ChatController extends Controller
             $messageData['file_path'] = $path;
         }
 
-        $message = Message::create($messageData);
+        $message = ChatMessage::create($messageData);
 
         $this->activityLogService->log(
             'message_sent',
