@@ -2,16 +2,22 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Village;
 use Illuminate\Database\Seeder;
 
 class VillageSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
-    public function run(): void
+    public function run()
     {
-        //
+        $villages = [
+            ['name' => 'Kikuyu', 'region_id' => 1],
+            ['name' => 'Majengo', 'region_id' => 2],
+            ['name' => 'Iyunga', 'region_id' => 3],
+            ['name' => 'Nyamagana', 'region_id' => 4]
+        ];
+
+        foreach ($villages as $village) {
+            Village::create($village);
+        }
     }
 }
