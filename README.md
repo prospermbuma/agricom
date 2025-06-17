@@ -54,6 +54,25 @@ php artisan make:migration create_chat_messages_table
 php artisan make:migration create_activity_logs_table
 ```
 
+## Run Migrations
+```
+php artisan migrate
+```
+
+## Database Seeders
+```
+php artisan make:seeder DatabaseSeeder
+php artisan make:seeder UserSeeder
+php artisan make:seeder RegionSeeder
+php artisan make:seeder VillageSeeder
+php artisan make:seeder CropSeeder
+```
+
+## Run Seeding
+```
+php artisan db:seed
+```
+
 ## Laravel UI Installation
 ```
 composer require laravel/ui
