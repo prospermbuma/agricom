@@ -9,14 +9,11 @@ use App\Models\Comment;
 use App\Models\Crop;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class ArticleController extends Controller
 {
-    use AuthorizesRequests;
-
     /**
      * Display a listing of the resource.
      */
