@@ -5,15 +5,18 @@ namespace App\Services;
 use App\Models\ActivityLog;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class ActivityLogService
 {
-    public function log(string $action, string $description, User $user = null, Model $model = null, array $properties = [])
+    public function log(string $action, string $description, ?User $user = null, ?Model $model = null, array $properties = [])
     {
+        $user_id = Auth::id();
+
         $logData = [
             'action' => $action,
             'description' => $description,
-            'user_id' => $user ? $user->id : auth()->id(),
+            'user_id' => $user ? $user->id : $user_id,
             'properties' => $properties,
             'ip_address' => request()->ip(),
             'user_agent' => request()->userAgent(),
