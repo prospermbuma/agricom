@@ -1,5 +1,4 @@
 <?php
-// app/Http/Requests/LoginRequest.php
 
 namespace App\Http\Requests;
 
