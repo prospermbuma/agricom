@@ -4,13 +4,14 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class ArticleRequest extends FormRequest
 {
     public function authorize()
     {
-        return true;
-        // return auth()->user()->isVEO();
+        return Auth::check() && Auth::user()->isVeo();
     }
 
     public function rules()

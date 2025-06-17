@@ -9,11 +9,14 @@ use App\Models\Comment;
 use App\Models\Crop;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class ArticleController extends Controller
 {
+    use AuthorizesRequests;
+
     /**
      * Display a listing of the resource.
      */
@@ -91,12 +94,7 @@ class ArticleController extends Controller
      */
     public function create(ArticleRequest $request)
     {
-        // $this->authorize('create', Article::class);
-
-        // Only VEOs can create articles
-        if (!$request->user()->isVEO()) {
-            return response()->json(['message' => 'Unauthorized'], 403);
-        }
+        $this->authorize('create', Article::class);
 
         $crops = Crop::all();
         $categories = [
@@ -116,12 +114,7 @@ class ArticleController extends Controller
      */
     public function store(ArticleRequest $request)
     {
-        // $this->authorize('create', Article::class);
-
-        // Only VEOs can create articles
-        if (!$request->user()->isVEO()) {
-            return response()->json(['message' => 'Unauthorized'], 403);
-        }
+        $this->authorize('create', Article::class);
 
         $validated = $request->validated();
         $validated['author_id'] = Auth::id();
@@ -164,12 +157,7 @@ class ArticleController extends Controller
      */
     public function edit(ArticleRequest $request, Article $article)
     {
-        // $this->authorize('update', $article);
-
-        // Only author can update
-        if ($article->author_id !== $request->user()->id && !$request->user()->isAdmin()) {
-            return response()->json(['message' => 'Unauthorized'], 403);
-        }
+        $this->authorize('update', $article);
 
         $crops = Crop::all();
         $categories = [
@@ -189,12 +177,7 @@ class ArticleController extends Controller
      */
     public function update(ArticleRequest $request, Article $article)
     {
-        // $this->authorize('update', $article);
-
-        // Only author can update
-        if ($article->author_id !== $request->user()->id) {
-            return response()->json(['message' => 'Unauthorized'], 403);
-        }
+        $this->authorize('update', $article);
 
         $validated = $request->validated();
 
@@ -242,14 +225,9 @@ class ArticleController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ArticleRequest $request, Article $article)
+    public function destroy(Article $article)
     {
-        // $this->authorize('delete', $article);
-
-        // Only author can delete
-        if ($article->author_id !== $request->user()->id && !$request->user()->isAdmin()) {
-            return response()->json(['message' => 'Unauthorized'], 403);
-        }
+        $this->authorize('delete', $article);
 
         // Delete associated files
         if ($article->featured_image) {
