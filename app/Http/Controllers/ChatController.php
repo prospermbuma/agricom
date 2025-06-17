@@ -2,125 +2,159 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\MessageSent;
-use App\Models\ChatConversation;
-use App\Models\ChatMessage;
-use App\Models\ChatParticipant;
+use App\Models\Chat;
+use App\Models\Message;
 use App\Models\User;
+use App\Services\ActivityLogService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class ChatController extends Controller
 {
-    public function index()
-    {
-        $user = Auth::user();
-        $conversations = $user->chatParticipants()
-            ->with(['conversation.participants.user', 'conversation.chatMessages'])
-            ->get()
-            ->map(function ($participant) {
-                return $participant->conversation;
-            });
+    protected $activityLogService;
 
-        $users = User::where('id', '!=', $user->id)
-            ->where('is_active', true)
+    public function __construct(ActivityLogService $activityLogService)
+    {
+        $this->activityLogService = $activityLogService;
+    }
+
+    public function index(Request $request)
+    {
+        $chats = $request->user()
+            ->chats()
+            ->with(['participants', 'latestMessage.user'])
+            ->orderBy('updated_at', 'desc')
             ->get();
 
-        return view('chat.index', compact('conversations', 'users'));
+        return response()->json($chats);
     }
 
-    public function show(ChatConversation $conversation)
+    public function store(Request $request)
     {
-        $this->authorize('view', $conversation);
-        
-        $messages = $conversation->chatMessages()
-            ->with('user')
-            ->latest()
-            ->limit(50)
-            ->get()
-            ->reverse();
-
-        // Mark messages as read
-        $conversation->chatMessages()
-            ->where('user_id', '!=', Auth::id())
-            ->where('is_read', false)
-            ->update(['is_read' => true]);
-
-        // Update last read timestamp
-        $conversation->participants()
-            ->where('user_id', Auth::id())
-            ->update(['last_read_at' => now()]);
-
-        return view('chat.show', compact('conversation', 'messages'));
-    }
-
-    public function store(Request $request, ChatConversation $conversation)
-    {
-        $this->authorize('participate', $conversation);
-        
-        $request->validate([
-            'message' => 'required|string|max:1000',
+        $validator = Validator::make($request->all(), [
+            'participants' => 'required|array|min:1',
+            'participants.*' => 'exists:users,id',
+            'name' => 'nullable|string|max:255',
+            'type' => 'required|in:private,group',
         ]);
 
-        $message = $conversation->chatMessages()->create([
-            'user_id' => Auth::id(),
-            'message' => $request->message,
-            'type' => 'text',
-        ]);
-
-        $conversation->update(['last_message_at' => now()]);
-
-        // Broadcast the message
-        broadcast(new MessageSent($message))->toOthers();
-
-        activity()
-            ->causedBy(Auth::user())
-            ->performedOn($message)
-            ->log('Message sent in chat');
-
-        return response()->json([
-            'message' => $message->load('user'),
-            'success' => true,
-        ]);
-    }
-
-    public function createConversation(Request $request)
-    {
-        $request->validate([
-            'user_id' => 'required|exists:users,id',
-        ]);
-
-        $user = Auth::user();
-        $otherUser = User::findOrFail($request->user_id);
-
-        // Check if conversation already exists
-        $existingConversation = ChatConversation::whereHas('participants', function ($query) use ($user) {
-            $query->where('user_id', $user->id);
-        })->whereHas('participants', function ($query) use ($otherUser) {
-            $query->where('user_id', $otherUser->id);
-        })->where('type', 'private')->first();
-
-        if ($existingConversation) {
-            return redirect()->route('chat.show', $existingConversation);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        // Create new conversation
-        $conversation = ChatConversation::create([
-            'type' => 'private',
-            'created_by' => $user->id,
+        // For private chats, check if chat already exists
+        if ($request->type === 'private' && count($request->participants) === 1) {
+            $existingChat = Chat::where('type', 'private')
+                ->whereHas('participants', function ($query) use ($request) {
+                    $query->where('user_id', $request->user()->id);
+                })
+                ->whereHas('participants', function ($query) use ($request) {
+                    $query->where('user_id', $request->participants[0]);
+                })
+                ->first();
+
+            if ($existingChat) {
+                return response()->json($existingChat->load(['participants', 'latestMessage']));
+            }
+        }
+
+        $chat = Chat::create([
+            'name' => $request->name,
+            'type' => $request->type,
         ]);
 
         // Add participants
-        $conversation->participants()->createMany([
-            ['user_id' => $user->id],
-            ['user_id' => $otherUser->id],
+        $participants = array_merge($request->participants, [$request->user()->id]);
+        $chat->participants()->attach(array_unique($participants));
+
+        $this->activityLogService->log(
+            'chat_created',
+            "Chat created",
+            $request->user(),
+            $chat
+        );
+
+        return response()->json($chat->load(['participants', 'latestMessage']), 201);
+    }
+
+    public function show(Request $request, Chat $chat)
+    {
+        // Check if user is participant
+        if (!$chat->participants->contains($request->user()->id)) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        $messages = $chat->messages()
+            ->with('user')
+            ->orderBy('created_at', 'asc')
+            ->paginate(50);
+
+        // Mark messages as read
+        $chat->messages()
+            ->where('user_id', '!=', $request->user()->id)
+            ->where('is_read', false)
+            ->update(['is_read' => true]);
+
+        return response()->json([
+            'chat' => $chat->load('participants'),
+            'messages' => $messages,
+        ]);
+    }
+
+    public function sendMessage(Request $request, Chat $chat)
+    {
+        // Check if user is participant
+        if (!$chat->participants->contains($request->user()->id)) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'content' => 'required|string',
+            'type' => 'required|in:text,image,file',
+            'file' => 'nullable|file|mimes:jpeg,png,jpg,gif,pdf,doc,docx|max:5120',
         ]);
 
-        activity()
-            ->causedBy(Auth::user())
-            ->performedOn($conversation)
-            ->log('Chat conversation created');
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
 
-        return redirect()->route('chat.show', $conversation);
+        $messageData = [
+            'content' => $request->content,
+            'type' => $request->type,
+            'chat_id' => $chat->id,
+            'user_id' => $request->user()->id,
+        ];
+
+        // Handle file upload
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $path = $file->storeAs('chat/files', $filename, 'public');
+            $messageData['file_path'] = $path;
+        }
+
+        $message = Message::create($messageData);
+
+        $this->activityLogService->log(
+            'message_sent',
+            "Message sent in chat",
+            $request->user(),
+            $message
+        );
+
+        // Update chat timestamp
+        $chat->touch();
+
+        return response()->json($message->load('user'), 201);
+    }
+
+    public function getUsers(Request $request)
+    {
+        $users = User::where('id', '!=', $request->user()->id)
+            ->where('is_active', true)
+            ->select('id', 'name', 'email', 'role', 'region', 'village')
+            ->get();
+
+        return response()->json($users);
     }
 }
