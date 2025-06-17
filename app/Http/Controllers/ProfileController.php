@@ -7,6 +7,7 @@ use App\Models\Region;
 use App\Models\Village;
 use App\Models\Crop;
 use App\Models\FarmerProfile;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -48,7 +49,7 @@ class ProfileController extends Controller
         $user->update($validated);
 
         // Update farmer profile if user is a farmer
-        if ($user->isFarmer()) {
+        if ($user->isFarmer) {
             $profileData = $request->only([
                 'region_id',
                 'village_id',
