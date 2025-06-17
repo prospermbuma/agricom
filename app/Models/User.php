@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -14,6 +13,9 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, LogsActivity;
 
+    /**
+     * The attributes that are mass assignable.
+     */
     protected $fillable = [
         'name',
         'email',
@@ -21,11 +23,12 @@ class User extends Authenticatable
         'phone',
         'bio',
         'avatar',
-        'is_active'
+        'is_active',
+        'role',
     ];
 
     /**
-     * The attributes that should be hidden for serialization.
+     * The attributes that should be hidden for arrays and JSON.
      */
     protected $hidden = [
         'password',
@@ -33,17 +36,26 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * The attributes that should be cast.
      */
-    protected function casts(): array
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'is_active' => 'boolean',
+    ];
+
+    /**
+     * Automatically hash password when set.
+     */
+    public function setPasswordAttribute($value)
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-            'is_active' => 'boolean'
-        ];
+        if ($value) {
+            $this->attributes['password'] = bcrypt($value);
+        }
     }
 
+    /**
+     * Spatie log options
+     */
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
@@ -51,7 +63,8 @@ class User extends Authenticatable
             ->logOnlyDirty();
     }
 
-    // Relationships
+    // ---------------- Relationships ----------------
+
     public function farmerProfile()
     {
         return $this->hasOne(FarmerProfile::class);
@@ -77,7 +90,8 @@ class User extends Authenticatable
         return $this->hasMany(ChatMessage::class);
     }
 
-    // Scopes
+    // ---------------- Query Scopes ----------------
+
     public function scopeFarmers($query)
     {
         return $query->where('role', 'farmer');
@@ -93,7 +107,8 @@ class User extends Authenticatable
         return $query->where('is_active', true);
     }
 
-    // Helper methods
+    // ---------------- Helper Methods ----------------
+
     public function isFarmer()
     {
         return $this->role === 'farmer';
