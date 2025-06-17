@@ -36,6 +36,7 @@ php artisan make:model ChatConversation -m
 php artisan make:model ChatParticipant -m
 php artisan make:model ChatMessage -m
 php artisan make:model ActivityLog -m
+php artisan make:model Notification -m
 ```
 
 ## Schema Creation (Migration)
