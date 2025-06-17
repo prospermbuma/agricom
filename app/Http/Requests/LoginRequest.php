@@ -2,13 +2,15 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Support\Facades\Auth;
+
 use Illuminate\Foundation\Http\FormRequest;
 
 class LoginRequest extends FormRequest
 {
     public function authorize()
     {
-        return true;
+        return Auth::check() && in_array(Auth::user()->role, ['admin', 'veo', 'farmer']);
     }
 
     public function rules()
