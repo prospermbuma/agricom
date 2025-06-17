@@ -2,16 +2,53 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Crop;
 use Illuminate\Database\Seeder;
 
 class CropSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
-    public function run(): void
+    public function run()
     {
-        //
+        $crops = [
+            [
+                'name' => 'Maize',
+                'scientific_name' => 'Zea mays',
+                'description' => 'Main staple crop in Tanzania',
+                'season' => 'wet',
+                'growing_period_days' => 120,
+            ],
+            [
+                'name' => 'Rice',
+                'scientific_name' => 'Oryza sativa',
+                'description' => 'Important cereal crop',
+                'season' => 'wet',
+                'growing_period_days' => 150,
+            ],
+            [
+                'name' => 'Beans',
+                'scientific_name' => 'Phaseolus vulgaris',
+                'description' => 'Legume crop rich in protein',
+                'season' => 'both',
+                'growing_period_days' => 90,
+            ],
+            [
+                'name' => 'Coffee',
+                'scientific_name' => 'Coffea arabica',
+                'description' => 'Cash crop for export',
+                'season' => 'both',
+                'growing_period_days' => 365,
+            ],
+            [
+                'name' => 'Cotton',
+                'scientific_name' => 'Gossypium hirsutum',
+                'description' => 'Cash crop for textile industry',
+                'season' => 'wet',
+                'growing_period_days' => 180,
+            ],
+        ];
+
+        foreach ($crops as $crop) {
+            Crop::create($crop);
+        }
     }
 }
