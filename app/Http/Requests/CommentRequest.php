@@ -3,12 +3,13 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class CommentRequest extends FormRequest
 {
     public function authorize()
     {
-        return true;
+        return Auth::check() && in_array(Auth::user()->role, ['veo', 'farmer']);
     }
 
     public function rules()
