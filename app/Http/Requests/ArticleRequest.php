@@ -10,6 +10,7 @@ class ArticleRequest extends FormRequest
     public function authorize()
     {
         return true;
+        // return auth()->user()->isVEO();
     }
 
     public function rules()
@@ -18,8 +19,12 @@ class ArticleRequest extends FormRequest
             'title' => ['required', 'string', 'max:255'],
             'content' => ['required', 'string', 'min:50'],
             'category' => ['required', Rule::in([
-                'pest_control', 'disease_management', 'farming_techniques',
-                'weather', 'market_prices', 'general'
+                'pest_control',
+                'disease_management',
+                'farming_techniques',
+                'weather',
+                'market_prices',
+                'general'
             ])],
             'target_crops' => ['nullable', 'array'],
             'target_crops.*' => ['exists:crops,id'],
@@ -27,7 +32,8 @@ class ArticleRequest extends FormRequest
             'attachments' => ['nullable', 'array', 'max:5'],
             'attachments.*' => ['file', 'mimes:pdf,doc,docx,xls,xlsx', 'max:10240'],
             'is_published' => ['boolean'],
-            'is_urgent' => ['boolean'],
+            // 'is_urgent' => ['boolean'],
+            'priority' => ['required',  Rule::in(['low', 'medium', 'high', 'urgent'])],
         ];
     }
 
@@ -37,7 +43,8 @@ class ArticleRequest extends FormRequest
             'title.required' => 'Article title is required.',
             'content.required' => 'Article content is required.',
             'content.min' => 'Article content must be at least 50 characters.',
-            'category.required' => 'Please select a category.',
+            'category.required' => 'Please select a category for this article.',
+            'priority.required' => 'Please select priority level for this article.',
             'featured_image.image' => 'Featured image must be an image file.',
             'featured_image.max' => 'Featured image must not exceed 5MB.',
             'attachments.max' => 'You can upload maximum 5 attachments.',
