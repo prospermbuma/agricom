@@ -98,6 +98,7 @@ php artisan make:controller CommentController --resource
 php artisan make:controller NotificationController --resource
 php artisan make:controller ActivityLogController --resource
 php artisan make:controller AdminController --resource
+php artisan make:controller DataController --resource
 ```
 
 ## Public Storage Link Creation
