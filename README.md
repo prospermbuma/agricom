@@ -68,16 +68,6 @@ php artisan make:seeder VillageSeeder
 php artisan make:seeder CropSeeder
 ```
 
- <!-- $table->id();
-            $table->string('action');
-            $table->text('description')->nullable();
-            $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
-            // $table->foreignId('user_id')->nullable()->constrained()->onDelete('set null');
-            $table->string('ip_address')->nullable();
-            $table->string('user_agent')->nullable();
-            $table->json('properties')->nullable();
-            $table->timestamps(); -->
-
 ## Run Seeding
 ```
 php artisan db:seed
