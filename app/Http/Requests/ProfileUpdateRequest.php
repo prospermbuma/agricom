@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
 class ProfileUpdateRequest extends FormRequest
@@ -15,18 +14,19 @@ class ProfileUpdateRequest extends FormRequest
 
     public function rules()
     {
-        $user = Auth::user();
-        
+        $user = $this->user();
+
         $rules = [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
+            'password' => ['nullable', 'string', 'max:255'],
             'phone' => ['nullable', 'string', 'max:20'],
             'bio' => ['nullable', 'string', 'max:500'],
             'avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],
         ];
 
         // Add farmer-specific validation rules
-        if ($user->isFarmer()) {
+        if ($user && $user->isFarmer()) {
             $rules = array_merge($rules, [
                 'region_id' => ['required', 'exists:regions,id'],
                 'village_id' => ['required', 'exists:villages,id'],
