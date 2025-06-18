@@ -41,7 +41,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/chat/conversations', [ChatController::class, 'createConversation'])->name('chat.conversations.store');
 
     // Activity Logs (VEO only)
-    Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index');
+    // Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index');
+    Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activity.logs');
 
     // API Routes for AJAX
     Route::get('/api/villages/{region}', function ($regionId) {
