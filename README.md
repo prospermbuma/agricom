@@ -79,6 +79,11 @@ php artisan db:seed
 php artisan db:wipe
 ```
 
+## Migrate + Seed
+```
+php artisan migrate --seed
+```
+
 ## Laravel UI Installation
 ```
 composer require laravel/ui
