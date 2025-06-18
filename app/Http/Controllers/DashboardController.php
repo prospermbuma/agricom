@@ -64,7 +64,7 @@ class DashboardController extends Controller
             ->take(10)
             ->get();
 
-        return response()->json($data);
+        return view('dashboard.index', $data);
     }
 
     public function stats(Request $request)
@@ -84,6 +84,6 @@ class DashboardController extends Controller
             'popular_articles' => Article::orderBy('views_count', 'desc')->take(5)->get(),
         ];
 
-        return response()->json($stats);
+        return view('dashboard.index', $stats);
     }
 }
