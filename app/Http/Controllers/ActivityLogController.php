@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\ActivityLog;
-use App\Models\User;
 use App\Services\ActivityLogService;
 use Illuminate\Http\Request;
 
@@ -18,6 +17,11 @@ class ActivityLogController extends Controller
 
     public function index(Request $request)
     {
+        // Allow only users with VEO role
+        if (!$request->user() || !$request->user()->isVeo()) {
+            abort(403, 'Unauthorized access');
+        }
+
         $query = ActivityLog::with('user')->latest();
 
         // Filter by user
@@ -29,5 +33,21 @@ class ActivityLogController extends Controller
         if ($request->has('action')) {
             $query->where('action', $request->action);
         }
+
+        // Filter by date-from
+        if ($request->date_from) {
+            $query->whereDate('created_at', '>=', $request->date_from);
+        }
+
+        // Filter by date-to
+        if ($request->date_to) {
+            $query->whereDate('created_at', '<=', $request->date_to);
+        }
+
+        $logs = $query->paginate(20);
+        $users = \App\Models\User::select('id', 'name', 'email')->get();
+        $actions = ActivityLog::distinct()->pluck('action');
+
+        return view('activity-logs.index', compact('logs', 'users', 'actions'));
     }
 }
