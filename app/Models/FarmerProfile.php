@@ -12,8 +12,12 @@ class FarmerProfile extends Model
     use HasFactory, LogsActivity;
 
     protected $fillable = [
-        'user_id', 'region_id', 'village_id', 'farm_size_acres',
-        'farming_experience', 'farming_methods'
+        'user_id', 
+        'region_id', 
+        'village_id', 
+        'farm_size_acres',
+        'farming_experience', 
+        'farming_methods'
     ];
 
     protected $casts = [
