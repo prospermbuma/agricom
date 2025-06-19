@@ -18,6 +18,45 @@
             color: #28a745 !important;
         }
 
+        .navbar .login-btn,
+        .navbar .register-btn {
+            border: 2px solid #28a745;
+            padding: 10px 34px;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all .4s;
+        }
+
+        .navbar .login-btn {
+            background: transparent;
+            color: #28a745;
+        }
+
+        .navbar .login-btn:hover {
+            background: #28a745;
+            color: #fff;
+        }
+
+        .navbar .register-btn {
+            background: #28a745;
+            color: #ffffff;
+        }
+
+        @media only screen and (max-width: 768px) {
+
+            .navbar .login-btn,
+            .navbar .register-btn {
+                border: 1px solid #28a745;
+                padding: 6px 24px;
+            }
+
+        }
+
+        .navbar .register-btn:hover {
+            background: transparent;
+            color: #28a745;
+        }
+
         .sidebar {
             min-height: 100vh;
             background-color: #f8f9fa;
@@ -42,9 +81,11 @@
 <body>
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
-        <div class="container-fluid px-md-5 py-md-2">
+        <div class="container-fluid px-md-5 py-1 py-md-2">
             <a class="navbar-brand" href="{{ route('dashboard') }}">
-                <i class="fas fa-seedling"></i> Agricom
+                <img src="{{ asset('images/logo.png') }}" alt="Logo" width="40px">
+                {{-- <i class="fas fa-seedling"></i>  --}}
+                Agricom
             </a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -88,7 +129,8 @@
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="{{ route('profile.edit') }}">
                                         <i class="fas fa-edit"></i> Edit Profile
-                                    </a></li>
+                                    </a>
+                                </li>
                                 <li><a class="dropdown-item" href="{{ route('activity.logs') }}">
                                         <i class="fas fa-history"></i> Activity Logs
                                     </a></li>
@@ -107,10 +149,14 @@
                         </li>
                     @else
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('login') }}">Login</a>
+                            <a class="nav-link" href="{{ route('login') }}">
+                                <span class="login-btn">Login</span>
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('register') }}">Register</a>
+                            <a class="nav-link" href="{{ route('register') }}">
+                                <span class="register-btn">Register</span>
+                            </a>
                         </li>
                     @endauth
                 </ul>
