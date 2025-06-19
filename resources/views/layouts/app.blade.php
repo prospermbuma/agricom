@@ -12,10 +12,22 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
+    <!-- Vite: Include CSS and JS -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
     <style>
+        html {
+            scrollbar-width: none;
+            scroll-behavior: smooth;
+        }
+
         .navbar-brand {
             font-weight: bold;
             color: #28a745 !important;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: .3em;
         }
 
         .navbar .login-btn,
