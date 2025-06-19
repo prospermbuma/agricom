@@ -196,3 +196,22 @@ Run:
 ```
 php artisan serve
 ```
+
+## Activity-Log Migration
+Run:
+```
+php artisan vendor:publish --provider="Spatie\Activitylog\ActivitylogServiceProvider" --tag="activitylog-migrations"
+```
+
+ <!-- $table->bigIncrements('id');
+            $table->string('log_name')->nullable();
+            $table->string('action')->nullable();
+            $table->text('description')->nullable();
+            $table->nullableMorphs('subject', 'subject');
+            $table->nullableMorphs('causer', 'causer');
+            $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
+            $table->string('ip_address')->nullable();
+            $table->string('user_agent')->nullable();
+            $table->json('properties')->nullable();
+            $table->timestamps();
+            $table->index('log_name'); -->
