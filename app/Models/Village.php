@@ -33,4 +33,9 @@ class Village extends Model
     {
         return $this->hasMany(FarmerProfile::class);
     }
+
+    public function users()
+    {
+        return $this->hasMany(User::class, 'village', 'name');
+    }
 }

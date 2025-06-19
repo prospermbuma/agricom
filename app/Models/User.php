@@ -21,6 +21,9 @@ class User extends Authenticatable
         'email',
         'password',
         'phone',
+        'region',
+        'village',
+        'crops',
         'bio',
         'avatar',
         'is_active',
@@ -40,6 +43,8 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+        'crops' => 'array',
         'is_active' => 'boolean',
     ];
 
@@ -88,6 +93,16 @@ class User extends Authenticatable
     public function chatMessages()
     {
         return $this->hasMany(ChatMessage::class);
+    }
+
+    public function activityLogs()
+    {
+        return $this->hasMany(ActivityLog::class);
+    }
+
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
     }
 
     // ---------------- Query Scopes ----------------

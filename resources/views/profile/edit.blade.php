@@ -67,39 +67,50 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="form-label">Region</label>
+                                    @php
+                                        $regions = [
+                                            'Arusha',
+                                            'Dar es Salaam',
+                                            'Dodoma',
+                                            'Geita',
+                                            'Iringa',
+                                            'Kagera',
+                                            'Katavi',
+                                            'Kigoma',
+                                            'Kilimanjaro',
+                                            'Lindi',
+                                            'Manyara',
+                                            'Mara',
+                                            'Mbeya',
+                                            'Morogoro',
+                                            'Mtwara',
+                                            'Mwanza',
+                                            'Njombe',
+                                            'Pemba North',
+                                            'Pemba South',
+                                            'Pwani',
+                                            'Rukwa',
+                                            'Ruvuma',
+                                            'Shinyanga',
+                                            'Simiyu',
+                                            'Singida',
+                                            'Songwe',
+                                            'Tabora',
+                                            'Tanga',
+                                            'Unguja North',
+                                            'Unguja South',
+                                            'Zanzibar West',
+                                        ];
+                                    @endphp
                                     <select name="region" class="form-select @error('region') is-invalid @enderror"
                                         required>
                                         <option value="">Select Region</option>
-                                        <option value="Arusha"
-                                            {{ old('region', auth()->user()->region) == 'Arusha' ? 'selected' : '' }}>Arusha
-                                        </option>
-                                        <option value="Dar es Salaam"
-                                            {{ old('region', auth()->user()->region) == 'Dar es Salaam' ? 'selected' : '' }}>
-                                            Dar es Salaam</option>
-                                        <option value="Dodoma"
-                                            {{ old('region', auth()->user()->region) == 'Dodoma' ? 'selected' : '' }}>
-                                            Dodoma</option>
-                                        <option value="Kilimanjaro"
-                                            {{ old('region', auth()->user()->region) == 'Kilimanjaro' ? 'selected' : '' }}>
-                                            Kilimanjaro</option>
-                                        <option value="Mbeya"
-                                            {{ old('region', auth()->user()->region) == 'Mbeya' ? 'selected' : '' }}>Mbeya
-                                        </option>
-                                        <option value="Morogoro"
-                                            {{ old('region', auth()->user()->region) == 'Morogoro' ? 'selected' : '' }}>
-                                            Morogoro</option>
-                                        <option value="Mwanza"
-                                            {{ old('region', auth()->user()->region) == 'Mwanza' ? 'selected' : '' }}>
-                                            Mwanza</option>
-                                        <option value="Pwani"
-                                            {{ old('region', auth()->user()->region) == 'Pwani' ? 'selected' : '' }}>Pwani
-                                        </option>
-                                        <option value="Tabora"
-                                            {{ old('region', auth()->user()->region) == 'Tabora' ? 'selected' : '' }}>
-                                            Tabora</option>
-                                        <option value="Tanga"
-                                            {{ old('region', auth()->user()->region) == 'Tanga' ? 'selected' : '' }}>Tanga
-                                        </option>
+                                        @foreach ($regions as $region)
+                                            <option value="{{ $region }}"
+                                                {{ old('region', auth()->user()->region) == $region ? 'selected' : '' }}>
+                                                {{ $region }}
+                                            </option>
+                                        @endforeach
                                     </select>
                                     @error('region')
                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -168,7 +179,8 @@
 
                         <div class="mb-3">
                             <label class="form-label">Change Password</label>
-                            <small class="form-text text-muted">Leave blank if you don't want to change your password</small>
+                            <small class="form-text text-muted">Leave blank if you don't want to change your
+                                password</small>
                         </div>
 
                         <div class="row">
@@ -192,8 +204,8 @@
                         </div>
 
                         <div class="d-flex justify-content-between">
-                            <a href="{{ route('dashboard') }}" class="btn btn-secondary">
-                                <i class="fas fa-arrow-left"></i> Back to Dashboard
+                            <a href="{{ route('profile.show') }}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i> Back to Profile
                             </a>
                             <button type="submit" class="btn btn-primary">
                                 <i class="fas fa-save"></i> Update Profile

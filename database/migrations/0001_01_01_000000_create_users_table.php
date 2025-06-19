@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('password');
             $table->enum('role', ['farmer', 'veo', 'admin'])->default('farmer');
             $table->string('phone')->nullable();
+            $table->string('region')->nullable();
+            $table->string('village')->nullable();
             $table->text('bio')->nullable();
             $table->string('avatar')->nullable();
             $table->boolean('is_active')->default(true);

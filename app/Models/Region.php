@@ -26,4 +26,9 @@ class Region extends Model
     {
         return $this->hasMany(FarmerProfile::class);
     }
+
+    public function users()
+    {
+        return $this->hasMany(User::class, 'region', 'name');
+    }
 }

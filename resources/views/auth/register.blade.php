@@ -97,13 +97,12 @@
                                 <option value="Zanzibar Urban/West"
                                     {{ old('region') == 'Zanzibar Urban/West' ? 'selected' : '' }}>Zanzibar Urban/West
                                 </option>
-                                <option value="Unguja South" {{ old('region') == 'Unguja South' ? 'selected' : '' }}>Unguja
-                                    South</option>
-                                <option value="Unguja North" {{ old('region') == 'Unguja North' ? 'selected' : '' }}>Unguja
-                                    North</option>
-
+                                <option value="Unguja South" {{ old('region') == 'Unguja South' ? 'selected' : '' }}>
+                                    Unguja South
                                 </option>
-                                <!-- Add more regions as needed -->
+                                <option value="Unguja North" {{ old('region') == 'Unguja North' ? 'selected' : '' }}>
+                                    Unguja North
+                                </option>
                             </select>
                             @error('region')
                                 <div class="invalid-feedback">{{ $message }}</div>
