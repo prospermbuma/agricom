@@ -21,12 +21,13 @@ class ChatController extends Controller
     public function index(Request $request)
     {
         $chats = $request->user()
-            ->chats()
+            ->chatMessages()
             ->with(['participants', 'latestMessage.user'])
             ->orderBy('updated_at', 'desc')
             ->get();
 
-        return response()->json($chats);
+        // return view('chat.index', $chats);
+        return view('chat.index', compact('chats'));
     }
 
     public function store(Request $request)
@@ -39,7 +40,8 @@ class ChatController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            // return response()->json(['errors' => $validator->errors()], 422);
+            return redirect()->back()->withErrors($validator)->withInput();
         }
 
         // For private chats, check if chat already exists
@@ -54,7 +56,8 @@ class ChatController extends Controller
                 ->first();
 
             if ($existingChat) {
-                return response()->json($existingChat->load(['participants', 'latestMessage']));
+                // return response()->json($existingChat->load(['participants', 'latestMessage']));
+                return redirect()->route('chat.show', $existingChat->id);
             }
         }
 
@@ -74,14 +77,19 @@ class ChatController extends Controller
             $chat
         );
 
-        return response()->json($chat->load(['participants', 'latestMessage']), 201);
+        // return response()->json($chat->load(['participants', 'latestMessage']), 201);
+        return redirect()->route('chat.show', $chat->id)->with('success', 'Chat created successfully.');
     }
 
     public function show(Request $request, ChatConversation $chat)
     {
         // Check if user is participant
+        // if (!$chat->participants->contains($request->user()->id)) {
+        //     return response()->json(['message' => 'Unauthorized'], 403);
+        // }
+
         if (!$chat->participants->contains($request->user()->id)) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            abort(403, 'Unauthorized');
         }
 
         $messages = $chat->messages()
@@ -105,7 +113,7 @@ class ChatController extends Controller
     {
         // Check if user is participant
         if (!$chat->participants->contains($request->user()->id)) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            abort(403, 'Unauthorized');
         }
 
         $validator = Validator::make($request->all(), [
@@ -115,7 +123,7 @@ class ChatController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            return redirect()->back()->withErrors($validator)->withInput();
         }
 
         $messageData = [
@@ -145,7 +153,8 @@ class ChatController extends Controller
         // Update chat timestamp
         $chat->touch();
 
-        return response()->json($message->load('user'), 201);
+        // return response()->json($message->load('user'), 201);
+        return redirect()->route('chat.show', $chat->id)->with('success', 'Message sent!');
     }
 
     public function getUsers(Request $request)
@@ -155,6 +164,7 @@ class ChatController extends Controller
             ->select('id', 'name', 'email', 'role', 'region', 'village')
             ->get();
 
-        return response()->json($users);
+        // return response()->json($users);
+        return view('chat.users', compact('users'));
     }
 }
