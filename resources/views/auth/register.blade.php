@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Register - Agriculture System')
+@section('title', 'Register - Agricom')
 
 @section('content')
     <div class="row justify-content-center mt-5">
@@ -63,10 +63,45 @@
                                 <option value="Dar es Salaam" {{ old('region') == 'Dar es Salaam' ? 'selected' : '' }}>Dar
                                     es Salaam</option>
                                 <option value="Dodoma" {{ old('region') == 'Dodoma' ? 'selected' : '' }}>Dodoma</option>
+                                <option value="Geita" {{ old('region') == 'Geita' ? 'selected' : '' }}>Geita</option>
+                                <option value="Iringa" {{ old('region') == 'Iringa' ? 'selected' : '' }}>Iringa</option>
+                                <option value="Kagera" {{ old('region') == 'Kagera' ? 'selected' : '' }}>Kagera</option>
+                                <option value="Katavi" {{ old('region') == 'Katavi' ? 'selected' : '' }}>Katavi</option>
+                                <option value="Kigoma" {{ old('region') == 'Kigoma' ? 'selected' : '' }}>Kigoma</option>
                                 <option value="Kilimanjaro" {{ old('region') == 'Kilimanjaro' ? 'selected' : '' }}>
                                     Kilimanjaro</option>
+                                <option value="Lindi" {{ old('region') == 'Lindi' ? 'selected' : '' }}>Lindi</option>
+                                <option value="Manyara" {{ old('region') == 'Manyara' ? 'selected' : '' }}>Manyara</option>
+                                <option value="Mara" {{ old('region') == 'Mara' ? 'selected' : '' }}>Mara</option>
                                 <option value="Mbeya" {{ old('region') == 'Mbeya' ? 'selected' : '' }}>Mbeya</option>
                                 <option value="Morogoro" {{ old('region') == 'Morogoro' ? 'selected' : '' }}>Morogoro
+                                </option>
+                                <option value="Mtwara" {{ old('region') == 'Mtwara' ? 'selected' : '' }}>Mtwara</option>
+                                <option value="Mwanza" {{ old('region') == 'Mwanza' ? 'selected' : '' }}>Mwanza</option>
+                                <option value="Njombe" {{ old('region') == 'Njombe' ? 'selected' : '' }}>Njombe</option>
+                                <option value="Pwani" {{ old('region') == 'Pwani' ? 'selected' : '' }}>Pwani</option>
+                                <option value="Rukwa" {{ old('region') == 'Rukwa' ? 'selected' : '' }}>Rukwa</option>
+                                <option value="Ruvuma" {{ old('region') == 'Ruvuma' ? 'selected' : '' }}>Ruvuma</option>
+                                <option value="Shinyanga" {{ old('region') == 'Shinyanga' ? 'selected' : '' }}>Shinyanga
+                                </option>
+                                <option value="Simiyu" {{ old('region') == 'Simiyu' ? 'selected' : '' }}>Simiyu</option>
+                                <option value="Singida" {{ old('region') == 'Singida' ? 'selected' : '' }}>Singida</option>
+                                <option value="Songwe" {{ old('region') == 'Songwe' ? 'selected' : '' }}>Songwe</option>
+                                <option value="Tabora" {{ old('region') == 'Tabora' ? 'selected' : '' }}>Tabora</option>
+                                <option value="Tanga" {{ old('region') == 'Tanga' ? 'selected' : '' }}>Tanga</option>
+                                <option value="Zanzibar Central/South"
+                                    {{ old('region') == 'Zanzibar Central/South' ? 'selected' : '' }}>Zanzibar
+                                    Central/South</option>
+                                <option value="Zanzibar North" {{ old('region') == 'Zanzibar North' ? 'selected' : '' }}>
+                                    Zanzibar North</option>
+                                <option value="Zanzibar Urban/West"
+                                    {{ old('region') == 'Zanzibar Urban/West' ? 'selected' : '' }}>Zanzibar Urban/West
+                                </option>
+                                <option value="Unguja South" {{ old('region') == 'Unguja South' ? 'selected' : '' }}>Unguja
+                                    South</option>
+                                <option value="Unguja North" {{ old('region') == 'Unguja North' ? 'selected' : '' }}>Unguja
+                                    North</option>
+
                                 </option>
                                 <!-- Add more regions as needed -->
                             </select>

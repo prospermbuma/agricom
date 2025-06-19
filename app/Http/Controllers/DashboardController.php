@@ -46,7 +46,7 @@ class DashboardController extends Controller
                 'my_comments_count' => Comment::where('user_id', $user->id)->count(),
                 'recent_articles' => $relevantArticles->latest('published_at')->take(5)->get(),
                 'urgent_articles' => Article::published()
-                    ->where('priority', 'urgent')
+                    ->where('is_urgent')
                     ->when(!empty($user->crops), function ($q) use ($user) {
                         $q->where(function ($query) use ($user) {
                             $query->forCrops($user->crops)->orWhere('category', 'general');
@@ -70,7 +70,7 @@ class DashboardController extends Controller
     public function stats(Request $request)
     {
         if (!$request->user()->isAdmin()) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            abort(403, 'Unauthorized');
         }
 
         $stats = [
