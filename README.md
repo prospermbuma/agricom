@@ -4,6 +4,7 @@ A web application enabling two-way communication between farmers and Village Ext
 ## ⚙️ Tech Stack
 + Laravel
 + Postgres
++ Blade
 
 ## 🚀 Project Setup
 
