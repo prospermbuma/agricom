@@ -24,6 +24,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard', [DashboardController::class, 'index']);
+    Route::get('/dashboard/stats', [DashboardController::class, 'stats']);
 
     // Profile routes
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
