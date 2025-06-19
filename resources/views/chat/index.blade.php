@@ -63,7 +63,7 @@
                 <div class="chat-container" id="chat-messages">
                     <div class="text-center text-muted py-5">
                         <i class="fas fa-comments fa-3x mb-3"></i>
-                        <h5>Welcome to AgriConnect Chat</h5>
+                        <h5>Welcome to Agricom Chat</h5>
                         <p>Select a user from the left to start a conversation</p>
                     </div>
                 </div>
