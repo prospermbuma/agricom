@@ -44,9 +44,4 @@ Route::middleware('auth')->group(function () {
     // Activity Logs (VEO only)
     // Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index');
     Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activity.logs');
-
-    // API Routes for AJAX
-    Route::get('/api/villages/{region}', function ($regionId) {
-        return \App\Models\Village::where('region_id', $regionId)->get();
-    });
 });

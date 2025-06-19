@@ -214,11 +214,19 @@
     </div>
 
     <!-- Footer -->
-    <footer class="bg-light text-center py-3 mt-5">
-        <div class="container">
-            <p class="mb-0">&copy; <span id="year"></span> Agricom - Tanzania</p>
-        </div>
-    </footer>
+    <!-- Only show footer while on login/register routes -->
+    @php
+        $currentRoute = Route::currentRouteName();
+    @endphp
+
+    @if (in_array($currentRoute, ['login', 'register']))
+        <footer class="bg-light text-center py-3 mt-5">
+            <div class="container">
+                <p class="mb-0">&copy; <span id="year"></span> Agricom - Tanzania</p>
+            </div>
+        </footer>
+    @endif
+
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
