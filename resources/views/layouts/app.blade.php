@@ -69,7 +69,8 @@
 
         }
 
-        .login-link, .register-link {
+        .login-link,
+        .register-link {
             text-decoration: none;
             color: #28a745;
             font-weight: 500;
@@ -145,38 +146,49 @@
                                 <i class="fas fa-user"></i> {{ auth()->user()->name }}
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="{{ route('profile.edit') }}">
-                                        <i class="fas fa-edit"></i> Edit Profile
+                                <li><a class="dropdown-item" href="{{ route('profile.show') }}">
+                                        <i class="fas fa-user"></i> Profile
                                     </a>
                                 </li>
-                                <li><a class="dropdown-item" href="{{ route('activity.logs') }}">
+                                @php
+                                    $user = auth()->user();
+                                @endphp
+
+                                @if (in_array($user->role, ['veo', 'admin']))
+                                    <li>
+                                        <a class="dropdown-item" href="{{ route('activity.logs') }}">
+                                            <i class="fas fa-history"></i> Activity Logs
+                                        </a>
+                                    </li>
+                                @endif
+                                {{-- <li><a class="dropdown-item" href="{{ route('activity.logs') }}">
                                         <i class="fas fa-history"></i> Activity Logs
                                     </a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li>
-                                    <form method="POST" action="{{ route('logout') }}">
-                                        @csrf
-                                        <button type="submit" class="dropdown-item">
-                                            <i class="fas fa-sign-out-alt"></i> Logout
-                                        </button>
-                                    </form>
-                                </li>
-                            </ul>
+                                <li> --}}
+                                <hr class="dropdown-divider">
                         </li>
-                    @else
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('login') }}">
-                                <span class="login-btn">Login</span>
-                            </a>
+                        <li>
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="dropdown-item">
+                                    <i class="fas fa-sign-out-alt"></i> Logout
+                                </button>
+                            </form>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('register') }}">
-                                <span class="register-btn">Register</span>
-                            </a>
-                        </li>
-                    @endauth
+                    </ul>
+                    </li>
+                @else
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('login') }}">
+                            <span class="login-btn">Login</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('register') }}">
+                            <span class="register-btn">Register</span>
+                        </a>
+                    </li>
+                @endauth
                 </ul>
             </div>
         </div>
