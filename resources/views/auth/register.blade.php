@@ -5,12 +5,12 @@
 @section('content')
     <div class="row justify-content-center mt-5">
         <div class="col-md-6">
-            <div class="hero-text mb-5">
+            <div class="hero-text mb-4">
                 <h1 class="text-center">
-                    <i class="fas fa-leaf text-success"></i> Agricom | Register
+                    <i class="fas fa-leaf"></i> Agricom | Register
                 </h1>
             </div>
-            <div class="card shadow p-4">
+            <div class="card shadow form-card">
                 <div class="card-body">
                     <form method="POST" action="{{ route('register') }}">
                         @csrf
@@ -234,7 +234,7 @@
                         </div>
 
                         <div class="d-grid">
-                            <button type="submit" class="btn btn-success">
+                            <button type="submit" class="registerBtn">
                                 <i class="fas fa-user-plus"></i> Register
                             </button>
                         </div>
@@ -248,25 +248,6 @@
         </div>
     </div>
 @endsection
-
-@section('styles')
-    <style>
-        .role-card {
-            cursor: pointer;
-            transition: 0.2s ease-in-out;
-        }
-
-        .role-card:hover {
-            border-color: #28a745;
-            box-shadow: 0 0 10px rgba(40, 167, 69, 0.3);
-        }
-
-        .role-card.border-success {
-            border-color: #198754 !important;
-        }
-    </style>
-@endsection
-
 
 @section('scripts')
     <script>
@@ -322,4 +303,62 @@
             }
         }
     </script>
+@endsection
+
+@section('styles')
+
+    <style>
+        .role-card {
+            cursor: pointer;
+            transition: 0.2s ease-in-out;
+        }
+
+        .role-card:hover {
+            border-color: #28a745;
+            box-shadow: 0 0 10px rgba(40, 167, 69, 0.3);
+        }
+
+        .role-card.border-success {
+            border-color: #198754 !important;
+        }
+
+        .form-card {
+            margin-top: 30px;
+            border-radius: 30px;
+            padding-top: 50px;
+            padding-bottom: 35px;
+            padding-left: 32px;
+            padding-right: 32px;
+        }
+
+        .form-control,
+        .registerBtn {
+            padding: 12px 24px;
+            border-radius: 10px;
+        }
+
+        .fas {
+            color: #484747;
+        }
+
+        .fas.fa-leaf {
+            color: #1e7e34;
+        }
+
+        .fas.fa-user-plus {
+            color: #fff;
+        }
+
+        .registerBtn {
+            background-color: #1e7e34;
+            color: #fff;
+            transition: all ease .4s;
+        }
+
+        .registerBtn:hover {
+            background-color: #146e29;
+            cursor: pointer;
+        }
+    </style>
+
 @endsection

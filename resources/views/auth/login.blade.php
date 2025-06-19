@@ -7,11 +7,11 @@
         <div class="col-md-5">
             <div class="hero-text mb-4">
                 <h1 class="text-center">
-                    <i class="fas fa-leaf text-success"></i> Agricom | Login
+                    <i class="fas fa-leaf"></i> Agricom | Login
                 </h1>
             </div>
 
-            <div class="card shadow p-4">
+            <div class="card shadow form-card">
                 <div class="card-body">
                     <form method="POST" action="{{ route('login') }}">
                         @csrf
@@ -30,7 +30,8 @@
                             <div class="input-group">
                                 <input type="password" name="password" id="password"
                                     class="form-control @error('password') is-invalid @enderror" required>
-                                <span class="input-group-text" style="cursor: pointer;" onclick="togglePassword('password', this)">
+                                <span class="input-group-text" style="cursor: pointer;"
+                                    onclick="togglePassword('password', this)">
                                     <i class="fas fa-eye text-secondary"></i>
                                 </span>
                             </div>
@@ -45,7 +46,7 @@
                         </div>
 
                         <div class="d-grid">
-                            <button type="submit" class="btn btn-success">
+                            <button type="submit" class="loginBtn">
                                 <i class="fas fa-sign-in-alt"></i> Login
                             </button>
                         </div>
@@ -79,4 +80,50 @@
             }
         }
     </script>
+@endsection
+
+@section('styles')
+
+    <style>
+        .form-card {
+            margin-top: 30px;
+            border-radius: 30px;
+            padding-top: 50px;
+            padding-bottom: 35px;
+            padding-left: 32px;
+            padding-right: 32px;
+        }
+
+        .form-control,
+        .loginBtn {
+            padding: 12px 24px;
+            border-radius: 10px;
+        }
+
+
+        .fas {
+            color: #484747;
+        }
+
+        .fas.fa-leaf {
+            color: #1e7e34;
+        }
+
+        .fas.fa-sign-in-alt {
+            color: #fff;
+        }
+
+
+        .loginBtn {
+            background-color: #1e7e34;
+            color: #fff;
+            transition: all ease .4s;
+        }
+
+        .loginBtn:hover {
+            background-color: #146e29;
+            cursor: pointer;
+        }
+    </style>
+
 @endsection
