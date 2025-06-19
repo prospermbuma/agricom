@@ -309,6 +309,7 @@
 
     <style>
         .role-card {
+            border-radius: 15px;
             cursor: pointer;
             transition: 0.2s ease-in-out;
         }
