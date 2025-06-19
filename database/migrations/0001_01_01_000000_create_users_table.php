@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->string('region')->nullable();
             $table->string('village')->nullable();
-            $table->json('crops')->nullable(); 
+            $table->string('crops')->nullable(); 
             $table->text('bio')->nullable();
             $table->string('avatar')->nullable();
             $table->boolean('is_active')->default(true);

@@ -9,7 +9,7 @@ class LoginRequest extends FormRequest
 {
     public function authorize()
     {
-        return Auth::check() && in_array(Auth::user()->role, ['admin', 'veo', 'farmer']);
+        return true;
     }
 
     public function rules()

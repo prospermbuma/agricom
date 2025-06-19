@@ -57,6 +57,7 @@
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label">Role</label>
+                                        <input type="hidden" name="role" value="{{ auth()->user()->role }}">
                                         <input type="text" class="form-control"
                                             value="{{ ucfirst(auth()->user()->role) }}" disabled>
                                         <small class="form-text text-muted">Role cannot be changed</small>
@@ -137,9 +138,6 @@
                                     <label class="form-label">Types of Crops</label>
                                     <div class="row">
                                         @php
-                                            $userCrops = auth()->user()->crops
-                                                ? json_decode(auth()->user()->crops)
-                                                : [];
                                             $availableCrops = [
                                                 'maize',
                                                 'rice',
@@ -150,13 +148,15 @@
                                                 'sunflower',
                                                 'other',
                                             ];
+                                            // $userCrops = old('crops') ?? json_decode(auth()->user()->crops ?? '[]', true);
+                                            $userCrops = old('crops') ?? (auth()->user()->crops ?? []);
                                         @endphp
                                         @foreach ($availableCrops as $crop)
                                             <div class="col-md-6">
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="checkbox" name="crops[]"
                                                         value="{{ $crop }}" id="{{ $crop }}"
-                                                        {{ in_array($crop, $userCrops) ? 'checked' : '' }}>
+                                                        {{ is_array($userCrops) && in_array($crop, $userCrops) ? 'checked' : '' }}>
                                                     <label class="form-check-label" for="{{ $crop }}">
                                                         {{ ucfirst($crop) }}
                                                     </label>
@@ -165,6 +165,9 @@
                                         @endforeach
                                     </div>
                                     @error('crops')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                    @error('crops.*')
                                         <div class="text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>

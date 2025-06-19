@@ -71,7 +71,8 @@
                             <div class="mb-3">
                                 <label class="form-label fw-bold">Types of Crops</label>
                                 @php
-                                    $userCrops = auth()->user()->crops ? json_decode(auth()->user()->crops) : [];
+                                    // $userCrops = auth()->user()->crops ? json_decode(auth()->user()->crops) : [];
+                                    $userCrops = auth()->user()->crops ?? [];
                                 @endphp
                                 @if (!empty($userCrops))
                                     <div class="row">
