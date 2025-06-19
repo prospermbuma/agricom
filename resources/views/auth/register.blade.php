@@ -7,7 +7,7 @@
         <div class="col-md-6">
             <div class="hero-text mb-5">
                 <h1 class="text-center">
-                    Agricom | Register
+                    <i class="fas fa-leaf text-success"></i> Agricom | Register
                 </h1>
             </div>
             <div class="card shadow p-4">
@@ -16,33 +16,33 @@
                         @csrf
 
                         <div class="mb-3">
-                            <label class="form-label">Full Name</label>
+                            <label class="form-label"><i class="fas fa-user"></i> Full Name</label>
                             <input type="text" name="name" class="form-control @error('name') is-invalid @enderror"
-                                value="{{ old('name') }}" required>
+                                value="{{ old('name') }}" placeholder="John Doe" required>
                             @error('name')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label">Email Address</label>
+                            <label class="form-label"><i class="fas fa-envelope"></i> Email Address</label>
                             <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
-                                value="{{ old('email') }}" required>
+                                value="{{ old('email') }}" placeholder="john.doe@example.com" required>
                             @error('email')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label">Phone Number</label>
+                            <label class="form-label"><i class="fas fa-phone"></i> Phone Number</label>
                             <input type="tel" name="phone" class="form-control @error('phone') is-invalid @enderror"
-                                value="{{ old('phone') }}" required>
+                                value="{{ old('phone') }}" placeholder="e.g., +255712345678" required>
                             @error('phone')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
-                        <div class="mb-3">
+                        {{-- <div class="mb-3">
                             <label class="form-label">Role</label>
                             <select name="role" class="form-select @error('role') is-invalid @enderror" required>
                                 <option value="">Select Role</option>
@@ -53,10 +53,45 @@
                             @error('role')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
+                        </div> --}}
+
+                        <!-- Role Selection -->
+                        <div class="mb-3">
+                            <label class="form-label">
+                                <i class="fas fa-user-tag"></i> Role
+                            </label>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="card border-2 role-card" data-role="farmer">
+                                        <div class="card-body text-center">
+                                            <i class="fas fa-seedling fa-2x text-success mb-2"></i>
+                                            <h6>Farmer</h6>
+                                            <small class="text-muted">I am a farmer seeking agricultural guidance</small>
+                                            <input type="radio" name="role" value="farmer"
+                                                class="form-check-input d-none"
+                                                {{ old('role') == 'farmer' ? 'checked' : '' }}>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="card border-2 role-card" data-role="veo">
+                                        <div class="card-body text-center">
+                                            <i class="fas fa-user-tie fa-2x text-primary mb-2"></i>
+                                            <h6>VEO</h6>
+                                            <small class="text-muted">I am a Village Extension Officer</small>
+                                            <input type="radio" name="role" value="veo"
+                                                class="form-check-input d-none" {{ old('role') == 'veo' ? 'checked' : '' }}>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            @error('role')
+                                <div class="text-danger small mt-1">{{ $message }}</div>
+                            @enderror
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label">Region</label>
+                            <label class="form-label"><i class="fas fa-map-marker-alt"></i> Region</label>
                             <select name="region" class="form-select @error('region') is-invalid @enderror" required>
                                 <option value="">Select Region</option>
                                 <option value="Arusha" {{ old('region') == 'Arusha' ? 'selected' : '' }}>Arusha</option>
@@ -110,9 +145,10 @@
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label">Village</label>
-                            <input type="text" name="village" class="form-control @error('village') is-invalid @enderror"
-                                value="{{ old('village') }}" required>
+                            <label class="form-label"><i class="fas fa-home"></i> Village</label>
+                            <input type="text" name="village"
+                                class="form-control @error('village') is-invalid @enderror" value="{{ old('village') }}"
+                                required>
                             @error('village')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -168,18 +204,33 @@
                             </div>
                         </div>
 
+                        {{-- === PASSWORD === --}}
                         <div class="mb-3">
-                            <label class="form-label">Password</label>
-                            <input type="password" name="password"
-                                class="form-control @error('password') is-invalid @enderror" required>
+                            <label class="form-label"><i class="fas fa-lock"></i> Password</label>
+                            <div class="input-group">
+                                <input type="password" name="password" id="password"
+                                    class="form-control @error('password') is-invalid @enderror" required>
+                                <span class="input-group-text" style="cursor: pointer;"
+                                    onclick="togglePassword('password', this)">
+                                    <i class="fas fa-eye text-secondary" id="toggle-password-icon"></i>
+                                </span>
+                            </div>
                             @error('password')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
+                        {{-- === CONFIRM PASSWORD === --}}
                         <div class="mb-3">
-                            <label class="form-label">Confirm Password</label>
-                            <input type="password" name="password_confirmation" class="form-control" required>
+                            <label class="form-label"><i class="fas fa-lock"></i> Confirm Password</label>
+                            <div class="input-group">
+                                <input type="password" name="password_confirmation" id="password_confirmation"
+                                    class="form-control" required>
+                                <span class="input-group-text" style="cursor: pointer;"
+                                    onclick="togglePassword('password_confirmation', this)">
+                                    <i class="fas fa-eye text-secondary" id="toggle-confirm-password-icon"></i>
+                                </span>
+                            </div>
                         </div>
 
                         <div class="d-grid">
@@ -198,21 +249,77 @@
     </div>
 @endsection
 
+@section('styles')
+    <style>
+        .role-card {
+            cursor: pointer;
+            transition: 0.2s ease-in-out;
+        }
+
+        .role-card:hover {
+            border-color: #28a745;
+            box-shadow: 0 0 10px rgba(40, 167, 69, 0.3);
+        }
+
+        .role-card.border-success {
+            border-color: #198754 !important;
+        }
+    </style>
+@endsection
+
+
 @section('scripts')
     <script>
-        $(document).ready(function() {
-            $('select[name="role"]').change(function() {
-                if ($(this).val() === 'farmer') {
-                    $('#crops-section').show();
-                } else {
-                    $('#crops-section').hide();
+        // ROLE CARDS
+        document.addEventListener('DOMContentLoaded', function() {
+            const roleCards = document.querySelectorAll('.role-card');
+
+            roleCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    // Unselect all cards
+                    roleCards.forEach(c => c.classList.remove('border-success', 'shadow-sm'));
+
+                    // Select clicked card
+                    card.classList.add('border-success', 'shadow-sm');
+
+                    // Set the corresponding radio input as checked
+                    const input = card.querySelector('input[type="radio"]');
+                    input.checked = true;
+
+                    // Show/hide crops section based on role
+                    if (input.value === 'farmer') {
+                        document.getElementById('crops-section').style.display = 'block';
+                    } else {
+                        document.getElementById('crops-section').style.display = 'none';
+                    }
+                });
+
+                // Trigger card styling if preselected
+                const radio = card.querySelector('input[type="radio"]');
+                if (radio.checked) {
+                    card.classList.add('border-success', 'shadow-sm');
+
+                    if (radio.value === 'farmer') {
+                        document.getElementById('crops-section').style.display = 'block';
+                    }
                 }
             });
-
-            // Trigger change on page load if role is already selected
-            if ($('select[name="role"]').val() === 'farmer') {
-                $('#crops-section').show();
-            }
         });
+
+        // HIDE/SHOW PASSWORD
+        function togglePassword(fieldId, iconElement) {
+            const input = document.getElementById(fieldId);
+            const icon = iconElement.querySelector('i');
+
+            if (input.type === "password") {
+                input.type = "text";
+                icon.classList.remove("fa-eye");
+                icon.classList.add("fa-eye-slash");
+            } else {
+                input.type = "password";
+                icon.classList.remove("fa-eye-slash");
+                icon.classList.add("fa-eye");
+            }
+        }
     </script>
 @endsection
