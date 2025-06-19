@@ -153,3 +153,55 @@
                                 @error('crops')
                                     <div class="text-danger">{{ $message }}</div>
                                 @enderror
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Farm Size (Hectares)</label>
+                                <input type="number" name="farm_size" step="0.1" min="0"
+                                    class="form-control @error('farm_size') is-invalid @enderror"
+                                    value="{{ old('farm_size', auth()->user()->farm_size) }}">
+                                @error('farm_size')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        @endif
+
+                        <div class="mb-3">
+                            <label class="form-label">Change Password</label>
+                            <small class="form-text text-muted">Leave blank if you don't want to change your password</small>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">New Password</label>
+                                    <input type="password" name="password"
+                                        class="form-control @error('password') is-invalid @enderror">
+                                    @error('password')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Confirm New Password</label>
+                                    <input type="password" name="password_confirmation" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ route('dashboard') }}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i> Back to Dashboard
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Update Profile
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
