@@ -5,7 +5,6 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ArticleController;
-use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ActivityLogController;
 use Illuminate\Support\Facades\Route;
