@@ -104,6 +104,14 @@
                 padding: 6px 18px;
                 font-size: 0.9rem;
             }
+
+            .navbar-brand {
+                margin-left: 15px
+            }
+
+            .navbar-toggler {
+                margin-right: 15px
+            }
         }
     </style>
 
