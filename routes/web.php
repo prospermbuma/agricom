@@ -1,5 +1,4 @@
 <?php
-// routes/web.php
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
@@ -10,19 +9,31 @@ use App\Http\Controllers\ActivityLogController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-// Landing page
-Route::get('/landing', function () {
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application.
+|
+*/
+
+// Public landing page at "/"
+Route::get('/', function () {
     if (Auth::check()) {
         return redirect()->route('dashboard');
     }
-    return view('landing');
-})->name('landing');
+    return view('home');
+})->name('home');
 
+Route::view('/about', 'about')->name('about');
+Route::view('/contact', 'contact')->name('contact');
 
 // Guest routes
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
+    
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
     Route::post('/register', [AuthController::class, 'register']);
 });
@@ -31,8 +42,7 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/dashboard', [DashboardController::class, 'index']);
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard/stats', [DashboardController::class, 'stats']);
 
     // Profile routes
@@ -50,7 +60,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/chat/{conversation}/messages', [ChatController::class, 'store'])->name('chat.messages.store');
     Route::post('/chat/conversations', [ChatController::class, 'createConversation'])->name('chat.conversations.store');
 
-    // Activity Logs (VEO only)
-    // Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index');
+    // Activity Logs (VEO/admin only)
     Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activity.logs');
 });

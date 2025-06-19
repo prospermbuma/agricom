@@ -9,11 +9,15 @@
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
-    <!-- Vite: Include CSS and JS -->
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Outfit:wght@100..900&display=swap"
+        rel="stylesheet">
+    <!-- Vite -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
@@ -23,7 +27,7 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: "Outfit", sans-serif;
         }
 
         .navbar-brand {
@@ -89,28 +93,12 @@
             text-decoration: underline;
         }
 
-        .sidebar {
-            min-height: 100vh;
-            background-color: #f8f9fa;
-        }
-
-        .chat-container {
-            height: 400px;
-            overflow-y: auto;
-            border: 1px solid #ddd;
-            padding: 10px;
-        }
-
-        .activity-log {
-            font-size: 0.9em;
-            color: #666;
-        }
-
         footer {
             border-top: 1px solid #eaeaea;
         }
 
         @media (max-width: 768px) {
+
             .navbar .login-btn,
             .navbar .register-btn {
                 padding: 6px 18px;
@@ -123,10 +111,15 @@
 </head>
 
 <body>
-    <!-- Navigation -->
+    @php
+        $currentRoute = Route::currentRouteName();
+        $hidePublicNav = in_array($currentRoute, ['dashboard', 'articles.index', 'chat.index', 'articles.create']);
+    @endphp
+
+    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
         <div class="container px-md-5 py-2">
-            <a class="navbar-brand" href="{{ route('dashboard') }}">
+            <a class="navbar-brand" href="{{ route('home') }}">
                 <img src="{{ asset('images/logo.png') }}" alt="Logo" width="36">
                 Agricom
             </a>
@@ -135,31 +128,51 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
                 <ul class="navbar-nav me-auto">
+                    @unless ($hidePublicNav)
+                        <li class="nav-item">
+                            <a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}" href="{{ route('home') }}">
+                                Home
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{ request()->routeIs('about') ? 'active' : '' }}"
+                                href="{{ route('about') }}">
+                                About
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{ request()->routeIs('contact') ? 'active' : '' }}"
+                                href="{{ route('contact') }}">
+                                Contact
+                            </a>
+                        </li>
+                    @endunless
+
                     @auth
                         <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}"
-                               href="{{ route('dashboard') }}">
+                                href="{{ route('dashboard') }}">
                                 <i class="fas fa-home"></i> Dashboard
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('articles.index') ? 'active' : '' }}"
-                               href="{{ route('articles.index') }}">
+                                href="{{ route('articles.index') }}">
                                 <i class="fas fa-newspaper"></i> Articles
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('chat.index') ? 'active' : '' }}"
-                               href="{{ route('chat.index') }}">
+                                href="{{ route('chat.index') }}">
                                 <i class="fas fa-comments"></i> Chat
                             </a>
                         </li>
                         @if (auth()->user()->role === 'veo')
                             <li class="nav-item">
                                 <a class="nav-link {{ request()->routeIs('articles.create') ? 'active' : '' }}"
-                                   href="{{ route('articles.create') }}">
+                                    href="{{ route('articles.create') }}">
                                     <i class="fas fa-plus"></i> New Article
                                 </a>
                             </li>
@@ -179,7 +192,6 @@
                                         <i class="fas fa-user-circle"></i> Profile
                                     </a>
                                 </li>
-
                                 @if (in_array(auth()->user()->role, ['veo', 'admin']))
                                     <li>
                                         <a class="dropdown-item" href="{{ route('activity.logs') }}">
@@ -187,9 +199,9 @@
                                         </a>
                                     </li>
                                 @endif
-
-                                <li><hr class="dropdown-divider"></li>
-
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
                                 <li>
                                     <form method="POST" action="{{ route('logout') }}">
                                         @csrf
@@ -240,29 +252,24 @@
     </div>
 
     <!-- Footer (Only on login & register pages) -->
-    @php
-        $currentRoute = Route::currentRouteName();
-    @endphp
-
     @if (in_array($currentRoute, ['login', 'register']))
         <footer class="bg-light text-center py-3 mt-auto">
             <div class="container">
-                <p class="mb-0 text-muted">
-                    &copy; <span id="year"></span> Agricom - Tanzania
-                </p>
+                <p class="mb-0 text-muted">&copy; <span id="year"></span> Agricom - Tanzania</p>
             </div>
         </footer>
     @endif
 
-    <!-- JS: Bootstrap & jQuery -->
+    <!-- JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <!-- Footer Year Script -->
+    <!-- Year Script -->
     <script>
         document.getElementById('year').textContent = new Date().getFullYear();
     </script>
 
     @yield('scripts')
 </body>
+
 </html>

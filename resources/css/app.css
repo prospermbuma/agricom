@@ -12,6 +12,10 @@
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
 
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
 html {
     scrollbar-width: none;
     scroll-behavior: smooth;

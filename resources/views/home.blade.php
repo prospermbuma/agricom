@@ -55,7 +55,7 @@
             font-weight: 500;
             transition: all 0.3s ease;
             text-decoration: none;
-             background-color: #28a745;
+            background-color: #28a745;
             color: #fff;
         }
 
@@ -77,6 +77,8 @@
         }
 
         .features-section .card {
+            background: hsla(0, 0%, 100%, 0.6);
+            backdrop-filter: blur(30px);
             border-radius: 30px;
             height: 300px;
             display: flex;
