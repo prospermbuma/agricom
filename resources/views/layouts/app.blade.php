@@ -54,6 +54,11 @@
             color: #ffffff;
         }
 
+        .navbar .register-btn:hover {
+            background: transparent;
+            color: #28a745;
+        }
+
         @media only screen and (max-width: 768px) {
 
             .navbar .login-btn,
@@ -64,9 +69,10 @@
 
         }
 
-        .navbar .register-btn:hover {
-            background: transparent;
+        .login-link, .register-link {
+            text-decoration: none;
             color: #28a745;
+            font-weight: 500;
         }
 
         .sidebar {

@@ -10,7 +10,7 @@
                     Agricom | Register
                 </h1>
             </div>
-            <div class="card shadow">
+            <div class="card shadow p-4">
                 <div class="card-body">
                     <form method="POST" action="{{ route('register') }}">
                         @csrf
@@ -156,7 +156,7 @@
                     </form>
 
                     <div class="text-center mt-3">
-                        <p>Already have an account? <a href="{{ route('login') }}">Login here</a></p>
+                        <p>Already have an account? <a href="{{ route('login') }}" class="login-link">Login here</a></p>
                     </div>
                 </div>
             </div>
