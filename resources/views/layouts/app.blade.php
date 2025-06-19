@@ -42,7 +42,7 @@
 <body>
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
-        <div class="container-fluid">
+        <div class="container-fluid px-md-5 py-md-2">
             <a class="navbar-brand" href="{{ route('dashboard') }}">
                 <i class="fas fa-seedling"></i> Agricom
             </a>
