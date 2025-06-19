@@ -9,6 +9,7 @@
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
@@ -21,59 +22,71 @@
             scroll-behavior: smooth;
         }
 
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
         .navbar-brand {
             font-weight: bold;
             color: #28a745 !important;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            gap: .3em;
+            gap: 0.4rem;
+        }
+
+        .navbar .nav-link {
+            font-weight: 500;
+            color: #333 !important;
+        }
+
+        .navbar .nav-link:hover,
+        .navbar .nav-link.active {
+            color: #28a745 !important;
         }
 
         .navbar .login-btn,
         .navbar .register-btn {
             border: 2px solid #28a745;
-            padding: 10px 34px;
+            padding: 8px 30px;
             border-radius: 50px;
             font-weight: 500;
-            transition: all .4s;
+            transition: all 0.3s ease;
         }
 
         .navbar .login-btn {
-            background: transparent;
+            background-color: transparent;
             color: #28a745;
         }
 
         .navbar .login-btn:hover {
-            background: #28a745;
+            background-color: #28a745;
             color: #fff;
         }
 
         .navbar .register-btn {
-            background: #28a745;
-            color: #ffffff;
+            background-color: #28a745;
+            color: #fff;
         }
 
         .navbar .register-btn:hover {
-            background: transparent;
+            background-color: transparent;
             color: #28a745;
         }
 
-        @media only screen and (max-width: 768px) {
-
-            .navbar .login-btn,
-            .navbar .register-btn {
-                border: 1px solid #28a745;
-                padding: 6px 24px;
-            }
-
+        .dropdown-menu {
+            border-radius: 10px;
         }
 
         .login-link,
         .register-link {
-            text-decoration: none;
             color: #28a745;
             font-weight: 500;
+            text-decoration: none;
+        }
+
+        .login-link:hover,
+        .register-link:hover {
+            text-decoration: underline;
         }
 
         .sidebar {
@@ -92,6 +105,18 @@
             font-size: 0.9em;
             color: #666;
         }
+
+        footer {
+            border-top: 1px solid #eaeaea;
+        }
+
+        @media (max-width: 768px) {
+            .navbar .login-btn,
+            .navbar .register-btn {
+                padding: 6px 18px;
+                font-size: 0.9rem;
+            }
+        }
     </style>
 
     @yield('styles')
@@ -99,11 +124,10 @@
 
 <body>
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
-        <div class="container-fluid px-md-5 py-1 py-md-2">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
+        <div class="container px-md-5 py-2">
             <a class="navbar-brand" href="{{ route('dashboard') }}">
-                <img src="{{ asset('images/logo.png') }}" alt="Logo" width="40px">
-                {{-- <i class="fas fa-seedling"></i>  --}}
+                <img src="{{ asset('images/logo.png') }}" alt="Logo" width="36">
                 Agricom
             </a>
 
@@ -115,24 +139,28 @@
                 <ul class="navbar-nav me-auto">
                     @auth
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('dashboard') }}">
+                            <a class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}"
+                               href="{{ route('dashboard') }}">
                                 <i class="fas fa-home"></i> Dashboard
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('articles.index') }}">
+                            <a class="nav-link {{ request()->routeIs('articles.index') ? 'active' : '' }}"
+                               href="{{ route('articles.index') }}">
                                 <i class="fas fa-newspaper"></i> Articles
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('chat.index') }}">
+                            <a class="nav-link {{ request()->routeIs('chat.index') ? 'active' : '' }}"
+                               href="{{ route('chat.index') }}">
                                 <i class="fas fa-comments"></i> Chat
                             </a>
                         </li>
                         @if (auth()->user()->role === 'veo')
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('articles.create') }}">
-                                    <i class="fas fa-plus"></i> Create Article
+                                <a class="nav-link {{ request()->routeIs('articles.create') ? 'active' : '' }}"
+                                   href="{{ route('articles.create') }}">
+                                    <i class="fas fa-plus"></i> New Article
                                 </a>
                             </li>
                         @endif
@@ -145,102 +173,96 @@
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
                                 <i class="fas fa-user"></i> {{ auth()->user()->name }}
                             </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="{{ route('profile.show') }}">
-                                        <i class="fas fa-user"></i> Profile
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('profile.show') }}">
+                                        <i class="fas fa-user-circle"></i> Profile
                                     </a>
                                 </li>
-                                @php
-                                    $user = auth()->user();
-                                @endphp
 
-                                @if (in_array($user->role, ['veo', 'admin']))
+                                @if (in_array(auth()->user()->role, ['veo', 'admin']))
                                     <li>
                                         <a class="dropdown-item" href="{{ route('activity.logs') }}">
                                             <i class="fas fa-history"></i> Activity Logs
                                         </a>
                                     </li>
                                 @endif
-                                {{-- <li><a class="dropdown-item" href="{{ route('activity.logs') }}">
-                                        <i class="fas fa-history"></i> Activity Logs
-                                    </a></li>
-                                <li> --}}
-                                <hr class="dropdown-divider">
+
+                                <li><hr class="dropdown-divider"></li>
+
+                                <li>
+                                    <form method="POST" action="{{ route('logout') }}">
+                                        @csrf
+                                        <button type="submit" class="dropdown-item">
+                                            <i class="fas fa-sign-out-alt"></i> Logout
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
                         </li>
-                        <li>
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-                                <button type="submit" class="dropdown-item">
-                                    <i class="fas fa-sign-out-alt"></i> Logout
-                                </button>
-                            </form>
+                    @else
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('login') }}">
+                                <span class="login-btn">Login</span>
+                            </a>
                         </li>
-                    </ul>
-                    </li>
-                @else
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('login') }}">
-                            <span class="login-btn">Login</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('register') }}">
-                            <span class="register-btn">Register</span>
-                        </a>
-                    </li>
-                @endauth
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('register') }}">
+                                <span class="register-btn">Register</span>
+                            </a>
+                        </li>
+                    @endauth
                 </ul>
             </div>
         </div>
     </nav>
 
-    <!-- Main Content -->
-    <div class="container-fluid">
+    <!-- Flash Messages -->
+    <div class="container mt-3">
         @if (session('success'))
-            <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
                 {{ session('success') }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         @endif
 
         @if (session('error'))
-            <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 {{ session('error') }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         @endif
+    </div>
 
+    <!-- Main Content -->
+    <div class="container-fluid my-5">
         @yield('content')
     </div>
 
-    <!-- Footer -->
-    <!-- Only show footer while on login/register routes -->
+    <!-- Footer (Only on login & register pages) -->
     @php
         $currentRoute = Route::currentRouteName();
     @endphp
 
     @if (in_array($currentRoute, ['login', 'register']))
-        <footer class="bg-light text-center py-3 mt-5">
+        <footer class="bg-light text-center py-3 mt-auto">
             <div class="container">
-                <p class="mb-0">&copy; <span id="year"></span> Agricom - Tanzania</p>
+                <p class="mb-0 text-muted">
+                    &copy; <span id="year"></span> Agricom - Tanzania
+                </p>
             </div>
         </footer>
     @endif
 
-
-    <!-- Bootstrap JS -->
+    <!-- JS: Bootstrap & jQuery -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <!-- Get Year -->
+    <!-- Footer Year Script -->
     <script>
-        const domYear = document.querySelector('#year');
-        const today = new Date();
-        domYear.innerText = today.getFullYear();
+        document.getElementById('year').textContent = new Date().getFullYear();
     </script>
 
     @yield('scripts')
 </body>
-
 </html>
