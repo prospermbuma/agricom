@@ -286,6 +286,15 @@
                                 </a>
                             </li>
 
+                            @if (auth()->user()->role === 'admin')
+                                <li class="nav-item mb-2">
+                                    <a class="nav-link {{ request()->routeIs('users') ? 'active' : '' }}"
+                                        href="{{ route('dashboard') }}">
+                                        <i class="fas fa-users me-2"></i> Users
+                                    </a>
+                                </li>
+                            @endif
+
                             @if (in_array(auth()->user()->role, ['admin', 'veo']))
                                 <li class="nav-item mb-2">
                                     <a class="nav-link {{ request()->routeIs('activity-logs.index') ? 'active' : '' }}"
@@ -296,15 +305,6 @@
                             @endif
 
                             <li class="nav-item mt-4">
-                                {{-- <a class="nav-link text-danger" href="{{ route('logout') }}"
-                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                    <i class="fas fa-sign-out-alt me-2"></i> Logout
-                                </a>
-
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                    @csrf
-                                </form> --}}
-
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
                                     <button type="submit" class="nav-link text-start text-danger w-100">
@@ -346,7 +346,6 @@
             </div>
 
             <!-- Main Content -->
-            {{-- <main class="container-fluid py-4"> --}}
             <main class="container-fluid py-4">
                 @yield('content')
             </main>

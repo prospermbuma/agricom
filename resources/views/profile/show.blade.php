@@ -22,7 +22,7 @@
                         </div>
 
                         <!-- Profile Info -->
-                        <div class="col-md-12 p-4">
+                        <div class="col-md-12 p-5">
                             <div class="d-flex justify-content-between align-items-start mb-3">
                                 <h5 class="text-success"><i class="fas fa-user-circle me-2"></i>Profile Details</h5>
                                 <a href="{{ route('profile.edit') }}" class="btn btn-outline-success btn-sm">
