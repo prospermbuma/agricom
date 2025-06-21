@@ -159,7 +159,7 @@
                                 </div>
                             </div>
                             <div class="mt-3">
-                                <a href="{{ route('profile.comments') }}" class="btn btn-sm btn-outline-info w-100">
+                                <a href="{{ route('profile.show') }}" class="btn btn-sm btn-outline-info w-100">
                                     View My Comments <i class="fas fa-arrow-right ms-1"></i>
                                 </a>
                             </div>

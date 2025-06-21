@@ -167,19 +167,20 @@
                 <ul class="navbar-nav me-auto">
                     @unless ($hidePublicNav)
                         <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}" href="{{ route('home') }}">
+                            <a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}"
+                                 href="{{ route('home') }}">
                                 Home
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('about') ? 'active' : '' }}"
-                                href="{{ route('about') }}">
+                            <a class="nav-link {{ request()->routeIs('about') ? 'active' : '' }}" {{-- href="{{ route('about') }}"> --}}
+                                href="#">
                                 About
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('contact') ? 'active' : '' }}"
-                                href="{{ route('contact') }}">
+                            <a class="nav-link {{ request()->routeIs('contact') ? 'active' : '' }}" {{-- href="{{ route('contact') }}"> --}}
+                                href="#">
                                 Contact
                             </a>
                         </li>
