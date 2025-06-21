@@ -49,16 +49,6 @@ class User extends Authenticatable
     ];
 
     /**
-     * Automatically hash password when set.
-     */
-    public function setPasswordAttribute($value)
-    {
-        if ($value) {
-            $this->attributes['password'] = bcrypt($value);
-        }
-    }
-
-    /**
      * Spatie log options
      */
     public function getActivitylogOptions(): LogOptions

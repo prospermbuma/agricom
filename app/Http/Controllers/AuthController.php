@@ -34,6 +34,7 @@ class AuthController extends Controller
     {
         $credentials = $request->validated();
 
+
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
@@ -47,6 +48,12 @@ class AuthController extends Controller
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
         ])->onlyInput('email');
+
+        // Don't override validation errors — just show login failure
+        // return back()->withErrors([
+        //     'email' => 'The provided credentials do not match our records.',
+        // ])->withInput();
+
     }
 
     public function register(RegisterRequest $request)

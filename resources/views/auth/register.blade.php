@@ -36,26 +36,13 @@
                         <div class="mb-3">
                             <label class="form-label"><i class="fas fa-phone"></i> Phone Number</label>
                             <input type="tel" name="phone" class="form-control @error('phone') is-invalid @enderror"
-                                value="{{ old('phone') }}" placeholder="e.g., +255712345678" required>
+                                value="{{ old('phone') }}" placeholder="e.g., 0712345678" required>
                             @error('phone')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
-                        {{-- <div class="mb-3">
-                            <label class="form-label">Role</label>
-                            <select name="role" class="form-select @error('role') is-invalid @enderror" required>
-                                <option value="">Select Role</option>
-                                <option value="farmer" {{ old('role') == 'farmer' ? 'selected' : '' }}>Farmer</option>
-                                <option value="veo" {{ old('role') == 'veo' ? 'selected' : '' }}>Village Extension
-                                    Officer</option>
-                            </select>
-                            @error('role')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div> --}}
-
-                        <!-- Role Selection -->
+                        {{-- === ROLE SELECTION === --}}
                         <div class="mb-3">
                             <label class="form-label">
                                 <i class="fas fa-user-tag"></i> Role

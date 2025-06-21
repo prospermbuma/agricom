@@ -19,7 +19,7 @@
                         <div class="mb-3">
                             <label class="form-label"><i class="fas fa-envelope"></i> Email Address</label>
                             <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
-                                value="{{ old('email') }}" placeholder="john.doe@example.com" required autofocus>
+                                value="{{ old('email') }}" placeholder="john.doe@example.com">
                             @error('email')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -29,7 +29,7 @@
                             <label class="form-label"><i class="fas fa-lock"></i> Password</label>
                             <div class="input-group">
                                 <input type="password" name="password" id="password"
-                                    class="form-control @error('password') is-invalid @enderror" required>
+                                    class="form-control @error('password') is-invalid @enderror">
                                 <span class="input-group-text" style="cursor: pointer;"
                                     onclick="togglePassword('password', this)">
                                     <i class="fas fa-eye text-secondary"></i>
