@@ -77,6 +77,28 @@
             color: #28a745;
         }
 
+        .sidebar-sticky {
+            top: 1rem;
+            height: 100vh;
+            position: sticky;
+            border-radius: 12px;
+            background-color: #f8f9fa;
+        }
+
+        .sidebar .nav-link {
+            color: #333;
+            font-weight: 500;
+            padding: 10px 15px;
+            border-radius: 8px;
+            transition: background 0.3s ease;
+        }
+
+        .sidebar .nav-link.active,
+        .sidebar .nav-link:hover {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
         .dropdown-menu {
             border-radius: 10px;
         }
@@ -121,13 +143,14 @@
 <body>
     @php
         $currentRoute = Route::currentRouteName();
-        $hidePublicNav = in_array($currentRoute, ['dashboard', 'articles.index', 'chat.index', 'articles.create']);
+        $authRoutes = ['dashboard', 'articles.index', 'chat.index', 'articles.create', 'profile.show', 'profile.edit', 'activity-logs.index'];
+        $hidePublicNav = in_array($currentRoute, $authRoutes);
     @endphp
 
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
-        <div class="container px-md-5 py-2">
-            <a class="navbar-brand" href="{{ route('home') }}">
+        <div class="{{ request()->routeIs($authRoutes) ? 'container-fluid px-md-5 py-1' : 'container px-md-5 py-2' }}">
+            <a class="navbar-brand" href="{{ request()->routeIs($authRoutes) ? route('dashboard') : route('home') }}">
                 <img src="{{ asset('images/logo.png') }}" alt="Logo" width="36">
                 Agricom
             </a>
@@ -157,35 +180,6 @@
                             </a>
                         </li>
                     @endunless
-
-                    @auth
-                        <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}"
-                                href="{{ route('dashboard') }}">
-                                <i class="fas fa-home"></i> Dashboard
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('articles.index') ? 'active' : '' }}"
-                                href="{{ route('articles.index') }}">
-                                <i class="fas fa-newspaper"></i> Articles
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('chat.index') ? 'active' : '' }}"
-                                href="{{ route('chat.index') }}">
-                                <i class="fas fa-comments"></i> Chat
-                            </a>
-                        </li>
-                        @if (auth()->user()->role === 'veo')
-                            <li class="nav-item">
-                                <a class="nav-link {{ request()->routeIs('articles.create') ? 'active' : '' }}"
-                                    href="{{ route('articles.create') }}">
-                                    <i class="fas fa-plus"></i> New Article
-                                </a>
-                            </li>
-                        @endif
-                    @endauth
                 </ul>
 
                 <ul class="navbar-nav">
@@ -202,7 +196,7 @@
                                 </li>
                                 @if (in_array(auth()->user()->role, ['veo', 'admin']))
                                     <li>
-                                        <a class="dropdown-item" href="{{ route('activity.logs') }}">
+                                        <a class="dropdown-item" href="{{ route('activity-logs.index') }}">
                                             <i class="fas fa-history"></i> Activity Logs
                                         </a>
                                     </li>
@@ -236,27 +230,118 @@
             </div>
         </div>
     </nav>
+    @php
+        $isAuthRoute = ['dashboard', 'articles.index', 'chat.index', 'articles.create', 'profile.show', 'profile.edit'];
+    @endphp
+    <div class="d-flex" id="main-wrapper">
+        @auth
+            @if ($isAuthRoute)
+                <!-- Sidebar -->
+                <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar shadow-sm p-3 sidebar-sticky">
+                    <div class="position-sticky">
+                        <h5 class="text-success mb-4"><i class="fas fa-seedling"></i> Agricom</h5>
+                        <ul class="nav flex-column">
+                            <li class="nav-item mb-2">
+                                <a class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}"
+                                    href="{{ route('dashboard') }}">
+                                    <i class="fas fa-cog me-2"></i> Dashboard
+                                </a>
+                            </li>
 
-    <!-- Flash Messages -->
-    <div class="container mt-3">
-        @if (session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            <li class="nav-item mb-2">
+                                <a class="nav-link {{ request()->routeIs('articles.index') ? 'active' : '' }}"
+                                    href="{{ route('articles.index') }}">
+                                    <i class="fas fa-newspaper me-2"></i> Articles
+                                </a>
+                            </li>
+
+                            @if (auth()->user()->role === 'veo')
+                                <li class="nav-item mb-2">
+                                    <a class="nav-link {{ request()->routeIs('articles.create') ? 'active' : '' }}"
+                                        href="{{ route('articles.create') }}">
+                                        <i class="fas fa-plus-circle me-2"></i> New Article
+                                    </a>
+                                </li>
+                            @endif
+
+                            <li class="nav-item mb-2">
+                                <a class="nav-link {{ request()->routeIs('chat.index') ? 'active' : '' }}"
+                                    href="{{ route('chat.index') }}">
+                                    <i class="fas fa-comments me-2"></i> Chat
+                                </a>
+                            </li>
+                            <li class="nav-item mb-2">
+                                <a class="nav-link {{ request()->routeIs('profile.show') ? 'active' : '' }}"
+                                    href="{{ route('profile.show') }}">
+                                    <i class="fas fa-user me-2"></i> Profile
+                                </a>
+                            </li>
+
+                            @if (in_array(auth()->user()->role, ['admin', 'veo']))
+                                <li class="nav-item mb-2">
+                                    <a class="nav-link {{ request()->routeIs('activity-logs.index') ? 'active' : '' }}"
+                                        href="{{ route('activity-logs.index') }}">
+                                        <i class="fas fa-history me-2"></i> Activity Logs
+                                    </a>
+                                </li>
+                            @endif
+
+                            <li class="nav-item mt-4">
+                                {{-- <a class="nav-link text-danger" href="{{ route('logout') }}"
+                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                    <i class="fas fa-sign-out-alt me-2"></i> Logout
+                                </a>
+
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                    @csrf
+                                </form> --}}
+
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit" class="nav-link text-start text-danger w-100">
+                                        <i class="fas fa-sign-out-alt me-2"></i> Logout
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            @endif
+        @endauth
+
+        <!-- Page content wrapper -->
+        <div id="page-content-wrapper" class="flex-grow-1">
+            <!-- Optional mobile sidebar toggler -->
+            @auth
+                @if ($isAuthRoute)
+                    <button class="btn btn-outline-success d-md-none m-2" id="openSidebar">
+                        <i class="fas fa-bars"></i> Menu
+                    </button>
+                @endif
+            @endauth
+
+            <!-- Flash messages -->
+            <div class="container mt-3">
+                @if (session('success'))
+                    <div class="alert alert-success alert-dismissible fade show">
+                        {{ session('success') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                @endif
+                @if (session('error'))
+                    <div class="alert alert-danger alert-dismissible fade show">
+                        {{ session('error') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                @endif
             </div>
-        @endif
 
-        @if (session('error'))
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                {{ session('error') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        @endif
-    </div>
-
-    <!-- Main Content -->
-    <div class="container-fluid my-5">
-        @yield('content')
+            <!-- Main Content -->
+            {{-- <main class="container-fluid py-4"> --}}
+            <main class="container-fluid py-4">
+                @yield('content')
+            </main>
+        </div>
     </div>
 
     <!-- Footer (Only on login & register pages) -->
@@ -275,6 +360,13 @@
     <!-- Year Script -->
     <script>
         document.getElementById('year').textContent = new Date().getFullYear();
+        document.getElementById('toggleSidebar')?.addEventListener('click', () => {
+            document.getElementById('sidebar').style.display = 'none';
+        });
+
+        document.getElementById('openSidebar')?.addEventListener('click', () => {
+            document.getElementById('sidebar').style.display = 'block';
+        });
     </script>
 
     @yield('scripts')

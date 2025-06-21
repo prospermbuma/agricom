@@ -61,5 +61,5 @@ Route::middleware('auth')->group(function () {
     Route::post('/chat/conversations', [ChatController::class, 'createConversation'])->name('chat.conversations.store');
 
     // Activity Logs (VEO/admin only)
-    Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activity.logs');
+    Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index');
 });

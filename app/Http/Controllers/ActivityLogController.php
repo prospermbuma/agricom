@@ -48,6 +48,6 @@ class ActivityLogController extends Controller
         $users = \App\Models\User::select('id', 'name', 'email')->get();
         $actions = ActivityLog::distinct()->pluck('action');
 
-        return view('activity.logs', compact('logs', 'users', 'actions'));
+        return view('activity-logs.index', compact('logs', 'users', 'actions'));
     }
 }

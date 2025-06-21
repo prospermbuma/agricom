@@ -79,11 +79,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
     });
 
     // Activity log routes (admin only)
-    Route::prefix('activity-logs')->middleware('role:admin')->group(function () {
-        Route::get('/', [ActivityLogController::class, 'index']);
-        Route::get('/user/{user}', [ActivityLogController::class, 'userActivity']);
-        Route::get('/export', [ActivityLogController::class, 'export']);
-    });
+    // Route::prefix('activity-logs')->middleware('role:admin')->group(function () {
+    //     Route::get('/', [ActivityLogController::class, 'index']);
+    //     Route::get('/user/{user}', [ActivityLogController::class, 'userActivity']);
+    //     Route::get('/export', [ActivityLogController::class, 'export']);
+    // });
 
     // Admin routes
     Route::prefix('admin')->middleware('role:admin')->group(function () {
