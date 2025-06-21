@@ -3,7 +3,7 @@
 @section('title', 'Chat with {{ $otherUser->name }} - Agricom')
 
 @section('content')
-    <div class="container mt-5">
+    <div class="container">
         <div class="row">
             <div class="col-md-12">
                 <!-- Chat Header -->

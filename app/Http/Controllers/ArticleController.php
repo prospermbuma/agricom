@@ -19,11 +19,28 @@ class ArticleController extends Controller
      */
     public function index(Request $request)
     {
-        // $query = Article::published()->with('author');
+        $query = Article::published()->with('author');
 
-        $query = Article::with(['author', 'comments'])
-            ->published()
-            ->orderBy('published_at', 'desc');
+        // $query = Article::with(['author', 'comments'])
+        //     ->published()
+        //     ->orderBy('published_at', 'desc');
+
+
+        // ✅ Optional: Log the full request input for debugging
+        // \Log::info('Full request:', $request->all());
+
+        // 🟡 Log crop filter value (ADD THIS LINE HERE)
+        // if ($request->has('crop')) {
+        //     \Log::info('Filtering by crop ID: ' . $request->crop);
+        // }
+
+        // $articles = Article::whereJsonContains('target_crops', 4)->get();
+        // dd($articles);
+
+        // $articles = \App\Models\Article::whereJsonContains('target_crops', 3)->get();
+        // dd($articles);
+
+
 
         // Filter by user's crops if farmer
         if ($request->user()->isFarmer() && !empty($request->user()->crops)) {
@@ -38,14 +55,14 @@ class ArticleController extends Controller
             $query->where('category', $request->category);
         }
 
-        // Filter by priority
-        if ($request->has('priority') && $request->priority !== '') {
-            $query->where('priority', $request->priority);
-        }
+        // // Filter by crop
+        // if ($request->has('crop') && $request->crop !== '') {
+        //     $query->whereJsonContains('target_crops', $request->crop);
+        // }
 
-        // Filter by crop
-        if ($request->has('crop') && $request->crop !== '') {
-            $query->whereJsonContains('target_crops', $request->crop);
+        // Filter by crop (cast to string if stored as string, or to int if stored as int)
+        if ($request->filled('crop')) {
+            $query->whereJsonContains('target_crops', (int) $request->crop); // Or (int) if you stored as integers
         }
 
         // Search by title or content
@@ -89,7 +106,7 @@ class ArticleController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(ArticleRequest $request)
+    public function create(Request $request)
     {
         $this->authorize('create', Article::class);
 
@@ -117,6 +134,11 @@ class ArticleController extends Controller
         $validated['author_id'] = Auth::id();
         $validated['slug'] = Str::slug($validated['title']);
         $validated['is_published'] = $request->boolean('is_published', false);
+
+        // Convert target_crops to integers
+        $validated['target_crops'] = collect($request->input('target_crops', []))
+            ->map(fn($id) => (int) $id)
+            ->toArray();
 
         // Handle featured image upload
         if ($request->hasFile('featured_image')) {
@@ -177,6 +199,11 @@ class ArticleController extends Controller
         $this->authorize('update', $article);
 
         $validated = $request->validated();
+
+        // Convert target_crops to integers
+        $validated['target_crops'] = collect($request->input('target_crops', []))
+            ->map(fn($id) => (int) $id)
+            ->toArray();
 
         // Handle featured image upload
         if ($request->hasFile('featured_image')) {

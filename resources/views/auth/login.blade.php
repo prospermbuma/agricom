@@ -3,7 +3,7 @@
 @section('title', 'Login - Agricom')
 
 @section('content')
-    <div class="row justify-content-center mt-5">
+    <div class="row justify-content-center mb-4">
         <div class="col-md-5">
             <div class="hero-text mb-4">
                 <h1 class="text-center">

@@ -3,7 +3,7 @@
 @section('title', $article->title . ' - Agricom')
 
 @section('content')
-    <div class="container mt-5">
+    <div class="container">
         <div class="row">
             <div class="col-md-8">
                 <div class="card">
@@ -72,7 +72,7 @@
                     </div>
                     <div class="card-body">
                         <!-- Comment Form -->
-                        <form method="POST" action="{{ route('comments.store', $article->id) }}" class="mb-4">
+                        <form method="POST" action="{{ route('articles.comments.store', $article->id) }}" class="mb-4">
                             @csrf
                             <div class="mb-3">
                                 <textarea name="content" class="form-control @error('content') is-invalid @enderror" rows="3"

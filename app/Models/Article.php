@@ -58,6 +58,15 @@ class Article extends Model
         return $query->where('is_published', true);
     }
 
+    public function scopeForCrops($query, $cropIds)
+    {
+        return $query->where(function ($q) use ($cropIds) {
+            foreach ($cropIds as $cropId) {
+                $q->orWhereJsonContains('target_crops', $cropId);
+            }
+        });
+    }
+
     public function scopeUrgent($query)
     {
         return $query->where('is_urgent', true);

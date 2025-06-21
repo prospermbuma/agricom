@@ -3,9 +3,9 @@
 @section('title', 'Edit Profile - Agricom')
 
 @section('content')
-    <div class="container mt-5">
+    <div class="container">
         <div class="row">
-            <div class="col-md-8 mx-auto">
+            <div class="col-md-12 mx-auto">
                 <div class="card">
                     <div class="card-header">
                         <h4><i class="fas fa-user-edit"></i> Edit Profile</h4>

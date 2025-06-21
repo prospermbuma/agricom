@@ -1,172 +1,95 @@
 @extends('layouts.app')
 
-@section('title', 'Profile - Agricom')
+@section('title', 'My Profile - Agricom')
 
 @section('content')
-    <div class="container mt-5">
-        <div class="row mt-4">
-            <div class="col-md-8 mx-auto">
-                <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h4><i class="fas fa-user"></i> My Profile</h4>
-                        <a href="{{ route('profile.edit') }}" class="btn btn-primary btn-sm">
-                            <i class="fas fa-edit"></i> Edit Profile
-                        </a>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label fw-bold">Full Name</label>
-                                    <p class="form-control-plaintext">{{ auth()->user()->name }}</p>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label fw-bold">Email Address</label>
-                                    <p class="form-control-plaintext">{{ auth()->user()->email }}</p>
-                                </div>
-                            </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card shadow-lg rounded-4 border-0 overflow-hidden">
+                    <div class="row g-0">
+                        <!-- Sidebar Avatar -->
+                        <div
+                            class="col-md-12 sidebar-avatar text-white d-flex flex-column align-items-center justify-content-center p-4 text-center">
+                            <img src="{{ auth()->user()->avatar ? asset('storage/' . auth()->user()->avatar) : asset('images/default-avatar.png') }}"
+                                alt="User Avatar" class="img-fluid rounded-circle shadow mb-3"
+                                style="width: 120px; height: 120px; object-fit: cover;">
+                            <h4 class="fw-bold">{{ auth()->user()->name }}</h4>
+                            <span class="badge bg-light text-success mt-1">{{ ucfirst(auth()->user()->role) }}</span>
+                            <p class="small mt-2"><i
+                                    class="fas fa-map-marker-alt me-1"></i>{{ auth()->user()->village ?? '-' }},
+                                {{ auth()->user()->region ?? '-' }}</p>
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label fw-bold">Phone Number</label>
-                                    <p class="form-control-plaintext">{{ auth()->user()->phone ?? 'Not provided' }}</p>
-                                </div>
+                        <!-- Profile Info -->
+                        <div class="col-md-12 p-4">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h5 class="text-success"><i class="fas fa-user-circle me-2"></i>Profile Details</h5>
+                                <a href="{{ route('profile.edit') }}" class="btn btn-outline-success btn-sm">
+                                    <i class="fas fa-edit me-1"></i>Edit
+                                </a>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="mb-3">
+                                <strong>Email:</strong>
+                                <p class="text-muted mb-0">{{ auth()->user()->email }}</p>
+                            </div>
+
+                            <div class="mb-3">
+                                <strong>Phone:</strong>
+                                <p class="text-muted mb-0">{{ auth()->user()->phone ?? 'Not provided' }}</p>
+                            </div>
+
+                            <div class="mb-3">
+                                <strong>Bio:</strong>
+                                <p class="text-muted mb-0">{{ auth()->user()->bio ?? 'No bio added yet.' }}</p>
+                            </div>
+
+                            @if (auth()->user()->role === 'farmer')
+                                <hr class="my-4">
+                                <h6 class="text-success mb-3">Farming Info</h6>
+
                                 <div class="mb-3">
-                                    <label class="form-label fw-bold">Role</label>
-                                    <p class="form-control-plaintext">
-                                        <span
-                                            class="badge bg-{{ auth()->user()->role === 'farmer' ? 'success' : (auth()->user()->role === 'buyer' ? 'info' : 'primary') }}">
-                                            {{ ucfirst(auth()->user()->role) }}
-                                        </span>
+                                    <strong>Farm Size:</strong>
+                                    <p class="text-muted mb-0">{{ auth()->user()->farm_size ?? 'Not specified' }} hectares
                                     </p>
                                 </div>
-                            </div>
-                        </div>
 
-                        <div class="row">
-                            <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label class="form-label fw-bold">Region</label>
-                                    <p class="form-control-plaintext">{{ auth()->user()->region ?? 'Not specified' }}</p>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label fw-bold">Village</label>
-                                    <p class="form-control-plaintext">{{ auth()->user()->village ?? 'Not specified' }}</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        @if (auth()->user()->role === 'farmer')
-                            <div class="mb-3">
-                                <label class="form-label fw-bold">Types of Crops</label>
-                                @php
-                                    // $userCrops = auth()->user()->crops ? json_decode(auth()->user()->crops) : [];
-                                    $userCrops = auth()->user()->crops ?? [];
-                                @endphp
-                                @if (!empty($userCrops))
-                                    <div class="row">
+                                    <strong>Crops:</strong>
+                                    @php $userCrops = auth()->user()->crops ?? []; @endphp
+                                    @if (!empty($userCrops))
                                         @foreach ($userCrops as $crop)
-                                            <div class="col-md-4 col-sm-6">
-                                                <span class="badge bg-light text-dark border me-2 mb-2">
-                                                    <i class="fas fa-seedling"></i> {{ ucfirst($crop) }}
-                                                </span>
-                                            </div>
+                                            <span class="badge bg-light text-dark border me-1 mb-1">
+                                                <i class="fas fa-seedling me-1"></i>{{ ucfirst($crop) }}
+                                            </span>
                                         @endforeach
-                                    </div>
-                                @else
-                                    <p class="form-control-plaintext text-muted">No crops specified</p>
-                                @endif
-                            </div>
-
-                            <div class="mb-3">
-                                <label class="form-label fw-bold">Farm Size</label>
-                                <p class="form-control-plaintext">
-                                    @if (auth()->user()->farm_size)
-                                        {{ auth()->user()->farm_size }} hectares
                                     @else
-                                        <span class="text-muted">Not specified</span>
+                                        <p class="text-muted">No crops listed.</p>
                                     @endif
-                                </p>
-                            </div>
-                        @endif
+                                </div>
+                            @endif
 
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label fw-bold">Member Since</label>
-                                    <p class="form-control-plaintext">
-                                        <i class="fas fa-calendar"></i>
-                                        {{ auth()->user()->created_at->format('F j, Y') }}
-                                    </p>
+                            <hr class="my-4">
+
+                            <div class="row text-muted small">
+                                <div class="col-md-6 mb-2">
+                                    <i class="fas fa-calendar me-1"></i>
+                                    <strong>Member Since:</strong> {{ auth()->user()->created_at->format('M d, Y') }}
+                                </div>
+                                <div class="col-md-6 text-md-end mb-2">
+                                    <i class="fas fa-clock me-1"></i>
+                                    <strong>Last Updated:</strong> {{ auth()->user()->updated_at->format('M d, Y h:i A') }}
                                 </div>
                             </div>
 
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label fw-bold">Last Updated</label>
-                                    <p class="form-control-plaintext">
-                                        <i class="fas fa-clock"></i>
-                                        {{ auth()->user()->updated_at->format('F j, Y g:i A') }}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-
-                        @if (auth()->user()->role === 'farmer')
-                            <div class="card bg-light mt-4">
-                                <div class="card-body">
-                                    <h6 class="card-title">
-                                        <i class="fas fa-chart-line text-success"></i> Quick Stats
-                                    </h6>
-                                    <div class="row text-center">
-                                        <div class="col-md-4">
-                                            <div class="border-end">
-                                                <h5 class="text-primary mb-0">{{ count($userCrops) }}</h5>
-                                                <small class="text-muted">Crop Types</small>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="border-end">
-                                                <h5 class="text-success mb-0">
-                                                    {{ auth()->user()->farm_size ?? '0' }}
-                                                </h5>
-                                                <small class="text-muted">Hectares</small>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <h5 class="text-info mb-0">
-                                                {{ auth()->user()->region ?? 'N/A' }}
-                                            </h5>
-                                            <small class="text-muted">Region</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        @endif
-
-                        <div class="d-flex justify-content-between mt-4">
-                            <a href="{{ route('dashboard') }}" class="btn btn-secondary">
-                                <i class="fas fa-arrow-left"></i> Back to Dashboard
-                            </a>
-                            <div>
-                                <a href="{{ route('profile.edit') }}" class="btn btn-primary">
-                                    <i class="fas fa-edit"></i> Edit Profile
+                            <div class="d-flex justify-content-between mt-4">
+                                <a href="{{ route('dashboard') }}" class="btn btn-outline-secondary">
+                                    <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
                                 </a>
                                 @if (auth()->user()->role === 'farmer')
-                                    <a href="#" class="btn btn-success ms-2" data-bs-toggle="tooltip"
-                                        title="View your crop listings">
-                                        <i class="fas fa-leaf"></i> My Crops
+                                    <a href="#" class="btn btn-success">
+                                        <i class="fas fa-leaf me-1"></i> My Crops
                                     </a>
                                 @endif
                             </div>
@@ -176,21 +99,25 @@
 
                 @if (session('success'))
                     <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
-                        <i class="fas fa-check-circle"></i> {{ session('success') }}
+                        <i class="fas fa-check-circle me-1"></i> {{ session('success') }}
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
                 @endif
             </div>
         </div>
-
-        @push('scripts')
-            <script>
-                // Initialize Bootstrap tooltips
-                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-                var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
-                    return new bootstrap.Tooltip(tooltipTriggerEl)
-                })
-            </script>
-        @endpush
     </div>
+@endsection
+
+@section('styles')
+
+    <style>
+        .sidebar-avatar {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .sidebar-avatar * {
+            color: #155724;
+        }
+    </style>
+
 @endsection

@@ -3,17 +3,15 @@
 @section('title', 'Articles - Agricom')
 
 @section('content')
-    <div class="container mt-5">
+    <div class="container">
         <div class="row">
-            <div class="col-12">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h2><i class="fas fa-newspaper"></i> Articles</h2>
-                    @if (auth()->user()->role === 'veo')
-                        <a href="{{ route('articles.create') }}" class="btn btn-success">
-                            <i class="fas fa-plus"></i> Create Article
-                        </a>
-                    @endif
-                </div>
+            <div class="col-12 d-flex justify-content-between align-items-center">
+                <h2><i class="fas fa-newspaper"></i> Articles</h2>
+                @if (auth()->user()->role === 'veo')
+                    <a href="{{ route('articles.create') }}" class="btn btn-success">
+                        <i class="fas fa-plus"></i> Create Article
+                    </a>
+                @endif
             </div>
         </div>
 
@@ -23,7 +21,7 @@
                 <div class="card">
                     <div class="card-body">
                         <form method="GET" action="{{ route('articles.index') }}">
-                            <div class="row">
+                            <div class="row g-2">
                                 <div class="col-md-4">
                                     <input type="text" name="search" class="form-control"
                                         placeholder="Search articles..." value="{{ request('search') }}">
@@ -31,34 +29,22 @@
                                 <div class="col-md-3">
                                     <select name="crop" class="form-select">
                                         <option value="">All Crops</option>
-                                        <option value="maize" {{ request('crop') == 'maize' ? 'selected' : '' }}>Maize
-                                        </option>
-                                        <option value="rice" {{ request('crop') == 'rice' ? 'selected' : '' }}>Rice
-                                        </option>
-                                        <option value="beans" {{ request('crop') == 'beans' ? 'selected' : '' }}>Beans
-                                        </option>
-                                        <option value="cassava" {{ request('crop') == 'cassava' ? 'selected' : '' }}>Cassava
-                                        </option>
-                                        <option value="coffee" {{ request('crop') == 'coffee' ? 'selected' : '' }}>Coffee
-                                        </option>
-                                        <option value="cotton" {{ request('crop') == 'cotton' ? 'selected' : '' }}>Cotton
-                                        </option>
+                                        @foreach ($crops as $crop)
+                                            <option value="{{ $crop->id }}" {{ request('crop') == $crop->id ? 'selected' : '' }}>
+                                                {{ ucfirst($crop->name) }}
+                                            </option>
+                                        @endforeach
                                     </select>
                                 </div>
                                 <div class="col-md-3">
                                     <select name="category" class="form-select">
                                         <option value="">All Categories</option>
-                                        <option value="disease" {{ request('category') == 'disease' ? 'selected' : '' }}>
-                                            Disease Alert</option>
-                                        <option value="pest" {{ request('category') == 'pest' ? 'selected' : '' }}>Pest
-                                            Control</option>
-                                        <option value="technology"
-                                            {{ request('category') == 'technology' ? 'selected' : '' }}>New Technology
-                                        </option>
-                                        <option value="method" {{ request('category') == 'method' ? 'selected' : '' }}>
-                                            Farming Methods</option>
-                                        <option value="general" {{ request('category') == 'general' ? 'selected' : '' }}>
-                                            General Knowledge</option>
+                                        <option value="disease_management" {{ request('category') == 'disease_management' ? 'selected' : '' }}>Disease Management</option>
+                                        <option value="pest_control" {{ request('category') == 'pest_control' ? 'selected' : '' }}>Pest Control</option>
+                                        <option value="farming_techniques" {{ request('category') == 'farming_techniques' ? 'selected' : '' }}>Farming Techniques</option>
+                                        <option value="weather" {{ request('category') == 'weather' ? 'selected' : '' }}>Weather</option>
+                                        <option value="market_prices" {{ request('category') == 'market_prices' ? 'selected' : '' }}>Market Prices</option>
+                                        <option value="general" {{ request('category') == 'general' ? 'selected' : '' }}>General</option>
                                     </select>
                                 </div>
                                 <div class="col-md-2">
@@ -78,17 +64,25 @@
             @forelse($articles ?? [] as $article)
                 <div class="col-md-6 mb-4">
                     <div class="card h-100">
-                        @if ($article->image)
-                            <img src="{{ asset('storage/' . $article->image) }}" class="card-img-top"
+                        @if ($article->featured_image)
+                            <img src="{{ asset('storage/' . $article->featured_image) }}" class="card-img-top"
                                 style="height: 200px; object-fit: cover;">
                         @endif
                         <div class="card-body">
                             <div class="d-flex justify-content-between mb-2">
                                 <span class="badge bg-primary">{{ ucfirst($article->category) }}</span>
-                                @if ($article->crop)
-                                    <span class="badge bg-success">{{ ucfirst($article->crop) }}</span>
-                                @endif
+
+                                {{-- Show crop badges --}}
+                                @foreach ($article->target_crops ?? [] as $cropId)
+                                    @php
+                                        $crop = $crops->firstWhere('id', $cropId);
+                                    @endphp
+                                    @if ($crop)
+                                        <span class="badge bg-success">{{ ucfirst($crop->name) }}</span>
+                                    @endif
+                                @endforeach
                             </div>
+
                             <h5 class="card-title">{{ $article->title }}</h5>
                             <p class="card-text">{{ Str::limit($article->content, 150) }}</p>
                             <div class="d-flex justify-content-between align-items-center">
@@ -97,15 +91,15 @@
                                     {{ $article->created_at->format('M d, Y') }}
                                 </small>
                                 <div>
-                                    <span class="badge bg-secondary">{{ $article->comments_count ?? 0 }} comments</span>
+                                    <span class="badge bg-secondary">{{ $article->comments->count() }} comments</span>
                                 </div>
                             </div>
                         </div>
-                        <div class="card-footer">
+                        <div class="card-footer d-flex justify-content-between align-items-center">
                             <a href="{{ route('articles.show', $article->id) }}" class="btn btn-primary btn-sm">
                                 <i class="fas fa-eye"></i> Read More
                             </a>
-                            @if (auth()->user()->id === $article->user_id)
+                            @if (auth()->id() === $article->author_id)
                                 <a href="{{ route('articles.edit', $article->id) }}" class="btn btn-warning btn-sm">
                                     <i class="fas fa-edit"></i> Edit
                                 </a>

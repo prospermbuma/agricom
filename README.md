@@ -85,16 +85,6 @@ php artisan db:wipe
 php artisan migrate --seed
 ```
 
-## Laravel UI Installation
-```
-composer require laravel/ui
-```
-
-## Authentication UI Scaffolding
-```
-php artisan ui bootstrap --auth
-```
-
 ## Building Controllers
 ```
 php artisan make:controller AuthController --resource

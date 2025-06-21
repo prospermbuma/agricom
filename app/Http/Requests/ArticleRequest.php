@@ -11,7 +11,7 @@ class ArticleRequest extends FormRequest
     public function authorize()
     {
         return Auth::check() && $this->user()->isVeo();
-    }
+    } //
 
     public function rules()
     {
@@ -43,7 +43,6 @@ class ArticleRequest extends FormRequest
             'content.required' => 'Article content is required.',
             'content.min' => 'Article content must be at least 50 characters.',
             'category.required' => 'Please select a category for this article.',
-            'priority.required' => 'Please select priority level for this article.',
             'featured_image.image' => 'Featured image must be an image file.',
             'featured_image.max' => 'Featured image must not exceed 5MB.',
             'attachments.max' => 'You can upload maximum 5 attachments.',

@@ -3,7 +3,7 @@
 @section('title', 'Dashboard - Agricom')
 
 @section('content')
-    <div class="container dashboard-wrapper mt-5">
+    <div class="container dashboard-wrapper">
         <div class="row">
             <div class="col-12">
                 <h2>Welcome, {{ auth()->user()->name }}!</h2>
@@ -20,7 +20,7 @@
         <div class="row mt-4">
             @if (in_array($user->role, ['admin', 'veo']))
                 <div class="col-md-3">
-                    <div class="card bg-success text-white total-articles">
+                    <div class="card bg-success text-white total-articles shadow-sm border-0">
                         <div class="card-body">
                             <h4>{{ $articlesCount ?? 0 }}</h4>
                             <p>Total Articles</p>
@@ -30,7 +30,7 @@
                 </div>
 
                 <div class="col-md-3">
-                    <div class="card bg-info text-white active-users">
+                    <div class="card bg-info text-white active-users shadow-sm border-0">
                         <div class="card-body">
                             <h4>{{ $usersCount ?? 0 }}</h4>
                             <p>Active Users</p>
@@ -40,7 +40,7 @@
                 </div>
 
                 <div class="col-md-3">
-                    <div class="card bg-warning text-white comments">
+                    <div class="card bg-warning text-white comments shadow-sm border-0">
                         <div class="card-body">
                             <h4>{{ $commentsCount ?? 0 }}</h4>
                             <p>Comments</p>
@@ -50,7 +50,7 @@
                 </div>
 
                 <div class="col-md-3">
-                    <div class="card bg-danger text-white activities-today">
+                    <div class="card bg-danger text-white activities-today shadow-sm border-0">
                         <div class="card-body">
                             <h4>{{ $activitiesCount ?? 0 }}</h4>
                             <p>Activities Today</p>
@@ -60,7 +60,7 @@
                 </div>
             @elseif($user->role === 'farmer')
                 <div class="col-md-4">
-                    <div class="card bg-success text-white relevant-articles">
+                    <div class="card bg-success text-white relevant-articles shadow-sm border-0">
                         <div class="card-body">
                             <h4>{{ $relevantArticlesCount ?? 0 }}</h4>
                             <p>Relevant Articles</p>
@@ -70,7 +70,7 @@
                 </div>
 
                 <div class="col-md-4">
-                    <div class="card bg-info text-white my-comments">
+                    <div class="card bg-info text-white my-comments shadow-sm border-0">
                         <div class="card-body">
                             <h4>{{ $myCommentsCount ?? 0 }}</h4>
                             <p>My Comments</p>
@@ -80,7 +80,7 @@
                 </div>
 
                 <div class="col-md-4">
-                    <div class="card bg-warning text-white urgent-articles">
+                    <div class="card bg-warning text-white urgent-articles shadow-sm border-0">
                         <div class="card-body">
                             <h4>{{ $urgentArticlesCount ?? 0 }}</h4>
                             <p>Urgent Articles</p>
@@ -94,7 +94,7 @@
         <div class="row mt-4">
             {{-- Recent Articles (shown to all roles) --}}
             <div class="col-md-8">
-                <div class="card  recent-articles">
+                <div class="card recent-articles">
                     <div class="card-header">
                         <h5><i class="fas fa-newspaper"></i> Recent Articles</h5>
                     </div>
@@ -139,7 +139,7 @@
                             @endforelse
 
                             <div class="text-center mt-3">
-                                <a href="{{ route('activity.logs') }}" class="btn btn-outline-secondary btn-sm">View
+                                <a href="{{ route('activity-logs.index') }}" class="btn btn-outline-secondary btn-sm">View
                                     All</a>
                             </div>
                         </div>

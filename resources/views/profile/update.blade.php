@@ -3,7 +3,7 @@
 @section('title', 'Profile Updated - Agricom')
 
 @section('content')
-    <div class="container mt-5">
+    <div class="container">
         <div class="row mt-4">
             <div class="col-md-8 mx-auto">
                 <!-- Success Alert -->
