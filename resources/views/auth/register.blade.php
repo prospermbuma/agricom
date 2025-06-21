@@ -7,7 +7,7 @@
         <div class="col-md-6">
             <div class="hero-text mb-4">
                 <h1 class="text-center">
-                    <i class="fas fa-leaf"></i> Agricom | Register
+                    <i class="fas fa-leaf"></i> Sign Up
                 </h1>
             </div>
             <div class="card shadow form-card">
@@ -18,7 +18,7 @@
                         <div class="mb-3">
                             <label class="form-label"><i class="fas fa-user"></i> Full Name</label>
                             <input type="text" name="name" class="form-control @error('name') is-invalid @enderror"
-                                value="{{ old('name') }}" placeholder="John Doe" required>
+                                value="{{ old('name') }}" placeholder="John Doe" >
                             @error('name')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -27,7 +27,7 @@
                         <div class="mb-3">
                             <label class="form-label"><i class="fas fa-envelope"></i> Email Address</label>
                             <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
-                                value="{{ old('email') }}" placeholder="john.doe@example.com" required>
+                                value="{{ old('email') }}" placeholder="john.doe@example.com" >
                             @error('email')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -36,7 +36,7 @@
                         <div class="mb-3">
                             <label class="form-label"><i class="fas fa-phone"></i> Phone Number</label>
                             <input type="tel" name="phone" class="form-control @error('phone') is-invalid @enderror"
-                                value="{{ old('phone') }}" placeholder="e.g., 0712345678" required>
+                                value="{{ old('phone') }}" placeholder="e.g., 0712345678" >
                             @error('phone')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -79,7 +79,7 @@
 
                         <div class="mb-3">
                             <label class="form-label"><i class="fas fa-map-marker-alt"></i> Region</label>
-                            <select name="region" class="form-select @error('region') is-invalid @enderror" required>
+                            <select name="region" class="form-select @error('region') is-invalid @enderror" >
                                 <option value="">Select Region</option>
                                 <option value="Arusha" {{ old('region') == 'Arusha' ? 'selected' : '' }}>Arusha</option>
                                 <option value="Dar es Salaam" {{ old('region') == 'Dar es Salaam' ? 'selected' : '' }}>Dar
@@ -135,7 +135,7 @@
                             <label class="form-label"><i class="fas fa-home"></i> Village</label>
                             <input type="text" name="village"
                                 class="form-control @error('village') is-invalid @enderror" value="{{ old('village') }}"
-                                required>
+                                >
                             @error('village')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -196,7 +196,7 @@
                             <label class="form-label"><i class="fas fa-lock"></i> Password</label>
                             <div class="input-group">
                                 <input type="password" name="password" id="password"
-                                    class="form-control @error('password') is-invalid @enderror" required>
+                                    class="form-control @error('password') is-invalid @enderror" >
                                 <span class="input-group-text" style="cursor: pointer;"
                                     onclick="togglePassword('password', this)">
                                     <i class="fas fa-eye text-secondary" id="toggle-password-icon"></i>
@@ -212,7 +212,7 @@
                             <label class="form-label"><i class="fas fa-lock"></i> Confirm Password</label>
                             <div class="input-group">
                                 <input type="password" name="password_confirmation" id="password_confirmation"
-                                    class="form-control" required>
+                                    class="form-control" >
                                 <span class="input-group-text" style="cursor: pointer;"
                                     onclick="togglePassword('password_confirmation', this)">
                                     <i class="fas fa-eye text-secondary" id="toggle-confirm-password-icon"></i>
@@ -222,7 +222,7 @@
 
                         <div class="d-grid">
                             <button type="submit" class="registerBtn">
-                                <i class="fas fa-user-plus"></i> Register
+                                <i class="fas fa-user-plus"></i> Create Account
                             </button>
                         </div>
                     </form>

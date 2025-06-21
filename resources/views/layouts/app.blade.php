@@ -223,12 +223,12 @@
                     @else
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('login') }}">
-                                <span class="login-btn">Login</span>
+                                <span class="login-btn">Sign In</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('register') }}">
-                                <span class="register-btn">Register</span>
+                                <span class="register-btn">Get started</span>
                             </a>
                         </li>
                     @endauth

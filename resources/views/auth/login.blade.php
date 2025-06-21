@@ -7,7 +7,7 @@
         <div class="col-md-5">
             <div class="hero-text mb-4">
                 <h1 class="text-center">
-                    <i class="fas fa-leaf"></i> Agricom | Login
+                    <i class="fas fa-leaf"></i> Sign In
                 </h1>
             </div>
 
