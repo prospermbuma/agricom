@@ -6,9 +6,13 @@
     <div class="container dashboard-wrapper">
         <div class="row">
             <div class="col-12">
-                <h2>Welcome, {{ auth()->user()->name }}!</h2>
-                <p class="text-muted">{{ ucfirst(auth()->user()->role) }} from {{ auth()->user()->village }},
-                    {{ auth()->user()->region }}</p>
+                <h2>Welcome, {{ ucfirst(auth()->user()->name) }}!</h2>
+                <p class="text-muted mb-0">
+                    <span class="badge bg-primary bg-opacity-10 text-primary me-2">
+                        {{ ucfirst(auth()->user()->role) }}
+                    </span>
+                    {{ auth()->user()->village }}, {{ auth()->user()->region }}
+                </p>
             </div>
         </div>
 

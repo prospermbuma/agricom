@@ -3,7 +3,7 @@
 @section('title', 'Create Article - Agricom')
 
 @section('content')
-    <div class="container-fluid py-4">
+    <div class="container-fluid">
         <div class="row">
             <div class="col-12">
                 <div class="page-header d-flex justify-content-between align-items-center mb-4">
@@ -21,7 +21,7 @@
             <!-- Main Form Column -->
             <div class="col-lg-8">
                 <div class="card shadow-sm border-0">
-                    <div class="card-body p-4">
+                    <div class="card-body p-5">
                         <form method="POST" action="{{ route('articles.store') }}" enctype="multipart/form-data"
                             class="needs-validation" novalidate>
                             @csrf

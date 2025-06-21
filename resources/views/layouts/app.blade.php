@@ -142,18 +142,22 @@
 
 <body>
     @php
-        $currentRoute = Route::currentRouteName();
-        $authRoutes = ['dashboard', 'articles.index', 'chat.index', 'articles.create', 'profile.show', 'profile.edit', 'activity-logs.index'];
-        $hidePublicNav = in_array($currentRoute, $authRoutes);
+        use Illuminate\Support\Facades\Route;
+        use Illuminate\Support\Facades\Auth;
+
+        $currentRoute = Route::current();
+        $middleware = $currentRoute ? $currentRoute->gatherMiddleware() : [];
+        $hidePublicNav = in_array('auth', $middleware);
     @endphp
 
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
-        <div class="{{ request()->routeIs($authRoutes) ? 'container-fluid px-md-5 py-1' : 'container px-md-5 py-2' }}">
-            <a class="navbar-brand" href="{{ request()->routeIs($authRoutes) ? route('dashboard') : route('home') }}">
+        <div class="{{ $hidePublicNav ? 'container-fluid px-md-5 py-1' : 'container px-md-5 py-2' }}">
+            <a class="navbar-brand" href="{{ $hidePublicNav ? route('dashboard') : route('home') }}">
                 <img src="{{ asset('images/logo.png') }}" alt="Logo" width="36">
                 Agricom
             </a>
+
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -184,6 +188,13 @@
 
                 <ul class="navbar-nav">
                     @auth
+                        <li class="nav-item">
+                            <p class="text-muted mt-2">
+                                <span class="badge bg-primary bg-opacity-10 text-primary me-2">
+                                    {{ ucfirst(auth()->user()->role) }}
+                                </span>
+                            </p>
+                        </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
                                 <i class="fas fa-user"></i> {{ auth()->user()->name }}
@@ -230,12 +241,10 @@
             </div>
         </div>
     </nav>
-    @php
-        $isAuthRoute = ['dashboard', 'articles.index', 'chat.index', 'articles.create', 'profile.show', 'profile.edit'];
-    @endphp
+
     <div class="d-flex" id="main-wrapper">
         @auth
-            @if ($isAuthRoute)
+            @if ($hidePublicNav)
                 <!-- Sidebar -->
                 <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar shadow-sm p-3 sidebar-sticky">
                     <div class="position-sticky">
@@ -313,7 +322,7 @@
         <div id="page-content-wrapper" class="flex-grow-1">
             <!-- Optional mobile sidebar toggler -->
             @auth
-                @if ($isAuthRoute)
+                @if ($hidePublicNav)
                     <button class="btn btn-outline-success d-md-none m-2" id="openSidebar">
                         <i class="fas fa-bars"></i> Menu
                     </button>

@@ -3,7 +3,7 @@
 @section('title', 'Chat - Agricom')
 
 @section('content')
-    <div class="container-fluid py-4">
+    <div class="container-fluid">
         <div class="row g-4">
             <!-- Left Sidebar -->
             <div class="col-lg-4">
