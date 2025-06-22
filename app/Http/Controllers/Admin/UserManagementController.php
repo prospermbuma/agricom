@@ -17,6 +17,11 @@ class UserManagementController extends Controller
      */
     public function index(Request $request)
     {
+        // Allow only users with Admin role
+        if (!$request->user() || !$request->user()->isAdmin()) {
+            abort(403, 'Unauthorized access');
+        }
+
         $query = User::query();
 
         // Search functionality

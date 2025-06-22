@@ -17,7 +17,7 @@ class ActivityLogController extends Controller
 
     public function index(Request $request)
     {
-        // Allow only users with VEO role
+        // Allow only users with VEO or Admin role
         if (!$request->user() || !$request->user()->isVeo() && !$request->user()->isAdmin()) {
             abort(403, 'Unauthorized access');
         }
