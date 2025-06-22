@@ -214,17 +214,6 @@
         box-shadow: 0 10px 20px rgba(0,0,0,0.1);
     }
     
-    .avatar {
-        width: 32px;
-        height: 32px;
-    }
-    
-    .avatar img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-    
     .badge {
         font-weight: 500;
         padding: 5px 10px;

@@ -22,7 +22,7 @@
                             </div>
                         </div>
                         <div class="avatar avatar-lg">
-                            <img src="{{ auth()->user()->avatar ?? asset('images/default-avatar.png') }}"
+                            <img src="{{ auth()->user()->avatar ? asset('storage/' . auth()->user()->avatar) : asset('images/default-avatar.png') }}"
                                 class="rounded-circle border-2" alt="User Avatar">
                         </div>
                     </div>
@@ -38,7 +38,7 @@
         <div class="row g-4 mb-4">
             @if (in_array($user->role, ['admin', 'veo']))
                 <!-- Admin/VEO Stats -->
-                <div class="col-md-6 col-lg-3">
+                <div class="col-md-6 {{ $user->role === 'veo' ? 'col-lg-4' : 'col-lg-3' }}">
                     <div class="card stat-card border-0 shadow-sm h-100 hover-lift">
                         <div class="card-body p-4">
                             <div class="d-flex justify-content-between align-items-start">
@@ -60,7 +60,7 @@
                 </div>
 
                 @if ($user->role === 'admin')
-                    <div class="col-md-6 col-lg-3">
+                    <div class="col-md-6 {{ $user->role === 'veo' ? 'col-lg-4' : 'col-lg-3' }}">
                         <div class="card stat-card border-0 shadow-sm h-100 hover-lift">
                             <div class="card-body p-4">
                                 <div class="d-flex justify-content-between align-items-start">
@@ -82,7 +82,7 @@
                     </div>
                 @endif
 
-                <div class="col-md-6 col-lg-3">
+                <div class="col-md-6 {{ $user->role === 'veo' ? 'col-lg-4' : 'col-lg-3' }}">
                     <div class="card stat-card border-0 shadow-sm h-100 hover-lift">
                         <div class="card-body p-4">
                             <div class="d-flex justify-content-between align-items-start">
@@ -103,7 +103,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-6 col-lg-3">
+                <div class="col-md-6 {{ $user->role === 'veo' ? 'col-lg-4' : 'col-lg-3' }}">
                     <div class="card stat-card border-0 shadow-sm h-100 hover-lift">
                         <div class="card-body p-4">
                             <div class="d-flex justify-content-between align-items-start">
@@ -354,35 +354,13 @@
 @section('styles')
     <style>
         body {
-           background-color: #fff;
+            background-color: #fff;
         }
 
         .welcome-card {
             border-radius: 12px;
             background-color: #fff;
             border-left: 4px solid var(--primary-color);
-        }
-
-        .avatar {
-            width: 50px;
-            height: 50px;
-        }
-
-        .avatar-sm {
-            width: 36px;
-            height: 36px;
-        }
-
-        .avatar-lg {
-            width: 60px;
-            height: 60px;
-        }
-
-        .avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-color: var(--primary-color);
         }
 
         .stat-card {

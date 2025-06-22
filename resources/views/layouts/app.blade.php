@@ -28,6 +28,7 @@
             --dark-text: #2c3e50;
             --light-text: #7f8c8d;
         }
+
         html {
             scrollbar-width: none;
             scroll-behavior: smooth;
@@ -35,8 +36,9 @@
 
         body {
             font-family: "Outfit", sans-serif;
-             background-color: #fff;
+            background-color: #fff;
         }
+
         .navbar-brand {
             font-weight: bold;
             color: #28a745 !important;
@@ -140,6 +142,28 @@
             box-shadow: 0 0 0 0.25rem rgba(76, 175, 80, 0.25);
         }
 
+        .avatar {
+            width: 50px;
+            height: 50px;
+        }
+
+        .avatar-sm {
+            width: 36px;
+            height: 36px;
+        }
+
+        .avatar-lg {
+            width: 60px;
+            height: 60px;
+        }
+
+         .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-color: var(--primary-color);
+        }
+
         footer {
             border-top: 1px solid #eaeaea;
         }
@@ -214,15 +238,20 @@
                 <ul class="navbar-nav">
                     @auth
                         <li class="nav-item">
-                            <p class="text-muted mt-2">
-                                <span class="badge bg-primary bg-opacity-10 text-primary me-2">
+                            <p class="text-muted">
+                                <span class="badge bg-primary bg-opacity-10 mt-3 text-primary me-1">
                                     {{ ucfirst(auth()->user()->role) }}
                                 </span>
                             </p>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                <i class="fas fa-user"></i> {{ auth()->user()->name }}
+                            <a class="nav-link dropdown-toggle d-flex justify-between align-items-center gap-1"
+                                href="#" role="button" data-bs-toggle="dropdown">
+                                <div class="avatar avatar-sm me-1">
+                                    <img src="{{ auth()->user()->avatar ? asset('storage/' . auth()->user()->avatar) : asset('images/default-avatar.png') }}"
+                                        class="rounded-circle border-3" alt="Profile Picture">
+                                </div>
+                                {{ auth()->user()->name }}
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li>
