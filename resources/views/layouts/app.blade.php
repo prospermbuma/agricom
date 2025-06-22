@@ -27,6 +27,7 @@
             --light-bg: #f8f9fa;
             --dark-text: #2c3e50;
             --light-text: #7f8c8d;
+            --blue-color: #0a52bd;
         }
 
         html {

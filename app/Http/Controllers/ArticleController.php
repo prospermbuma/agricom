@@ -25,23 +25,6 @@ class ArticleController extends Controller
         //     ->published()
         //     ->orderBy('published_at', 'desc');
 
-
-        // ✅ Optional: Log the full request input for debugging
-        // \Log::info('Full request:', $request->all());
-
-        // 🟡 Log crop filter value (ADD THIS LINE HERE)
-        // if ($request->has('crop')) {
-        //     \Log::info('Filtering by crop ID: ' . $request->crop);
-        // }
-
-        // $articles = Article::whereJsonContains('target_crops', 4)->get();
-        // dd($articles);
-
-        // $articles = \App\Models\Article::whereJsonContains('target_crops', 3)->get();
-        // dd($articles);
-
-
-
         // Filter by user's crops if farmer
         if ($request->user()->isFarmer() && !empty($request->user()->crops)) {
             $query->where(function ($q) use ($request) {
@@ -55,14 +38,14 @@ class ArticleController extends Controller
             $query->where('category', $request->category);
         }
 
-        // // Filter by crop
+        // // Filter by crop (cast to string if stored as string)
         // if ($request->has('crop') && $request->crop !== '') {
         //     $query->whereJsonContains('target_crops', $request->crop);
         // }
 
-        // Filter by crop (cast to string if stored as string, or to int if stored as int)
+        // Filter by crop (cast to to int if stored as int)
         if ($request->filled('crop')) {
-            $query->whereJsonContains('target_crops', (int) $request->crop); // Or (int) if you stored as integers
+            $query->whereJsonContains('target_crops', (int) $request->crop); 
         }
 
         // Search by title or content

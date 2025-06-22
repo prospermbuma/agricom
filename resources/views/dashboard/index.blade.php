@@ -308,37 +308,44 @@
                         </div>
                         <div class="card-body">
                             <div class="d-grid gap-3">
-                                <a href="{{ route('chat.index') }}" class="btn btn-outline-primary text-start py-2">
+                                <!-- Ask a Question Button -->
+                                <a href="{{ route('chat.index') }}"
+                                    class="btn btn-outline-primary text-start py-2 hover-scale">
                                     <div class="d-flex align-items-center">
-                                        <div class="bg-primary bg-opacity-10 p-2 rounded-3 me-3">
+                                        <div class="bg-primary bg-opacity-10 p-2 rounded-3 me-3 hover-icon-scale">
                                             <i class="fas fa-plus-circle text-primary"></i>
                                         </div>
                                         <div>
-                                            <div class="fw-semibold">Ask a Question</div>
-                                            <small class="text-muted">Get help from experts</small>
+                                            <div class="fw-semibold hover-text-primary">Ask a Question</div>
+                                            <small class="text-muted hover-text-dark">Get help from experts</small>
                                         </div>
                                     </div>
                                 </a>
+
+                                <!-- Urgent Alerts Button -->
                                 <a href="{{ route('articles.index', ['urgent' => 1]) }}"
-                                    class="btn btn-outline-danger text-start py-2">
+                                    class="btn btn-outline-danger text-start py-2 hover-scale">
                                     <div class="d-flex align-items-center">
-                                        <div class="bg-danger bg-opacity-10 p-2 rounded-3 me-3">
+                                        <div class="bg-danger bg-opacity-10 p-2 rounded-3 me-3 hover-icon-scale">
                                             <i class="fas fa-exclamation-triangle text-danger"></i>
                                         </div>
                                         <div>
-                                            <div class="fw-semibold">Urgent Alerts</div>
-                                            <small class="text-muted">View critical updates</small>
+                                            <div class="fw-semibold hover-text-danger">Urgent Alerts</div>
+                                            <small class="text-muted hover-text-dark">View critical updates</small>
                                         </div>
                                     </div>
                                 </a>
-                                <a href="{{ route('profile.edit') }}" class="btn btn-outline-secondary text-start py-2">
+
+                                <!-- Update Profile Button -->
+                                <a href="{{ route('profile.edit') }}"
+                                    class="btn btn-outline-secondary text-start py-2 hover-scale">
                                     <div class="d-flex align-items-center">
-                                        <div class="bg-secondary bg-opacity-10 p-2 rounded-3 me-3">
+                                        <div class="bg-secondary bg-opacity-10 p-2 rounded-3 me-3 hover-icon-scale">
                                             <i class="fas fa-user-edit text-secondary"></i>
                                         </div>
                                         <div>
-                                            <div class="fw-semibold">Update Profile</div>
-                                            <small class="text-muted">Keep your info current</small>
+                                            <div class="fw-semibold hover-text-secondary">Update Profile</div>
+                                            <small class="text-muted hover-text-dark">Keep your info current</small>
                                         </div>
                                     </div>
                                 </a>
@@ -380,6 +387,55 @@
         .quick-action {
             border-radius: 30px;
             padding: 20px;
+        }
+
+        .hover-scale:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+        }
+
+        .hover-icon-scale {
+            transition: all 0.2s ease;
+        }
+
+        .hover-scale:hover .hover-icon-scale {
+            transform: scale(1.1);
+        }
+
+        .hover-text-primary:hover {
+            color: #0d6efd !important;
+        }
+
+        .hover-text-danger:hover {
+            color: #dc3545 !important;
+        }
+
+        .hover-text-secondary:hover {
+            color: #6c757d !important;
+        }
+
+        .hover-text-dark:hover {
+            color: #212529 !important;
+        }
+
+        .btn-outline-primary:hover {
+            background-color: rgba(13, 110, 253, 0.05);
+            color: #0d6efd !important;
+        }
+
+        .btn-outline-danger:hover {
+            background-color: rgba(220, 53, 69, 0.05);
+            color: #dc3545 !important;
+        }
+
+        .btn-outline-secondary:hover {
+            background-color: rgba(108, 117, 125, 0.05);
+            color: #212529 !important;
+        }
+
+        .hover-scale:hover small.text-muted {
+            opacity: 0.9;
         }
 
         .hover-lift:hover {
