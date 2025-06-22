@@ -7,7 +7,7 @@
         <!-- Page Header -->
         <div class="row mb-4">
             <div class="col-12">
-                <div class="page-header d-flex justify-content-between align-items-center bg-white p-4 rounded-3 shadow-sm">
+                <div class="page-header d-flex justify-content-between align-items-center bg-white p-4 shadow-sm">
                     <div>
                         <h3 class="fw-bold text-secondary mb-0">
                             <i class="fas fa-newspaper me-2"></i>Knowledge Center

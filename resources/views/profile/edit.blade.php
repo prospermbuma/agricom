@@ -12,7 +12,7 @@
                         <div class="d-flex align-items-center">
                             <div class="avatar avatar-lg me-4">
                                 <img src="{{ auth()->user()->avatar ?? asset('images/default-avatar.png') }}"
-                                    class="rounded-circle border-3 border-primary" alt="Profile Picture">
+                                    class="rounded-circle border-3" alt="Profile Picture">
                             </div>
                             <div>
                                 <h2 class="fw-bold mb-1">Edit Your Profile</h2>
@@ -228,9 +228,9 @@
 
 @section('styles')
     <style>
-        :root {
-            --primary-color: #4CAF50;
-            --secondary-color: #8BC34A;
+
+         body {
+            background-color: #f5f7fb;
         }
 
         .avatar {
@@ -242,6 +242,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            border-color: var(--primary-color);
         }
 
         .card {
@@ -272,6 +273,7 @@
         .form-check-input:checked {
             background-color: var(--primary-color);
             border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(76, 175, 80, 0.25);
         }
 
         .btn-primary {

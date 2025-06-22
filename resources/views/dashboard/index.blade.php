@@ -23,7 +23,7 @@
                         </div>
                         <div class="avatar avatar-lg">
                             <img src="{{ auth()->user()->avatar ?? asset('images/default-avatar.png') }}"
-                                class="rounded-circle border-2 border-primary" alt="User Avatar">
+                                class="rounded-circle border-2" alt="User Avatar">
                         </div>
                     </div>
                 </div>
@@ -308,7 +308,7 @@
                         </div>
                         <div class="card-body">
                             <div class="d-grid gap-3">
-                                <a href="{{ route('articles.create') }}" class="btn btn-outline-primary text-start py-2">
+                                <a href="{{ route('chat.index') }}" class="btn btn-outline-primary text-start py-2">
                                     <div class="d-flex align-items-center">
                                         <div class="bg-primary bg-opacity-10 p-2 rounded-3 me-3">
                                             <i class="fas fa-plus-circle text-primary"></i>
@@ -353,12 +353,8 @@
 
 @section('styles')
     <style>
-        :root {
-            --primary-color: #4CAF50;
-            --secondary-color: #8BC34A;
-            --light-bg: #f8f9fa;
-            --dark-text: #2c3e50;
-            --light-text: #7f8c8d;
+        body {
+           background-color: #fff;
         }
 
         .welcome-card {
@@ -386,6 +382,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            border-color: var(--primary-color);
         }
 
         .stat-card {

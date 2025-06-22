@@ -21,6 +21,13 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
+        :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #8BC34A;
+            --light-bg: #f8f9fa;
+            --dark-text: #2c3e50;
+            --light-text: #7f8c8d;
+        }
         html {
             scrollbar-width: none;
             scroll-behavior: smooth;
@@ -28,8 +35,8 @@
 
         body {
             font-family: "Outfit", sans-serif;
+             background-color: #fff;
         }
-
         .navbar-brand {
             font-weight: bold;
             color: #28a745 !important;
@@ -115,6 +122,24 @@
             text-decoration: underline;
         }
 
+        .form-control,
+        .form-select {
+            border-radius: 8px;
+            padding: 12px 16px;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(76, 175, 80, 0.25);
+        }
+
+        .form-check-input:checked {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(76, 175, 80, 0.25);
+        }
+
         footer {
             border-top: 1px solid #eaeaea;
         }
@@ -167,8 +192,7 @@
                 <ul class="navbar-nav me-auto">
                     @unless ($hidePublicNav)
                         <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}"
-                                 href="{{ route('home') }}">
+                            <a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}" href="{{ route('home') }}">
                                 Home
                             </a>
                         </li>
