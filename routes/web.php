@@ -65,11 +65,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index');
 
     // User Management - Admin Only
-    // Route::prefix('/')->middleware(['auth', 'can:isAdmin'])->group(function () {
-    //     Route::resource('users', AdminUserManagementController::class)->names('users');
-    // });
-
-    Route::middleware(['auth'])->prefix('/')->group(function () {
+    Route::middleware(['auth', 'admin'])->prefix('/')->group(function () {
         Route::resource('users', AdminUserManagementController::class);
         Route::put('users/{user}/toggle-status', [AdminUserManagementController::class, 'toggle-status'])->name('users.toggle-status');
     });
