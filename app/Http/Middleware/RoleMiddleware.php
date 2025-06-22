@@ -11,13 +11,13 @@ class RoleMiddleware
     public function handle(Request $request, Closure $next, ...$roles)
     {
         if (!Auth::check()) {
-            return response()->json(['message' => 'Unauthenticated'], 401);
+            abort(401, 'Unauthenticated');
         }
 
         $user = Auth::user();
 
         if (!in_array($user->role, $roles)) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            abort(403, 'Unauthorized');
         }
 
         return $next($request);

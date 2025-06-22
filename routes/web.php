@@ -6,6 +6,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ActivityLogController;
+use App\Http\Controllers\Admin\UserManagementController as AdminUserManagementController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -33,7 +34,7 @@ Route::view('/contact', 'contact')->name('contact');
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
-    
+
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
     Route::post('/register', [AuthController::class, 'register']);
 });
@@ -62,4 +63,14 @@ Route::middleware('auth')->group(function () {
 
     // Activity Logs (VEO/admin only)
     Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index');
+
+    // User Management - Admin Only
+    // Route::prefix('/')->middleware(['auth', 'can:isAdmin'])->group(function () {
+    //     Route::resource('users', AdminUserManagementController::class)->names('users');
+    // });
+
+    Route::middleware(['auth'])->prefix('/')->group(function () {
+        Route::resource('users', AdminUserManagementController::class);
+        Route::put('users/{user}/toggle-status', [AdminUserManagementController::class, 'toggle-status'])->name('users.toggle-status');
+    });
 });

@@ -85,8 +85,8 @@
                                         <tr>
                                             <th width="5%">#</th>
                                             <th width="15%">User</th>
-                                            <th width="15%">Action</th>
-                                            <th width="25%">Description</th>
+                                            <th width="25%">Action</th>
+                                            {{-- <th width="25%">Description</th> --}}
                                             <th width="15%">IP Address</th>
                                             <th width="15%">Date & Time</th>
                                             <th width="10%">Details</th>

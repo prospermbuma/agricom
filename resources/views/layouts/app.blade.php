@@ -313,8 +313,8 @@
 
                             @if (auth()->user()->role === 'admin')
                                 <li class="nav-item mb-2">
-                                    <a class="nav-link {{ request()->routeIs('users') ? 'active' : '' }}"
-                                        href="{{ route('dashboard') }}">
+                                    <a class="nav-link {{ request()->routeIs('users.index') ? 'active' : '' }}"
+                                        href="{{ route('users.index') }}">
                                         <i class="fas fa-users me-2"></i> Users
                                     </a>
                                 </li>
