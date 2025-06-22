@@ -67,6 +67,6 @@ Route::middleware('auth')->group(function () {
     // User Management - Admin Only
     Route::middleware(['auth', 'admin'])->prefix('/')->group(function () {
         Route::resource('users', AdminUserManagementController::class);
-        Route::put('users/{user}/toggle-status', [AdminUserManagementController::class, 'toggle-status'])->name('users.toggle-status');
+        Route::put('users/{user}/toggle-status', [AdminUserManagementController::class, 'toggleStatus'])->name('users.toggle-status');
     });
 });
