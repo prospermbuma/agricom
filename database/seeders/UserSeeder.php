@@ -14,23 +14,27 @@ class UserSeeder extends Seeder
     public function run()
     {
         // Create admin user
-        User::create([
-            'name' => 'System Administrator',
-            'email' => 'admin@agriculture.gov.tz',
-            'password' => Hash::make('password'),
-            'role' => 'admin',
-            'phone' => '+255123456789',
-        ]);
+        User::updateOrCreate(
+            ['email' => 'admin@agriculture.gov.tz'],
+            [
+                'name' => 'System Administrator',
+                'password' => Hash::make('password'),
+                'role' => 'admin',
+                'phone' => '+255123456789',
+            ]
+        );
 
         // Create sample VEO
-        User::create([
-            'name' => 'John Mwalimu',
-            'email' => 'john.veo@agriculture.gov.tz',
-            'password' => Hash::make('password'),
-            'role' => 'veo',
-            'phone' => '+255123456790',
-            'bio' => 'Village Extension Officer with 10 years experience',
-        ]);
+        User::updateOrCreate(
+            ['email' => 'john.veo@agriculture.gov.tz'],
+            [
+                'name' => 'John Mwalimu',
+                'password' => Hash::make('password'),
+                'role' => 'veo',
+                'phone' => '+255123456790',
+                'bio' => 'Village Extension Officer with 10 years experience',
+            ]
+        );
 
         // Create sample farmers
         $farmers = [
@@ -49,20 +53,25 @@ class UserSeeder extends Seeder
         ];
 
         foreach ($farmers as $farmerData) {
-            $user = User::create([
-                ...$farmerData,
-                'password' => Hash::make('password'),
-            ]);
+            $user = User::updateOrCreate(
+                ['email' => $farmerData['email']],
+                [
+                    ...$farmerData,
+                    'password' => Hash::make('password'),
+                ]
+            );
 
             // Create farmer profile
-            FarmerProfile::create([
-                'user_id' => $user->id,
-                'region_id' => Region::first()->id,
-                'village_id' => Village::first()->id,
-                'farm_size_acres' => rand(1, 10),
-                'farming_experience' => 'intermediate',
-                'farming_methods' => 'Traditional and modern techniques',
-            ]);
+            FarmerProfile::updateOrCreate(
+                ['user_id' => $user->id],
+                [
+                    'region_id' => Region::first()->id,
+                    'village_id' => Village::first()->id,
+                    'farm_size_acres' => rand(1, 10),
+                    'farming_experience' => 'intermediate',
+                    'farming_methods' => 'Traditional and modern techniques',
+                ]
+            );
         }
     }
 }

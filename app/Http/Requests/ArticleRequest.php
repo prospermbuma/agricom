@@ -31,7 +31,7 @@ class ArticleRequest extends FormRequest
             'featured_image' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:5120'],
             'attachments' => ['nullable', 'array', 'max:5'],
             'attachments.*' => ['file', 'mimes:pdf,doc,docx,xls,xlsx', 'max:10240'],
-            'is_published' => ['boolean'],
+            'is_published' => ['nullable', 'boolean'],
             'is_urgent' => ['boolean'],
         ];
     }

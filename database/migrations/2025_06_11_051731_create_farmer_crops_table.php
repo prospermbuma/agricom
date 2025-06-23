@@ -18,7 +18,12 @@ return new class extends Migration
             $table->decimal('area_planted_acres', 8, 2)->nullable();
             $table->date('planting_date')->nullable();
             $table->date('expected_harvest_date')->nullable();
+            $table->enum('status', ['planned', 'planted', 'active', 'harvested'])->default('planned');
+            $table->text('notes')->nullable();
             $table->timestamps();
+            
+            $table->unique(['farmer_profile_id', 'crop_id']);
+            $table->index(['farmer_profile_id', 'status']);
         });
     }
 

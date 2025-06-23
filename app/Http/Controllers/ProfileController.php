@@ -80,8 +80,10 @@ class ProfileController extends Controller
         }
 
         activity()
-            ->causedBy($user)
-            ->log('Profile updated');
+            ->causedBy(Auth::user())
+            ->performedOn($user)
+            ->withProperties(['action' => 'profile_updated', 'ip' => request()->ip()])
+            ->log('User ' . $user->name . ' updated their profile.');
 
         return redirect()->route('profile.show')->with('success', 'Profile updated successfully!');
     }

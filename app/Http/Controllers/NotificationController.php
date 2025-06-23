@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Notification;
 use App\Services\NotificationService;
 use Illuminate\Http\Request;
 
@@ -16,41 +17,60 @@ class NotificationController extends Controller
 
     public function index(Request $request)
     {
-        $notifications = $this->notificationService->getUserNotifications(
-            $request->user(),
-            false,
-            $request->get('limit', 20)
-        );
+        $user = $request->user();
+        $notifications = $this->notificationService->getUserNotifications($user, false, 50);
 
-        return response()->json($notifications);
+        return view('notifications.index', compact('notifications'));
     }
 
     public function unread(Request $request)
     {
-        $notifications = $this->notificationService->getUserNotifications(
-            $request->user(),
-            true,
-            $request->get('limit', 20)
-        );
+        $user = $request->user();
+        $notifications = $this->notificationService->getUserNotifications($user, true, 20);
 
         return response()->json($notifications);
     }
 
-    public function markAsRead(Request $request, $notificationId)
+    public function markAsRead(Request $request, Notification $notification)
     {
-        $result = $this->notificationService->markAsRead($request->user(), $notificationId);
+        $user = $request->user();
 
-        if ($result) {
-            return response()->json(['message' => 'Notification marked as read']);
+        if ($notification->user_id !== $user->id) {
+            abort(403, 'Unauthorized');
         }
 
-        return response()->json(['message' => 'Notification not found'], 404);
+        $notification->markAsRead();
+
+        return response()->json(['success' => true]);
     }
 
     public function markAllAsRead(Request $request)
     {
-        $this->notificationService->markAllAsRead($request->user());
+        $user = $request->user();
+        $this->notificationService->markAllAsRead($user);
 
-        return response()->json(['message' => 'All notifications marked as read']);
+        return response()->json(['success' => true]);
+    }
+
+    public function destroy(Request $request, Notification $notification)
+    {
+        $user = $request->user();
+
+        if ($notification->user_id !== $user->id) {
+            abort(403, 'Unauthorized');
+        }
+
+        $notification->delete();
+
+        return response()->json(['success' => true]);
+    }
+
+    public function clearAll(Request $request)
+    {
+        $user = $request->user();
+        
+        Notification::where('user_id', $user->id)->delete();
+
+        return response()->json(['success' => true]);
     }
 }

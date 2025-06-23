@@ -7,16 +7,23 @@
         <div class="row">
             <div class="col-md-8">
                 <div class="card">
-                    @if ($article->image)
-                        <img src="{{ asset('storage/' . $article->image) }}" class="card-img-top"
+                    @if ($article->featured_image)
+                        <img src="{{ asset('storage/' . $article->featured_image) }}" class="card-img-top"
                             style="height: 300px; object-fit: cover;">
                     @endif
                     <div class="card-body">
                         <div class="d-flex justify-content-between mb-3">
                             <div>
-                                <span class="badge bg-primary">{{ ucfirst($article->category) }}</span>
-                                @if ($article->crop)
-                                    <span class="badge bg-success">{{ ucfirst($article->crop) }}</span>
+                                <span class="badge bg-primary">{{ ucfirst(str_replace('_', ' ', $article->category)) }}</span>
+                                @if ($article->target_crops)
+                                    @foreach ($article->target_crops as $cropId)
+                                        @php
+                                            $crop = \App\Models\Crop::find($cropId);
+                                        @endphp
+                                        @if ($crop)
+                                            <span class="badge bg-success">{{ ucfirst($crop->name) }}</span>
+                                        @endif
+                                    @endforeach
                                 @endif
                                 @if ($article->is_urgent)
                                     <span class="badge bg-danger">URGENT</span>
@@ -31,8 +38,8 @@
                             <small class="text-muted">
                                 <i class="fas fa-user"></i> By {{ $article->author->name }}
                                 ({{ ucfirst($article->author->role) }})
-                                @if ($article->author->village)
-                                    from {{ $article->author->village }}, {{ $article->author->region }}
+                                @if ($article->author->farmerProfile && $article->author->farmerProfile->village)
+                                    from {{ $article->author->farmerProfile->village->name }}, {{ $article->author->farmerProfile->region->name }}
                                 @endif
                             </small>
                         </div>
@@ -40,6 +47,22 @@
                         <div class="article-content">
                             {!! nl2br(e($article->content)) !!}
                         </div>
+
+                        @if ($article->attachments)
+                            <div class="mt-4">
+                                <h6><i class="fas fa-paperclip"></i> Attachments</h6>
+                                <div class="list-group">
+                                    @foreach ($article->attachments as $attachment)
+                                        <a href="{{ asset('storage/' . $attachment) }}" 
+                                           class="list-group-item list-group-item-action" 
+                                           target="_blank">
+                                            <i class="fas fa-file me-2"></i>
+                                            {{ basename($attachment) }}
+                                        </a>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
 
                         <div class="mt-4 pt-3 border-top">
                             <div class="d-flex justify-content-between align-items-center">
@@ -50,7 +73,7 @@
                                     </span>
                                 </div>
                                 <div>
-                                    @if (auth()->user()->id === $article->user_id)
+                                    @if (auth()->user()->id === $article->author_id)
                                         <a href="{{ route('articles.edit', $article->id) }}"
                                             class="btn btn-warning btn-sm">
                                             <i class="fas fa-edit"></i> Edit
@@ -116,7 +139,15 @@
                         <h6><i class="fas fa-newspaper"></i> Related Articles</h6>
                     </div>
                     <div class="card-body">
-                        @forelse($relatedArticles ?? [] as $related)
+                        @php
+                            $relatedArticles = \App\Models\Article::published()
+                                ->where('id', '!=', $article->id)
+                                ->where('category', $article->category)
+                                ->latest()
+                                ->take(5)
+                                ->get();
+                        @endphp
+                        @forelse($relatedArticles as $related)
                             <div class="mb-3 border-bottom pb-2">
                                 <h6><a
                                         href="{{ route('articles.show', $related->id) }}">{{ Str::limit($related->title, 50) }}</a>
@@ -137,12 +168,17 @@
                     <div class="card-body">
                         <h6>{{ $article->author->name }}</h6>
                         <p class="text-muted mb-1">{{ ucfirst($article->author->role) }}</p>
-                        <p class="text-muted mb-2">{{ $article->author->village }}, {{ $article->author->region }}</p>
-                        @if ($article->author->role === 'farmer' && $article->author->crops)
+                        @if ($article->author->farmerProfile)
+                            <p class="text-muted mb-2">
+                                {{ $article->author->farmerProfile->village->name }}, 
+                                {{ $article->author->farmerProfile->region->name }}
+                            </p>
+                        @endif
+                        @if ($article->author->role === 'farmer' && $article->author->farmerProfile && $article->author->farmerProfile->crops)
                             <div>
                                 <small class="text-muted">Crops:</small>
-                                @foreach (json_decode($article->author->crops) as $crop)
-                                    <span class="badge bg-light text-dark">{{ ucfirst($crop) }}</span>
+                                @foreach ($article->author->farmerProfile->crops as $farmerCrop)
+                                    <span class="badge bg-light text-dark">{{ ucfirst($farmerCrop->crop->name) }}</span>
                                 @endforeach
                             </div>
                         @endif
@@ -162,29 +198,29 @@
                 </a>
             </div>
         </div>
-    @endsection
-
-    @section('scripts')
-        <script>
-            function shareArticle() {
-                if (navigator.share) {
-                    navigator.share({
-                        title: '{{ $article->title }}',
-                        text: '{{ Str::limit($article->content, 100) }}',
-                        url: window.location.href
-                    });
-                } else {
-                    // Fallback - copy to clipboard
-                    navigator.clipboard.writeText(window.location.href).then(function() {
-                        alert('Article link copied to clipboard!');
-                    });
-                }
-            }
-
-            function startChat(userId) {
-                // Redirect to chat with specific user
-                window.location.href = '/chat?user=' + userId;
-            }
-        </script>
     </div>
+@endsection
+
+@section('scripts')
+    <script>
+        function shareArticle() {
+            if (navigator.share) {
+                navigator.share({
+                    title: '{{ $article->title }}',
+                    text: '{{ Str::limit($article->content, 100) }}',
+                    url: window.location.href
+                });
+            } else {
+                // Fallback - copy to clipboard
+                navigator.clipboard.writeText(window.location.href).then(function() {
+                    alert('Article link copied to clipboard!');
+                });
+            }
+        }
+
+        function startChat(userId) {
+            // Redirect to chat with specific user
+            window.location.href = '/chat?user=' + userId;
+        }
+    </script>
 @endsection

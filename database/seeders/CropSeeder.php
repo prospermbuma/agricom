@@ -14,14 +14,14 @@ class CropSeeder extends Seeder
                 'name' => 'Maize',
                 'scientific_name' => 'Zea mays',
                 'description' => 'Main staple crop in Tanzania',
-                'season' => 'wet',
+                'season' => 'rainy',
                 'growing_period_days' => 120,
             ],
             [
                 'name' => 'Rice',
                 'scientific_name' => 'Oryza sativa',
                 'description' => 'Important cereal crop',
-                'season' => 'wet',
+                'season' => 'rainy',
                 'growing_period_days' => 150,
             ],
             [
@@ -42,13 +42,37 @@ class CropSeeder extends Seeder
                 'name' => 'Cotton',
                 'scientific_name' => 'Gossypium hirsutum',
                 'description' => 'Cash crop for textile industry',
-                'season' => 'wet',
+                'season' => 'rainy',
                 'growing_period_days' => 180,
+            ],
+            [
+                'name' => 'Cassava',
+                'scientific_name' => 'Manihot esculenta',
+                'description' => 'Drought-resistant root crop',
+                'season' => 'both',
+                'growing_period_days' => 240,
+            ],
+            [
+                'name' => 'Sweet Potatoes',
+                'scientific_name' => 'Ipomoea batatas',
+                'description' => 'Nutritious root crop',
+                'season' => 'both',
+                'growing_period_days' => 120,
+            ],
+            [
+                'name' => 'Sorghum',
+                'scientific_name' => 'Sorghum bicolor',
+                'description' => 'Drought-tolerant cereal crop',
+                'season' => 'dry',
+                'growing_period_days' => 100,
             ],
         ];
 
         foreach ($crops as $crop) {
-            Crop::create($crop);
+            Crop::updateOrCreate(
+                ['name' => $crop['name']],
+                $crop
+            );
         }
     }
 }

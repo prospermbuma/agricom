@@ -15,11 +15,14 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->foreignId('region_id')->constrained()->onDelete('cascade');
-            $table->string('code', 20)->unique();
+            $table->string('code')->unique();
             $table->decimal('latitude', 10, 8)->nullable();
             $table->decimal('longitude', 11, 8)->nullable();
             $table->integer('population')->nullable();
             $table->timestamps();
+            
+            $table->index(['region_id', 'name']);
+            $table->index(['latitude', 'longitude']);
         });
     }
 

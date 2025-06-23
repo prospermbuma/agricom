@@ -90,7 +90,8 @@ class UserManagementController extends Controller
         activity()
             ->causedBy(Auth::user())
             ->performedOn($user)
-            ->log('created user');
+            ->withProperties(['action' => 'user_created', 'ip' => request()->ip()])
+            ->log('A new user was created: ' . $user->name . ' by ' . Auth::user()->name);
 
         return redirect()->route('users.index')->with('success', 'User created successfully.');
     }
@@ -156,7 +157,8 @@ class UserManagementController extends Controller
         activity()
             ->causedBy(Auth::user())
             ->performedOn($user)
-            ->log('updated user');
+            ->withProperties(['action' => 'user_updated', 'ip' => request()->ip()])
+            ->log('User ' . $user->name . ' was updated by ' . Auth::user()->name);
 
         return redirect()->route('users.index')->with('success', 'User updated successfully.');
     }
@@ -176,7 +178,8 @@ class UserManagementController extends Controller
         activity()
             ->causedBy(Auth::user())
             ->performedOn($user)
-            ->log('deleted user');
+            ->withProperties(['action' => 'user_deleted', 'ip' => request()->ip()])
+            ->log('User ' . $user->name . ' was deleted by ' . Auth::user()->name);
 
         return redirect()->route('users.index')->with('success', 'User deleted successfully.');
     }
@@ -193,7 +196,8 @@ class UserManagementController extends Controller
         activity()
             ->causedBy(Auth::user())
             ->performedOn($user)
-            ->log("$status user");
+            ->withProperties(['action' => 'user_' . $status, 'ip' => request()->ip()])
+            ->log("User account for " . $user->name . " was " . $status . " by " . Auth::user()->name);
 
         return back()->with('success', "User $status successfully.");
     }

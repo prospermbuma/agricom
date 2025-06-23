@@ -85,6 +85,11 @@ class User extends Authenticatable
         return $this->hasMany(ChatMessage::class);
     }
 
+    public function createdConversations()
+    {
+        return $this->hasMany(ChatConversation::class, 'created_by');
+    }
+
     public function activityLogs()
     {
         return $this->hasMany(ActivityLog::class);
@@ -93,6 +98,11 @@ class User extends Authenticatable
     public function notifications()
     {
         return $this->hasMany(Notification::class);
+    }
+
+    public function unreadNotifications()
+    {
+        return $this->hasMany(Notification::class)->unread();
     }
 
     // ---------------- Query Scopes ----------------
@@ -107,9 +117,29 @@ class User extends Authenticatable
         return $query->where('role', 'veo');
     }
 
+    public function scopeAdmins($query)
+    {
+        return $query->where('role', 'admin');
+    }
+
     public function scopeActive($query)
     {
         return $query->where('is_active', true);
+    }
+
+    public function scopeInactive($query)
+    {
+        return $query->where('is_active', false);
+    }
+
+    public function scopeByRegion($query, $region)
+    {
+        return $query->where('region', $region);
+    }
+
+    public function scopeByVillage($query, $village)
+    {
+        return $query->where('village', $village);
     }
 
     // ---------------- Helper Methods ----------------
@@ -127,5 +157,49 @@ class User extends Authenticatable
     public function isAdmin()
     {
         return $this->role === 'admin';
+    }
+
+    public function isActive()
+    {
+        return $this->is_active;
+    }
+
+    public function getAvatarUrlAttribute()
+    {
+        if ($this->avatar) {
+            return asset('storage/' . $this->avatar);
+        }
+        return asset('images/default-avatar.png');
+    }
+
+    public function getUnreadNotificationsCountAttribute()
+    {
+        return $this->notifications()->unread()->count();
+    }
+
+    public function getRoleLabelAttribute()
+    {
+        $labels = [
+            'farmer' => 'Farmer',
+            'veo' => 'Village Extension Officer',
+            'admin' => 'Administrator',
+        ];
+
+        return $labels[$this->role] ?? ucfirst($this->role);
+    }
+
+    public function canCreateArticles()
+    {
+        return $this->isVeo() || $this->isAdmin();
+    }
+
+    public function canManageUsers()
+    {
+        return $this->isAdmin();
+    }
+
+    public function canViewActivityLogs()
+    {
+        return $this->isVeo() || $this->isAdmin();
     }
 }

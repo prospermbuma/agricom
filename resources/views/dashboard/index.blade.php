@@ -73,7 +73,7 @@
                                     </div>
                                 </div>
                                 <div class="mt-3">
-                                    <a href="{{ route('dashboard') }}" class="btn btn-sm btn-outline-info w-100">
+                                    <a href="{{ route('users.index') }}" class="btn btn-sm btn-outline-info w-100">
                                         Manage Users <i class="fas fa-arrow-right ms-1"></i>
                                     </a>
                                 </div>

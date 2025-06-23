@@ -19,7 +19,7 @@ class ArticleController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Article::published()->with('author');
+        $query = Article::with('author'); // Show all articles for now
 
         // $query = Article::with(['author', 'comments'])
         //     ->published()
@@ -56,7 +56,7 @@ class ArticleController extends Controller
             });
         }
 
-        $articles = $query->latest('published_at')->paginate(12);
+        $articles = $query->latest('created_at')->paginate(12);
         $crops = Crop::all();
         $categories = [
             'pest_control' => 'Pest Control',
@@ -81,7 +81,8 @@ class ArticleController extends Controller
         activity()
             ->causedBy(Auth::user())
             ->performedOn($article)
-            ->log('Article viewed');
+            ->withProperties(['action' => 'article_viewed', 'ip' => request()->ip()])
+            ->log('User viewed article: ' . $article->title);
 
         return view('articles.show', compact('article'));
     }
@@ -148,7 +149,8 @@ class ArticleController extends Controller
         activity()
             ->causedBy(Auth::user())
             ->performedOn($article)
-            ->log('Article created');
+            ->withProperties(['action' => 'article_created', 'ip' => request()->ip()])
+            ->log('Article "' . $validated['title'] . '" was created.');
 
         return redirect()->route('articles.show', $article)
             ->with('success', 'Article created successfully!');
@@ -157,7 +159,7 @@ class ArticleController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ArticleRequest $request, Article $article)
+    public function edit(Article $article)
     {
         $this->authorize('update', $article);
 
@@ -182,6 +184,9 @@ class ArticleController extends Controller
         $this->authorize('update', $article);
 
         $validated = $request->validated();
+
+        // Handle is_published field properly
+        $validated['is_published'] = $request->boolean('is_published', false);
 
         // Convert target_crops to integers
         $validated['target_crops'] = collect($request->input('target_crops', []))
@@ -223,7 +228,8 @@ class ArticleController extends Controller
         activity()
             ->causedBy(Auth::user())
             ->performedOn($article)
-            ->log('Article updated');
+            ->withProperties(['action' => 'article_updated', 'ip' => request()->ip()])
+            ->log('Article "' . $article->title . '" was updated.');
 
         return redirect()->route('articles.show', $article)
             ->with('success', 'Article updated successfully!');
@@ -250,7 +256,8 @@ class ArticleController extends Controller
         activity()
             ->causedBy(Auth::user())
             ->performedOn($article)
-            ->log('Article deleted');
+            ->withProperties(['action' => 'article_deleted', 'ip' => request()->ip()])
+            ->log('Article "' . $article->title . '" was deleted.');
 
         $article->delete();
 
@@ -272,8 +279,53 @@ class ArticleController extends Controller
         activity()
             ->causedBy(Auth::user())
             ->performedOn($comment)
-            ->log('Comment added to article');
+            ->withProperties(['action' => 'comment_added', 'ip' => request()->ip()])
+            ->log('A comment was added to article "' . $article->title . '".');
 
         return back()->with('success', 'Comment added successfully!');
+    }
+
+    /**
+     * Publish the specified article.
+     */
+    public function publish(Article $article)
+    {
+        $this->authorize('update', $article);
+
+        $article->update([
+            'is_published' => true,
+            'published_at' => now()
+        ]);
+
+        activity()
+            ->causedBy(Auth::user())
+            ->performedOn($article)
+            ->withProperties(['action' => 'article_published', 'ip' => request()->ip()])
+            ->log('Article "' . $article->title . '" was published.');
+
+        return redirect()->route('articles.edit', $article->id)
+            ->with('success', 'Article published successfully!');
+    }
+
+    /**
+     * Unpublish the specified article.
+     */
+    public function unpublish(Article $article)
+    {
+        $this->authorize('update', $article);
+
+        $article->update([
+            'is_published' => false,
+            'published_at' => null
+        ]);
+
+        activity()
+            ->causedBy(Auth::user())
+            ->performedOn($article)
+            ->withProperties(['action' => 'article_unpublished', 'ip' => request()->ip()])
+            ->log('Article "' . $article->title . '" was unpublished.');
+
+        return redirect()->route('articles.edit', $article->id)
+            ->with('success', 'Article unpublished successfully!');
     }
 }

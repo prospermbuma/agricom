@@ -17,7 +17,10 @@ class VillageSeeder extends Seeder
         ];
 
         foreach ($villages as $village) {
-            Village::create($village);
+            Village::updateOrCreate(
+                ['code' => $village['code']],
+                $village
+            );
         }
     }
 }

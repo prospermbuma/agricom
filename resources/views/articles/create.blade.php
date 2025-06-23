@@ -94,20 +94,20 @@
 
                             <!-- Featured Image Upload -->
                             <div class="mb-4">
-                                <label for="image" class="form-label fw-semibold">Featured Image</label>
+                                <label for="featured_image" class="form-label fw-semibold">Featured Image</label>
                                 <div class="image-upload-container">
                                     <div class="image-preview mb-2" id="imagePreview">
                                         <img src="" alt="Image Preview" class="image-preview__image"
                                             style="display: none;">
                                         <span class="image-preview__default-text">No image selected</span>
                                     </div>
-                                    <input type="file" id="image" name="image"
-                                        class="form-control @error('image') is-invalid @enderror" accept="image/*">
-                                    @error('image')
+                                    <input type="file" id="featured_image" name="featured_image"
+                                        class="form-control @error('featured_image') is-invalid @enderror" accept="image/*">
+                                    @error('featured_image')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                     <small class="form-text text-muted">Supported formats: JPG, PNG, GIF. Max size:
-                                        2MB</small>
+                                        5MB</small>
                                 </div>
                             </div>
 
@@ -131,6 +131,18 @@
                                         <label class="form-check-label fw-semibold mt-1 ml-3" for="is_urgent">
                                             <i class="fas fa-exclamation-triangle text-warning"></i>
                                             Mark as Urgent (Disease/Pest Alert)
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Published Checkbox -->
+                                <div class="">
+                                    <div class="form-check form-switch d-flex justify-start align-items-center">
+                                        <input class="form-check-input" type="checkbox" name="is_published" id="is_published"
+                                            {{ old('is_published', true) ? 'checked' : '' }}>
+                                        <label class="form-check-label fw-semibold mt-1 ml-3" for="is_published">
+                                            <i class="fas fa-globe text-success"></i>
+                                            Publish Immediately
                                         </label>
                                     </div>
                                 </div>
@@ -340,7 +352,7 @@
 @section('scripts')
     <script>
         // Image Preview Functionality
-        const imageUpload = document.getElementById('image');
+        const imageUpload = document.getElementById('featured_image');
         const imagePreview = document.getElementById('imagePreview');
         const previewImage = imagePreview.querySelector('.image-preview__image');
         const previewDefaultText = imagePreview.querySelector('.image-preview__default-text');

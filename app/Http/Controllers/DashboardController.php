@@ -15,22 +15,25 @@ class DashboardController extends Controller
         $user = $request->user();
         $data = [];
 
-        if ($user->isVEO()) {
+        if ($user->isVeo()) {
             $data = [
-                'total_articles' => Article::where('author_id', $user->id)->count(),
-                'published_articles' => Article::where('author_id', $user->id)->published()->count(),
-                'total_comments' => Comment::whereHas('article', function ($query) use ($user) {
+                'articlesCount' => Article::where('author_id', $user->id)->count(),
+                'publishedArticlesCount' => Article::where('author_id', $user->id)->published()->count(),
+                'commentsCount' => Comment::whereHas('article', function ($query) use ($user) {
                     $query->where('author_id', $user->id);
                 })->count(),
-                'recent_articles' => Article::where('author_id', $user->id)
+                'recentArticles' => Article::where('author_id', $user->id)
                     ->with('comments')
                     ->latest()
                     ->take(5)
                     ->get(),
-                'popular_articles' => Article::where('author_id', $user->id)
+                'popularArticles' => Article::where('author_id', $user->id)
                     ->orderBy('views_count', 'desc')
                     ->take(5)
                     ->get(),
+                'activitiesCount' => ActivityLog::where('user_id', $user->id)
+                    ->whereDate('created_at', now()->toDateString())
+                    ->count(),
             ];
         } elseif ($user->isFarmer()) {
             $relevantArticles = Article::published();
@@ -42,11 +45,19 @@ class DashboardController extends Controller
             }
 
             $data = [
-                'relevant_articles_count' => $relevantArticles->count(),
-                'my_comments_count' => Comment::where('user_id', $user->id)->count(),
-                'recent_articles' => $relevantArticles->latest('published_at')->take(5)->get(),
-                'urgent_articles' => Article::published()
-                    ->where('is_urgent')
+                'relevantArticlesCount' => $relevantArticles->count(),
+                'myCommentsCount' => Comment::where('user_id', $user->id)->count(),
+                'recentArticles' => $relevantArticles->latest('published_at')->take(5)->get(),
+                'urgentArticlesCount' => Article::published()
+                    ->where('is_urgent', true)
+                    ->when(!empty($user->crops), function ($q) use ($user) {
+                        $q->where(function ($query) use ($user) {
+                            $query->forCrops($user->crops)->orWhere('category', 'general');
+                        });
+                    })
+                    ->count(),
+                'urgentArticles' => Article::published()
+                    ->where('is_urgent', true)
                     ->when(!empty($user->crops), function ($q) use ($user) {
                         $q->where(function ($query) use ($user) {
                             $query->forCrops($user->crops)->orWhere('category', 'general');
@@ -55,6 +66,19 @@ class DashboardController extends Controller
                     ->latest('published_at')
                     ->take(3)
                     ->get(),
+            ];
+        } elseif ($user->isAdmin()) {
+            $data = [
+                'usersCount' => User::count(),
+                'totalFarmers' => User::where('role', 'farmer')->count(),
+                'totalVeos' => User::where('role', 'veo')->count(),
+                'articlesCount' => Article::count(),
+                'publishedArticlesCount' => Article::published()->count(),
+                'commentsCount' => Comment::count(),
+                'recentUsers' => User::latest()->take(5)->get(),
+                'popularArticles' => Article::orderBy('views_count', 'desc')->take(5)->get(),
+                'recentArticles' => Article::with('author')->latest()->take(5)->get(),
+                'activitiesCount' => ActivityLog::whereDate('created_at', now()->toDateString())->count(),
             ];
         }
 
@@ -84,6 +108,6 @@ class DashboardController extends Controller
             'popular_articles' => Article::orderBy('views_count', 'desc')->take(5)->get(),
         ];
 
-        return view('dashboard.index', $stats);
+        return response()->json($stats);
     }
 }

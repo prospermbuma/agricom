@@ -99,9 +99,9 @@
 
                             <div class="mb-3">
                                 <label class="form-label">Featured Image</label>
-                                @if ($article->image)
+                                @if ($article->featured_image)
                                     <div class="mb-2">
-                                        <img src="{{ asset('storage/' . $article->image) }}" alt="Current featured image"
+                                        <img src="{{ asset('storage/' . $article->featured_image) }}" alt="Current featured image"
                                             class="img-thumbnail" style="max-height: 200px;">
                                         <div class="mt-1">
                                             <small class="text-muted">Current image</small>
@@ -112,14 +112,14 @@
                                         </div>
                                     </div>
                                 @endif
-                                <input type="file" name="image"
-                                    class="form-control @error('image') is-invalid @enderror" accept="image/*">
+                                <input type="file" name="featured_image"
+                                    class="form-control @error('featured_image') is-invalid @enderror" accept="image/*">
                                 <input type="hidden" name="remove_image" id="remove_image" value="0">
-                                @error('image')
+                                @error('featured_image')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                                 <small class="form-text text-muted">
-                                    {{ $article->image ? 'Upload a new image to replace the current one.' : 'Supported formats: JPG, PNG, GIF. Max size: 2MB' }}
+                                    {{ $article->featured_image ? 'Upload a new image to replace the current one.' : 'Supported formats: JPG, PNG, GIF. Max size: 5MB' }}
                                 </small>
                             </div>
 
@@ -137,6 +137,16 @@
                                         {{ old('is_urgent', $article->is_urgent) ? 'checked' : '' }}>
                                     <label class="form-check-label" for="is_urgent">
                                         Mark as Urgent (Disease/Pest Alert)
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="is_published" id="is_published"
+                                        {{ old('is_published', $article->is_published) ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="is_published">
+                                        Publish Article
                                     </label>
                                 </div>
                             </div>
@@ -171,7 +181,7 @@
                             <div class="col-sm-12">
                                 <strong>Created:</strong> {{ $article->created_at->format('M d, Y H:i') }}<br>
                                 <strong>Updated:</strong> {{ $article->updated_at->format('M d, Y H:i') }}<br>
-                                <strong>Author:</strong> {{ $article->user->name ?? 'Unknown' }}<br>
+                                <strong>Author:</strong> {{ $article->author->name ?? 'Unknown' }}<br>
                                 <strong>Status:</strong>
                                 <span class="badge badge-{{ $article->is_published ? 'success' : 'warning' }}">
                                     {{ $article->is_published ? 'Published' : 'Draft' }}

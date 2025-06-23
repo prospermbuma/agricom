@@ -6,6 +6,6 @@ return [
     'default_auth_driver' => null,
     'default_log_name' => 'default',
     'subject_returns_soft_deleted_models' => false,
-    'activity_model' => \Spatie\Activitylog\Models\Activity::class,
+    'activity_model' => \App\Models\ActivityLog::class,
     'table_name' => 'activity_logs',
 ];

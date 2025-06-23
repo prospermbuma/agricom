@@ -85,10 +85,10 @@
                                         <tr>
                                             <th width="5%">#</th>
                                             <th width="15%">User</th>
-                                            <th width="25%">Action</th>
-                                            {{-- <th width="25%">Description</th> --}}
+                                            <th width="20%">Action</th>
+                                            <th width="25%">Description</th>
                                             <th width="15%">IP Address</th>
-                                            <th width="15%">Date & Time</th>
+                                            <th width="10%">Date & Time</th>
                                             <th width="10%">Details</th>
                                         </tr>
                                     </thead>
@@ -111,6 +111,11 @@
                                                     @else
                                                         <span class="text-muted">System</span>
                                                     @endif
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-primary bg-opacity-10 text-primary">
+                                                        {{ ucfirst(str_replace('_', ' ', $log->action ?? 'Unknown')) }}
+                                                    </span>
                                                 </td>
                                                 <td>
                                                     <div class="text-truncate" style="max-width: 300px;">

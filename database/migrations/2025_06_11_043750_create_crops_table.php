@@ -16,10 +16,13 @@ return new class extends Migration
             $table->string('name');
             $table->string('scientific_name')->nullable();
             $table->text('description')->nullable();
-            $table->string('season'); // dry, wet, both
+            $table->enum('season', ['rainy', 'dry', 'both'])->default('both');
             $table->integer('growing_period_days')->nullable();
             $table->string('image')->nullable();
             $table->timestamps();
+            
+            $table->index('name');
+            $table->index('season');
         });
     }
 

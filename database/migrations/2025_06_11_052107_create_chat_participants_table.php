@@ -15,10 +15,14 @@ return new class extends Migration
             $table->id();
             $table->foreignId('conversation_id')->constrained('chat_conversations')->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->timestamp('joined_at')->useCurrent();
-            $table->timestamp('last_read_at')->nullable();
-            $table->unique(['conversation_id', 'user_id']);
+            $table->timestamp('joined_at')->nullable();
+            $table->timestamp('left_at')->nullable();
+            $table->boolean('is_admin')->default(false);
+            $table->boolean('is_muted')->default(false);
             $table->timestamps();
+            
+            $table->unique(['conversation_id', 'user_id']);
+            $table->index(['conversation_id', 'left_at']);
         });
     }
 

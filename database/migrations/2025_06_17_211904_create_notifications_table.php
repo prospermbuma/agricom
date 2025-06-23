@@ -13,7 +13,17 @@ return new class extends Migration
     {
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('type');
+            $table->string('title');
+            $table->text('message');
+            $table->json('data')->nullable();
+            $table->timestamp('read_at')->nullable();
+            $table->boolean('is_urgent')->default(false);
             $table->timestamps();
+            
+            $table->index(['user_id', 'read_at']);
+            $table->index(['user_id', 'type']);
         });
     }
 

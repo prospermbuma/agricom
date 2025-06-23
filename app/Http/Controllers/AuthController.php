@@ -40,7 +40,8 @@ class AuthController extends Controller
 
             activity()
                 ->causedBy(Auth::user())
-                ->log('User logged in');
+                ->withProperties(['action' => 'user_login', 'ip' => request()->ip()])
+                ->log('User ' . Auth::user()->name . ' logged in.');
 
             return redirect()->intended(route('dashboard'));
         }
@@ -65,7 +66,8 @@ class AuthController extends Controller
 
         activity()
             ->causedBy($user)
-            ->log('User registered');
+            ->withProperties(['action' => 'user_registered', 'ip' => request()->ip()])
+            ->log('New user registered: ' . $user->name);
 
         Auth::login($user);
 
@@ -76,7 +78,8 @@ class AuthController extends Controller
     {
         activity()
             ->causedBy(Auth::user())
-            ->log('User logged out');
+            ->withProperties(['action' => 'user_logout', 'ip' => request()->ip()])
+            ->log('User ' . Auth::user()->name . ' logged out.');
 
         Auth::logout();
         $request->session()->invalidate();
