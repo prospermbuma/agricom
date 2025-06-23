@@ -22,6 +22,16 @@
             <div class="col-lg-8">
                 <div class="card shadow-sm border-0">
                     <div class="card-body p-5">
+                        @if ($errors->any())
+                            <div class="alert alert-danger">
+                                <ul class="mb-0">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+                        
                         <form method="POST" action="{{ route('articles.store') }}" enctype="multipart/form-data"
                             class="needs-validation" novalidate>
                             @csrf
@@ -77,8 +87,8 @@
                                     <label for="target_crops" class="form-label fw-semibold">Related Crops
                                         (Optional)</label>
                                     <select id="target_crops" name="target_crops[]"
-                                        class="form-select select2-multiple @error('target_crops') is-invalid @enderror"
-                                        multiple="multiple">
+                                        class="form-select @error('target_crops') is-invalid @enderror"
+                                        multiple size="4">
                                         @foreach ($crops as $crop)
                                             <option value="{{ $crop->id }}"
                                                 {{ collect(old('target_crops'))->contains($crop->id) ? 'selected' : '' }}>
@@ -89,6 +99,7 @@
                                     @error('target_crops')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
+                                    <small class="form-text text-muted">Hold Ctrl (or Cmd on Mac) to select multiple crops</small>
                                 </div>
                             </div>
 
@@ -319,19 +330,6 @@
             height: 1.5em;
         }
 
-        .select2-container--default .select2-selection--multiple {
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            min-height: 42px;
-        }
-
-        .select2-container--default .select2-selection--multiple .select2-selection__choice {
-            background-color: var(--primary-color);
-            border: none;
-            color: white;
-            border-radius: 4px;
-        }
-
         .page-header {
             padding: 1rem;
             background-color: white;
@@ -390,14 +388,6 @@
             }
         });
 
-        // Initialize Select2 for multiple select
-        $(document).ready(function() {
-            $('.select2-multiple').select2({
-                placeholder: "Select crops (optional)",
-                allowClear: true
-            });
-        });
-
         // Form validation
         (function() {
             'use strict'
@@ -407,6 +397,13 @@
             Array.prototype.slice.call(forms)
                 .forEach(function(form) {
                     form.addEventListener('submit', function(event) {
+                        // Log form data for debugging
+                        const formData = new FormData(form);
+                        console.log('Form data being submitted:');
+                        for (let [key, value] of formData.entries()) {
+                            console.log(key + ': ' + value);
+                        }
+                        
                         if (!form.checkValidity()) {
                             event.preventDefault()
                             event.stopPropagation()

@@ -66,6 +66,26 @@ class User extends Authenticatable
         return $this->hasOne(FarmerProfile::class);
     }
 
+    public function crops()
+    {
+        // For farmers, get crops from farmer profile
+        if ($this->isFarmerRole() && $this->farmerProfile) {
+            return $this->farmerProfile->farmerCrops()->with('crop');
+        }
+        
+        // For other users, return empty collection
+        return collect();
+    }
+
+    public function getCropIdsAttribute()
+    {
+        if ($this->isFarmerRole() && $this->farmerProfile) {
+            return $this->farmerProfile->farmerCrops()->pluck('crop_id')->toArray();
+        }
+        
+        return [];
+    }
+
     public function articles()
     {
         return $this->hasMany(Article::class, 'author_id');

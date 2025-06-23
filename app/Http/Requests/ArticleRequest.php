@@ -32,7 +32,7 @@ class ArticleRequest extends FormRequest
             'attachments' => ['nullable', 'array', 'max:5'],
             'attachments.*' => ['file', 'mimes:pdf,doc,docx,xls,xlsx', 'max:10240'],
             'is_published' => ['nullable', 'boolean'],
-            'is_urgent' => ['boolean'],
+            'is_urgent' => ['nullable', 'boolean'],
         ];
     }
 

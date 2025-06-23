@@ -34,9 +34,9 @@ class ArticleController extends Controller
         }
 
         // Filter by user's crops if farmer
-        if ($user->isFarmerRole() && !empty($user->crops)) {
+        if ($user->isFarmerRole() && !empty($user->crop_ids)) {
             $query->where(function ($q) use ($user) {
-                $q->forCrops($user->crops)
+                $q->forCrops($user->crop_ids)
                     ->orWhere('category', 'general');
             });
         }
@@ -117,10 +117,29 @@ class ArticleController extends Controller
     {
         $this->authorize('create', Article::class);
 
+        // Debug: Log the request data
+        \Log::info('Article creation attempt', [
+            'user_id' => Auth::id(),
+            'request_data' => $request->all(),
+            'validated_data' => $request->validated()
+        ]);
+
         $validated = $request->validated();
         $validated['author_id'] = Auth::id();
-        $validated['slug'] = Str::slug($validated['title']);
+        
+        // Generate unique slug
+        $baseSlug = Str::slug($validated['title']);
+        $slug = $baseSlug;
+        $counter = 1;
+        
+        while (Article::where('slug', $slug)->exists()) {
+            $slug = $baseSlug . '-' . $counter;
+            $counter++;
+        }
+        
+        $validated['slug'] = $slug;
         $validated['is_published'] = $request->boolean('is_published', false);
+        $validated['is_urgent'] = $request->boolean('is_urgent', false);
 
         // Convert target_crops to integers
         $validated['target_crops'] = collect($request->input('target_crops', []))
@@ -147,16 +166,27 @@ class ArticleController extends Controller
             $validated['published_at'] = now();
         }
 
-        $article = Article::create($validated);
+        try {
+            $article = Article::create($validated);
+            
+            \Log::info('Article created successfully', ['article_id' => $article->id]);
 
-        activity()
-            ->causedBy(Auth::user())
-            ->performedOn($article)
-            ->withProperties(['action' => 'article_created', 'ip_address' => request()->ip()])
-            ->log('Article "' . $validated['title'] . '" was created.');
+            activity()
+                ->causedBy(Auth::user())
+                ->performedOn($article)
+                ->withProperties(['action' => 'article_created', 'ip_address' => request()->ip()])
+                ->log('Article "' . $validated['title'] . '" was created.');
 
-        return redirect()->route('articles.show', $article)
-            ->with('success', 'Article created successfully!');
+            return redirect()->route('articles.show', $article)
+                ->with('success', 'Article created successfully!');
+        } catch (\Exception $e) {
+            \Log::error('Article creation failed', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return back()->withInput()->withErrors(['error' => 'Failed to create article: ' . $e->getMessage()]);
+        }
     }
 
     /**
