@@ -200,6 +200,22 @@
         $hidePublicNav = in_array('auth', $middleware);
     @endphp
 
+    <!-- Notification Toasts -->
+    <div style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; min-width: 300px; max-width: 90vw;">
+        @if (session('success'))
+            <div class="alert alert-success alert-dismissible fade show text-center shadow" role="alert">
+                <i class="fas fa-check-circle me-1"></i> {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        @endif
+        @if (session('error'))
+            <div class="alert alert-danger alert-dismissible fade show text-center shadow" role="alert">
+                <i class="fas fa-exclamation-circle me-1"></i> {{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        @endif
+    </div>
+
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
         <div class="{{ $hidePublicNav ? 'container-fluid px-md-5 py-1' : 'container px-md-5 py-2' }}">
@@ -383,22 +399,6 @@
                     </button>
                 @endif
             @endauth
-
-            <!-- Flash messages -->
-            <div class="container mt-3">
-                @if (session('success'))
-                    <div class="alert alert-success alert-dismissible fade show">
-                        {{ session('success') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                @endif
-                @if (session('error'))
-                    <div class="alert alert-danger alert-dismissible fade show">
-                        {{ session('error') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                @endif
-            </div>
 
             <!-- Main Content -->
             <main class="container-fluid py-4">

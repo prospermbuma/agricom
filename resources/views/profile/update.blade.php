@@ -6,34 +6,6 @@
     <div class="container">
         <div class="row mt-4">
             <div class="col-md-8 mx-auto">
-                <!-- Success Alert -->
-                @if (session('success'))
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        <div class="d-flex align-items-center">
-                            <i class="fas fa-check-circle me-3 fs-4"></i>
-                            <div>
-                                <h5 class="alert-heading mb-1">Profile Updated Successfully!</h5>
-                                <p class="mb-0">{{ session('success') }}</p>
-                            </div>
-                        </div>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                @endif
-
-                <!-- Error Alert -->
-                @if (session('error'))
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <div class="d-flex align-items-center">
-                            <i class="fas fa-exclamation-circle me-3 fs-4"></i>
-                            <div>
-                                <h5 class="alert-heading mb-1">Update Failed!</h5>
-                                <p class="mb-0">{{ session('error') }}</p>
-                            </div>
-                        </div>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                @endif
-
                 <!-- Profile Summary Card -->
                 <div class="card">
                     <div class="card-header bg-success text-white">

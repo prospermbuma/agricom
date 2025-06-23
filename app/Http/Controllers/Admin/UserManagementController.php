@@ -4,11 +4,14 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Region;
+use App\Models\Crop;
+use App\Models\FarmerProfile;
+use App\Models\ActivityLog as Activity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
-use Spatie\Activitylog\Models\Activity;
 
 class UserManagementController extends Controller
 {
@@ -54,8 +57,9 @@ class UserManagementController extends Controller
      */
     public function create()
     {
-        $regions = $this->getTanzaniaRegions();
-        return view('users.create', compact('regions'));
+        $regions = Region::all();
+        $crops = Crop::all();
+        return view('users.create', compact('regions', 'crops'));
     }
 
     /**
@@ -69,12 +73,15 @@ class UserManagementController extends Controller
             'phone' => 'required|string|max:20|unique:users',
             'password' => 'required|string|min:8|confirmed',
             'role' => 'required|in:admin,veo,farmer',
-            'region' => 'required|string',
-            'village' => 'required|string',
+            'region_id' => 'required|exists:regions,id',
+            'village' => 'required|string|max:255',
+            'bio' => 'nullable|string|max:500',
             'crops' => 'nullable|array',
-            'crops.*' => 'nullable|string',
+            'crops.*' => 'exists:crops,id',
             'is_active' => 'boolean',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'farm_size_acres' => 'nullable|numeric|min:0.1|max:1000',
+            'farming_experience' => 'nullable|in:beginner,intermediate,expert',
         ]);
 
         // Handle avatar upload
@@ -115,8 +122,9 @@ class UserManagementController extends Controller
      */
     public function edit(User $user)
     {
-        $regions = $this->getTanzaniaRegions();
-        return view('users.edit', compact('user', 'regions'));
+        $regions = Region::all();
+        $crops = Crop::all();
+        return view('users.edit', compact('user', 'regions', 'crops'));
     }
 
     /**
@@ -130,12 +138,15 @@ class UserManagementController extends Controller
             'phone' => ['required', 'string', 'max:20', Rule::unique('users')->ignore($user->id)],
             'password' => 'nullable|string|min:8|confirmed',
             'role' => 'required|in:admin,veo,farmer',
-            'region' => 'required|string',
-            'village' => 'required|string',
+            'region_id' => 'required|exists:regions,id',
+            'village' => 'required|string|max:255',
+            'bio' => 'nullable|string|max:500',
             'crops' => 'nullable|array',
-            'crops.*' => 'nullable|string',
+            'crops.*' => 'exists:crops,id',
             'is_active' => 'boolean',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'farm_size_acres' => 'nullable|numeric|min:0.1|max:1000',
+            'farming_experience' => 'nullable|in:beginner,intermediate,expert',
         ]);
 
         // Handle avatar upload
@@ -152,7 +163,40 @@ class UserManagementController extends Controller
 
         $validated['is_active'] = $request->has('is_active');
 
-        $user->update($validated);
+        // Only update user fields that exist on the User model
+        $userFields = [
+            'name', 'email', 'phone', 'bio', 'avatar', 'is_active', 'role', 'village', 'password'
+        ];
+        $userData = array_intersect_key($validated, array_flip($userFields));
+        $user->update($userData);
+
+        // Update farmer profile if user is a farmer
+        if ($user->role === 'farmer') {
+            $profileData = $request->only([
+                'region_id',
+                'farm_size_acres',
+                'farming_experience',
+                'farming_methods'
+            ]);
+
+            if ($user->farmerProfile) {
+                $user->farmerProfile->update($profileData);
+            } else {
+                $profileData['user_id'] = $user->id;
+                FarmerProfile::create($profileData);
+            }
+
+            // Update farmer crops
+            if ($request->has('crops')) {
+                $user->farmerProfile->farmerCrops()->delete();
+                foreach ($request->crops as $cropId) {
+                    $user->farmerProfile->farmerCrops()->create([
+                        'crop_id' => $cropId,
+                        'area_planted_acres' => $request->input("crop_areas.{$cropId}", 0),
+                    ]);
+                }
+            }
+        }
 
         activity()
             ->causedBy(Auth::user())

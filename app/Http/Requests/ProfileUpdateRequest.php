@@ -30,7 +30,7 @@ class ProfileUpdateRequest extends FormRequest
         if ($user && $user->isFarmerRole()) {
             $rules = array_merge($rules, [
                 'region_id' => ['required', 'exists:regions,id'],
-                'village_id' => ['required', 'exists:villages,id'],
+                'village' => ['required', 'string', 'max:255'],
                 'farm_size_acres' => ['nullable', 'numeric', 'min:0.1', 'max:1000'],
                 'farming_experience' => ['required', Rule::in(['beginner', 'intermediate', 'expert'])],
                 'farming_methods' => ['nullable', 'string', 'max:1000'],
@@ -53,7 +53,7 @@ class ProfileUpdateRequest extends FormRequest
             'avatar.mimes' => 'Avatar must be a JPEG or PNG file.',
             'avatar.max' => 'Avatar file size must not exceed 2MB.',
             'region_id.required' => 'Please select your region.',
-            'village_id.required' => 'Please select your village.',
+            'village.required' => 'Please enter your village.',
             'farm_size_acres.numeric' => 'Farm size must be a number.',
             'farming_experience.required' => 'Please select your farming experience level.',
         ];

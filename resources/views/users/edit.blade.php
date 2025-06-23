@@ -121,18 +121,16 @@
 
                                 <div class="col-md-6">
                                     <div class="form-floating">
-                                        <select class="form-select @error('region') is-invalid @enderror" id="region"
-                                            name="region" required>
+                                        <select class="form-select @error('region_id') is-invalid @enderror" id="region_id" name="region_id" required>
                                             <option value="">Select Region</option>
                                             @foreach ($regions as $region)
-                                                <option value="{{ $region }}"
-                                                    {{ old('region', $user->region) == $region ? 'selected' : '' }}>
-                                                    {{ $region }}
+                                                <option value="{{ $region->id }}" {{ old('region_id', optional($user->farmerProfile)->region_id ?? '') == $region->id ? 'selected' : '' }}>
+                                                    {{ $region->name }}
                                                 </option>
                                             @endforeach
                                         </select>
-                                        <label for="region">Region</label>
-                                        @error('region')
+                                        <label for="region_id">Region</label>
+                                        @error('region_id')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
@@ -159,16 +157,15 @@
                                         <div class="mb-3">
                                             <label class="form-label">Crops Grown</label>
                                             <div class="row g-3">
-                                                @foreach (['maize', 'rice', 'beans', 'cassava', 'coffee', 'cotton', 'sunflower', 'other'] as $crop)
+                                                @foreach ($crops as $crop)
                                                     <div class="col-md-3">
                                                         <div class="form-check">
                                                             <input class="form-check-input" type="checkbox"
-                                                                name="crops[]" value="{{ $crop }}"
-                                                                id="crop-{{ $crop }}"
-                                                                {{ is_array(old('crops', $user->crops ?? [])) && in_array($crop, old('crops', $user->crops ?? [])) ? 'checked' : '' }}>
+                                                                name="crops[]" value="{{ $crop->id }}" id="crop_{{ $crop->id }}"
+                                                                {{ is_array(old('crops', optional($user->farmerProfile)->crops->pluck('id')->toArray() ?? [])) && in_array($crop->id, old('crops', optional($user->farmerProfile)->crops->pluck('id')->toArray() ?? [])) ? 'checked' : '' }}>
                                                             <label class="form-check-label"
-                                                                for="crop-{{ $crop }}">
-                                                                {{ ucfirst($crop) }}
+                                                                for="crop_{{ $crop->id }}">
+                                                                {{ $crop->name }}
                                                             </label>
                                                         </div>
                                                     </div>
@@ -179,21 +176,31 @@
                                             @enderror
                                         </div>
 
-                                        <!-- Farming Experience -->
-                                        <div class="mb-3">
-                                            <label for="farming_experience" class="form-label">Farming Experience</label>
-                                            <select name="farming_experience" id="farming_experience" class="form-select @error('farming_experience') is-invalid @enderror" required>
-                                                <option value="">Select Experience</option>
-                                                <option value="beginner" {{ old('farming_experience', $user->farming_experience) == 'beginner' ? 'selected' : '' }}>Beginner</option>
-                                                <option value="intermediate" {{ old('farming_experience', $user->farming_experience) == 'intermediate' ? 'selected' : '' }}>Intermediate</option>
-                                                <option value="expert" {{ old('farming_experience', $user->farming_experience) == 'expert' ? 'selected' : '' }}>Expert</option>
-                                            </select>
-                                            @error('farming_experience')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="number" name="farm_size_acres" id="farm_size_acres" step="0.1" min="0" class="form-control @error('farm_size_acres') is-invalid @enderror" value="{{ old('farm_size_acres', optional($user->farmerProfile)->farm_size_acres) }}">
+                                        <label for="farm_size_acres">Farm Size (Hectares)</label>
+                                        @error('farm_size_acres')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
                                     </div>
                                 </div>
+
+                                <!-- Farming Experience -->
+                                <div class="mb-3">
+                                    <label for="farming_experience" class="form-label">Farming Experience</label>
+                                    <select name="farming_experience" id="farming_experience" class="form-select @error('farming_experience') is-invalid @enderror" required>
+                                        <option value="">Select Experience</option>
+                                        <option value="beginner" {{ old('farming_experience', optional($user->farmerProfile)->farming_experience) == 'beginner' ? 'selected' : '' }}>Beginner</option>
+                                        <option value="intermediate" {{ old('farming_experience', optional($user->farmerProfile)->farming_experience) == 'intermediate' ? 'selected' : '' }}>Intermediate</option>
+                                        <option value="expert" {{ old('farming_experience', optional($user->farmerProfile)->farming_experience) == 'expert' ? 'selected' : '' }}>Expert</option>
+                                    </select>
+                                    @error('farming_experience')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
 
                                 <div class="col-md-6">
                                     <div class="form-check form-switch">

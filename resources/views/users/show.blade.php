@@ -64,21 +64,21 @@
                                         <div class="col-md-6">
                                             <div class="bg-light p-4 rounded-4 h-100">
                                                 <h6 class="fw-semibold mb-2">Farming Information</h6>
-                                                @if ($user->crops && count($user->crops) > 0)
+                                                @if ($user->farmerProfile && $user->farmerProfile->crops->count() > 0)
                                                     <p class="mb-2"><i class="fas fa-seedling me-2 text-muted"></i>
                                                         <strong>Crops:</strong>
-                                                        {{ implode(', ', array_map('ucfirst', $user->crops)) }}
+                                                        {{ $user->farmerProfile->crops->pluck('name')->implode(', ') }}
                                                     </p>
                                                 @endif
-                                                @if ($user->farm_size)
+                                                @if ($user->farmerProfile && $user->farmerProfile->farm_size_acres)
                                                     <p class="mb-0"><i class="fas fa-ruler-combined me-2 text-muted"></i>
-                                                        <strong>Farm Size:</strong> {{ $user->farm_size }} hectares
+                                                        <strong>Farm Size:</strong> {{ $user->farmerProfile->farm_size_acres }} hectares
                                                     </p>
                                                 @endif
                                                 <p class="mb-0 mt-2"><i class="fas fa-user-graduate me-2 text-muted"></i>
                                                     <strong>Farming Experience:</strong>
                                                     @php
-                                                        $exp = $user->farming_experience ?? null;
+                                                        $exp = optional($user->farmerProfile)->farming_experience ?? null;
                                                         $expLabels = ['beginner' => 'Beginner', 'intermediate' => 'Intermediate', 'expert' => 'Expert'];
                                                     @endphp
                                                     {{ $expLabels[$exp] ?? '-' }}

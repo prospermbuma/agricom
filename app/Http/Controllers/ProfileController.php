@@ -48,16 +48,19 @@ class ProfileController extends Controller
 
         // Only update user fields that exist on the User model
         $userFields = [
-            'name', 'email', 'phone', 'bio', 'avatar', 'is_active', 'role', 'region', 'village', 'password'
+            'name', 'email', 'phone', 'bio', 'avatar', 'is_active', 'role', 'village', 'password'
         ];
         $userData = array_intersect_key($validated, array_flip($userFields));
+        // Only update password if provided
+        if (empty($userData['password'])) {
+            unset($userData['password']);
+        }
         $user->update($userData);
 
         // Update farmer profile if user is a farmer
         if ($user->isFarmerRole()) {
             $profileData = $request->only([
                 'region_id',
-                'village_id',
                 'farm_size_acres',
                 'farming_experience',
                 'farming_methods'
@@ -67,7 +70,7 @@ class ProfileController extends Controller
                 $user->farmerProfile->update($profileData);
             } else {
                 $profileData['user_id'] = $user->id;
-                FarmerProfile::create($profileData);
+                $user->farmerProfile()->create($profileData);
             }
 
             // Update farmer crops

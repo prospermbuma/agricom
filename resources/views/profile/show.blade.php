@@ -8,7 +8,7 @@
             <div class="col-lg-12">
                 <div class="card shadow-lg rounded-4 border-0 overflow-hidden">
                     <div class="row g-0">
-                        <!-- Sidebar Avatar -->
+                        <!-- Topbar Avatar -->
                         <div
                             class="col-md-12 sidebar-avatar text-white d-flex flex-column align-items-center justify-content-center p-4 text-center">
                             <img src="{{ auth()->user()->avatar ? asset('storage/' . auth()->user()->avatar) : asset('images/default-avatar.png') }}"
@@ -50,18 +50,26 @@
                                 <h6 class="text-success mb-3">Farming Info</h6>
 
                                 <div class="mb-3">
+                                    <strong>Region:</strong>
+                                    <p class="text-muted mb-0">{{ optional(auth()->user()->farmerProfile->region)->name ?? 'Not specified' }}</p>
+                                </div>
+
+                                <div class="mb-3">
+                                    <strong>Village:</strong>
+                                    <p class="text-muted mb-0">{{ auth()->user()->village ?? 'Not specified' }}</p>
+                                </div>
+
+                                <div class="mb-3">
                                     <strong>Farm Size:</strong>
-                                    <p class="text-muted mb-0">{{ auth()->user()->farm_size ?? 'Not specified' }} hectares
-                                    </p>
+                                    <p class="text-muted mb-0">{{ optional(auth()->user()->farmerProfile)->farm_size_acres ?? 'Not specified' }} hectares</p>
                                 </div>
 
                                 <div class="mb-3">
                                     <strong>Crops:</strong>
-                                    @php $userCrops = auth()->user()->crops ?? []; @endphp
-                                    @if (!empty($userCrops))
-                                        @foreach ($userCrops as $crop)
+                                    @if (auth()->user()->farmerProfile && auth()->user()->farmerProfile->crops->count() > 0)
+                                        @foreach (auth()->user()->farmerProfile->crops as $crop)
                                             <span class="badge bg-light text-dark border me-1 mb-1">
-                                                <i class="fas fa-seedling me-1"></i>{{ ucfirst($crop) }}
+                                                <i class="fas fa-seedling me-1"></i>{{ $crop->name }}
                                             </span>
                                         @endforeach
                                     @else
@@ -73,7 +81,7 @@
                                     <strong>Farming Experience:</strong>
                                     <p class="text-muted mb-0">
                                         @php
-                                            $exp = auth()->user()->farming_experience ?? null;
+                                            $exp = optional(auth()->user()->farmerProfile)->farming_experience ?? null;
                                             $expLabels = ['beginner' => 'Beginner', 'intermediate' => 'Intermediate', 'expert' => 'Expert'];
                                         @endphp
                                         {{ $expLabels[$exp] ?? '-' }}
@@ -107,13 +115,6 @@
                         </div>
                     </div>
                 </div>
-
-                @if (session('success'))
-                    <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
-                        <i class="fas fa-check-circle me-1"></i> {{ session('success') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                @endif
             </div>
         </div>
     </div>
