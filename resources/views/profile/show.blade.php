@@ -11,7 +11,7 @@
                         <!-- Topbar Avatar -->
                         <div
                             class="col-md-12 sidebar-avatar text-white d-flex flex-column align-items-center justify-content-center p-4 text-center">
-                            <img src="{{ auth()->user()->avatar ? asset('storage/' . auth()->user()->avatar) : asset('images/default-avatar.png') }}"
+                            <img src="{{ auth()->user()->avatar_url }}"
                                 alt="User Avatar" class="img-fluid rounded-circle shadow mb-3"
                                 style="width: 120px; height: 120px; object-fit: cover;">
                             <h4 class="fw-bold">{{ auth()->user()->name }}</h4>

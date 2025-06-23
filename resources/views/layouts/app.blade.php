@@ -266,7 +266,7 @@
                             <a class="nav-link dropdown-toggle d-flex justify-between align-items-center gap-1"
                                 href="#" role="button" data-bs-toggle="dropdown">
                                 <div class="avatar avatar-sm me-1">
-                                    <img src="{{ auth()->user()->avatar ? asset('storage/' . auth()->user()->avatar) : asset('images/default-avatar.png') }}"
+                                    <img src="{{ auth()->user()->avatar_url }}"
                                         class="rounded-circle border-3" alt="Profile Picture">
                                 </div>
                                 {{ auth()->user()->name }}
@@ -423,7 +423,11 @@
 
     <!-- Year Script -->
     <script>
-        document.getElementById('year').textContent = new Date().getFullYear();
+        const yearElement = document.getElementById('year');
+        if (yearElement) {
+            yearElement.textContent = new Date().getFullYear();
+        }
+        
         document.getElementById('toggleSidebar')?.addEventListener('click', () => {
             document.getElementById('sidebar').style.display = 'none';
         });

@@ -126,7 +126,7 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="d-flex align-items-center">
                                     <div class="avatar avatar-sm me-2">
-                                        <img src="{{ $article->author->avatar ?? asset('images/default-avatar.png') }}" 
+                                        <img src="{{ $article->author->avatar_url }}"
                                             class="rounded-circle" alt="{{ $article->author->name }}">
                                     </div>
                                     <div>

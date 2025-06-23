@@ -100,7 +100,7 @@
                                                     @if ($log->user)
                                                         <div class="d-flex align-items-center">
                                                             <div class="avatar avatar-sm me-2">
-                                                                <img src="{{ $log->user->avatar ?? asset('images/default-avatar.png') }}"
+                                                                <img src="{{ $log->user->avatar_url }}"
                                                                     class="rounded-circle" alt="{{ $log->user->name }}">
                                                             </div>
                                                             <div>
@@ -198,7 +198,7 @@
                                         @if ($log->user)
                                             <div class="d-flex align-items-center">
                                                 <div class="avatar avatar-md me-3">
-                                                    <img src="{{ $log->user->avatar ?? asset('images/default-avatar.png') }}"
+                                                    <img src="{{ $log->user->avatar_url }}"
                                                         class="rounded-circle" alt="{{ $log->user->name }}">
                                                 </div>
                                                 <div>

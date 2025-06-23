@@ -30,7 +30,7 @@
                             </div>
                         </div>
                         <div class="avatar avatar-lg">
-                            <img src="{{ auth()->user()->avatar ? asset('storage/' . auth()->user()->avatar) : asset('images/default-avatar.png') }}"
+                            <img src="{{ auth()->user()->avatar_url }}"
                                 class="rounded-circle border-2" alt="User Avatar">
                         </div>
                     </div>
@@ -276,7 +276,7 @@
                                     <div class="list-group-item border-0 py-3 hover-bg-light">
                                         <div class="d-flex">
                                             <div class="avatar avatar-sm me-3">
-                                                <img src="{{ $activity->user->avatar ?? asset('images/default-avatar.png') }}"
+                                                <img src="{{ $activity->user->avatar_url }}"
                                                     class="rounded-circle" alt="{{ $activity->user->name }}">
                                             </div>
                                             <div class="flex-grow-1">

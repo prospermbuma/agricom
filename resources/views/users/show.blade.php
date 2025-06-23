@@ -31,7 +31,7 @@
                         <div class="row">
                             <div class="col-md-4 mb-4 mb-md-0">
                                 <div class="avatar avatar-xxl mb-3">
-                                    <img src="{{ $user->avatar ? asset('storage/' . $user->avatar) : asset('images/default-avatar.png') }}"
+                                    <img src="{{ $user->avatar_url }}"
                                         class="rounded-circle border-3" alt="{{ $user->name }}">
                                 </div>
                                 <h4 class="fw-bold mb-1">{{ $user->name }}</h4>

@@ -42,8 +42,26 @@ class ProfileController extends Controller
         if ($request->hasFile('avatar')) {
             if ($user->avatar) {
                 Storage::disk('public')->delete($user->avatar);
+                // Also delete from public directory if it exists
+                $publicPath = public_path('storage/' . $user->avatar);
+                if (file_exists($publicPath)) {
+                    unlink($publicPath);
+                }
             }
             $validated['avatar'] = $request->file('avatar')->store('avatars', 'public');
+            
+            // Copy to public directory to ensure web access
+            $sourcePath = storage_path('app/public/' . $validated['avatar']);
+            $publicPath = public_path('storage/' . $validated['avatar']);
+            $publicDir = dirname($publicPath);
+            
+            if (!is_dir($publicDir)) {
+                mkdir($publicDir, 0755, true);
+            }
+            
+            if (file_exists($sourcePath)) {
+                copy($sourcePath, $publicPath);
+            }
         }
 
         // Only update user fields that exist on the User model

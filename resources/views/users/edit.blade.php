@@ -10,7 +10,7 @@
                     <div class="card-header bg-white border-0 py-3">
                         <div class="d-flex align-items-center">
                             <div class="avatar me-4">
-                                <img src="{{ $user->avatar ? asset('storage/' . $user->avatar) : asset('images/default-avatar.png') }}"
+                                <img src="{{ $user->avatar_url }}"
                                     class="rounded-circle border-3" alt="{{ $user->name }}" width="80" height="80">
                             </div>
                             <div>

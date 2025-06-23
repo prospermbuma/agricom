@@ -67,7 +67,7 @@
                                     <td>
                                         <div class="d-flex align-items-center">
                                             <div class="avatar avatar-sm me-3">
-                                                <img src="{{ $user->avatar ? asset('storage/'.$user->avatar) : asset('images/default-avatar.png') }}" 
+                                                <img src="{{ $user->avatar_url }}" 
                                                     class="rounded-circle" alt="{{ $user->name }}" width="50">
                                             </div>
                                             <div>

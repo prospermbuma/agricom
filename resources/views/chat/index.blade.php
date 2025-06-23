@@ -11,7 +11,7 @@
                 <div class="card shadow-sm border-0 mb-4">
                     <div class="card-body p-4 d-flex align-items-center">
                         <div class="avatar avatar-lg me-3">
-                            <img src="{{ auth()->user()->avatar ? asset('storage/' . auth()->user()->avatar) : asset('images/default-avatar.png') }}"
+                            <img src="{{ auth()->user()->avatar_url }}"
                                 class="rounded-circle" alt="User Avatar">
                         </div>
                         <div>
@@ -50,7 +50,7 @@
                                     data-user-id="{{ $user->id }}" data-user-name="{{ $user->name }}">
                                     <div class="d-flex align-items-center">
                                         <div class="position-relative me-3">
-                                            <img src="{{ $user->avatar ?? asset('images/default-avatar.png') }}"
+                                            <img src="{{ $user->avatar_url }}"
                                                 class="rounded-circle avatar-sm" alt="{{ $user->name }}">
                                             <span
                                                 class="position-absolute bottom-0 end-0 bg-success rounded-circle border border-2 border-white"

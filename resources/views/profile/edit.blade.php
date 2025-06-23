@@ -11,7 +11,7 @@
                     <div class="card-header bg-white border-0 py-4">
                         <div class="d-flex align-items-center">
                             <div class="avatar avatar-lg me-4">
-                                <img src="{{ auth()->user()->avatar ? asset('storage/' . auth()->user()->avatar) : asset('images/default-avatar.png') }}"
+                                <img src="{{ auth()->user()->avatar_url }}"
                                     class="rounded-circle border-3" alt="Profile Picture">
                             </div>
                             <div>

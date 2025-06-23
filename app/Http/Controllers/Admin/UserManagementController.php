@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Storage;
 
 class UserManagementController extends Controller
 {
@@ -87,6 +88,19 @@ class UserManagementController extends Controller
         // Handle avatar upload
         if ($request->hasFile('avatar')) {
             $validated['avatar'] = $request->file('avatar')->store('avatars', 'public');
+            
+            // Copy to public directory to ensure web access
+            $sourcePath = storage_path('app/public/' . $validated['avatar']);
+            $publicPath = public_path('storage/' . $validated['avatar']);
+            $publicDir = dirname($publicPath);
+            
+            if (!is_dir($publicDir)) {
+                mkdir($publicDir, 0755, true);
+            }
+            
+            if (file_exists($sourcePath)) {
+                copy($sourcePath, $publicPath);
+            }
         }
 
         $validated['password'] = Hash::make($validated['password']);
@@ -151,7 +165,28 @@ class UserManagementController extends Controller
 
         // Handle avatar upload
         if ($request->hasFile('avatar')) {
+            if ($user->avatar) {
+                Storage::disk('public')->delete($user->avatar);
+                // Also delete from public directory if it exists
+                $publicPath = public_path('storage/' . $user->avatar);
+                if (file_exists($publicPath)) {
+                    unlink($publicPath);
+                }
+            }
             $validated['avatar'] = $request->file('avatar')->store('avatars', 'public');
+            
+            // Copy to public directory to ensure web access
+            $sourcePath = storage_path('app/public/' . $validated['avatar']);
+            $publicPath = public_path('storage/' . $validated['avatar']);
+            $publicDir = dirname($publicPath);
+            
+            if (!is_dir($publicDir)) {
+                mkdir($publicDir, 0755, true);
+            }
+            
+            if (file_exists($sourcePath)) {
+                copy($sourcePath, $publicPath);
+            }
         }
 
         // Only update password if it was provided
