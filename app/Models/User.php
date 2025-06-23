@@ -21,7 +21,6 @@ class User extends Authenticatable
         'email',
         'password',
         'phone',
-        'region',
         'region_id',
         'village',
         'crops',
@@ -64,6 +63,11 @@ class User extends Authenticatable
     public function farmerProfile()
     {
         return $this->hasOne(FarmerProfile::class);
+    }
+
+    public function region()
+    {
+        return $this->belongsTo(Region::class);
     }
 
     public function crops()

@@ -78,7 +78,13 @@ class ArticleController extends Controller
      */
     public function show(Article $article)
     {
-        $article->load(['author', 'comments.user', 'comments.replies.user']);
+        $article->load([
+            'author.farmerProfile.region', 
+            'author.farmerProfile.farmerCrops.crop',
+            'author.region', 
+            'comments.user', 
+            'comments.replies.user'
+        ]);
         $article->incrementViews();
 
         activity()
@@ -121,7 +127,9 @@ class ArticleController extends Controller
         \Log::info('Article creation attempt', [
             'user_id' => Auth::id(),
             'request_data' => $request->all(),
-            'validated_data' => $request->validated()
+            'validated_data' => $request->validated(),
+            'files' => $request->allFiles(),
+            'attachments' => $request->file('attachments')
         ]);
 
         $validated = $request->validated();
@@ -138,8 +146,8 @@ class ArticleController extends Controller
         }
         
         $validated['slug'] = $slug;
-        $validated['is_published'] = $request->boolean('is_published', false);
-        $validated['is_urgent'] = $request->boolean('is_urgent', false);
+        $validated['is_published'] = $request->has('is_published');
+        $validated['is_urgent'] = $request->has('is_urgent');
 
         // Convert target_crops to integers
         $validated['target_crops'] = collect($request->input('target_crops', []))

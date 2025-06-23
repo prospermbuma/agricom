@@ -38,10 +38,26 @@
                             <small class="text-muted">
                                 <i class="fas fa-user"></i> By {{ $article->author->name }}
                                 ({{ ucfirst($article->author->role) }})
-                                @if ($article->author->role === 'farmer' && $article->author->farmerProfile)
+                                @if ($article->author->role === 'farmer' && $article->author->farmerProfile && is_object($article->author->farmerProfile->village))
+                                    from {{ $article->author->farmerProfile->village->name }}, {{ $article->author->farmerProfile->region->name }}
+                                @elseif ($article->author->role === 'farmer' && $article->author->farmerProfile && is_string($article->author->farmerProfile->village))
                                     from {{ $article->author->farmerProfile->village }}, {{ $article->author->farmerProfile->region->name }}
-                                @elseif ($article->author->role === 'veo' && $article->author->region_id)
+                                @elseif ($article->author->role === 'veo' && $article->author->region_id && $article->author->region && is_object($article->author->region))
                                     from {{ $article->author->region->name }}
+                                @elseif ($article->author->role === 'veo' && $article->author->region_id)
+                                    @php
+                                        \Log::info('Region debug', [
+                                            'region_id' => $article->author->region_id,
+                                            'region' => $article->author->region,
+                                            'region_type' => gettype($article->author->region),
+                                            'is_object' => is_object($article->author->region)
+                                        ]);
+                                    @endphp
+                                    @if (is_string($article->author->region))
+                                        from {{ $article->author->region }}
+                                    @else
+                                        from Unknown Region
+                                    @endif
                                 @endif
                             </small>
                         </div>
@@ -172,19 +188,25 @@
                         <p class="text-muted mb-1">{{ ucfirst($article->author->role) }}</p>
                         @if ($article->author->role === 'farmer' && $article->author->farmerProfile)
                             <p class="text-muted mb-2">
-                                {{ $article->author->farmerProfile->village }}, 
+                                @if (is_string($article->author->farmerProfile->village))
+                                    {{ $article->author->farmerProfile->village }}, 
+                                @elseif (is_object($article->author->farmerProfile->village))
+                                    {{ $article->author->farmerProfile->village->name }}, 
+                                @endif
                                 {{ $article->author->farmerProfile->region->name }}
                             </p>
-                        @elseif ($article->author->role === 'veo' && $article->author->region_id)
+                        @elseif ($article->author->role === 'veo' && $article->author->region_id && $article->author->region && is_object($article->author->region))
                             <p class="text-muted mb-2">
                                 {{ $article->author->region->name }}
                             </p>
                         @endif
-                        @if ($article->author->role === 'farmer' && $article->author->farmerProfile && $article->author->farmerProfile->farmerCrops)
+                        @if ($article->author->role === 'farmer' && $article->author->farmerProfile && $article->author->farmerProfile->farmerCrops && $article->author->farmerProfile->farmerCrops->count() > 0)
                             <div>
                                 <small class="text-muted">Crops:</small>
                                 @foreach ($article->author->farmerProfile->farmerCrops as $farmerCrop)
-                                    <span class="badge bg-light text-dark">{{ ucfirst($farmerCrop->crop->name) }}</span>
+                                    @if ($farmerCrop->crop)
+                                        <span class="badge bg-light text-dark">{{ ucfirst($farmerCrop->crop->name) }}</span>
+                                    @endif
                                 @endforeach
                             </div>
                         @endif

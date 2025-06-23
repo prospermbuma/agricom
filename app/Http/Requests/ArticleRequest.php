@@ -30,9 +30,9 @@ class ArticleRequest extends FormRequest
             'target_crops.*' => ['exists:crops,id'],
             'featured_image' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:5120'],
             'attachments' => ['nullable', 'array', 'max:5'],
-            'attachments.*' => ['file', 'mimes:pdf,doc,docx,xls,xlsx', 'max:10240'],
-            'is_published' => ['nullable', 'boolean'],
-            'is_urgent' => ['nullable', 'boolean'],
+            'attachments.*' => ['nullable', 'file', 'extensions:pdf,doc,docx,xls,xlsx', 'max:10240'],
+            'is_published' => ['nullable', 'accepted'],
+            'is_urgent' => ['nullable', 'accepted'],
         ];
     }
 
@@ -47,6 +47,7 @@ class ArticleRequest extends FormRequest
             'featured_image.max' => 'Featured image must not exceed 5MB.',
             'attachments.max' => 'You can upload maximum 5 attachments.',
             'attachments.*.file' => 'Each attachment must be a valid file.',
+            'attachments.*.extensions' => 'Each attachment must have a .pdf, .doc, .docx, .xls, or .xlsx extension.',
             'attachments.*.max' => 'Each attachment must not exceed 10MB.',
         ];
     }
