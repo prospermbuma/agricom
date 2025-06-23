@@ -22,15 +22,34 @@ class ActivityLogController extends Controller
             abort(403, 'Unauthorized access');
         }
 
+        $user = $request->user();
         $query = ActivityLog::with('user')->latest();
 
-        // Filter by user
-        if ($request->has('user_id')) {
-            $query->where('user_id', $request->user_id);
+        // Role-based filtering
+        if ($user->isVeo()) {
+            // VEOs can only see:
+            // 1. Their own activities
+            // 2. Activities from farmers in their assigned region
+            $query->where(function ($q) use ($user) {
+                $q->where('causer_id', $user->id) // Their own activities
+                  ->orWhereHas('user', function ($userQuery) use ($user) {
+                      // Activities from farmers in their region
+                      $userQuery->where('role', 'farmer')
+                               ->where('region_id', $user->region_id);
+                  });
+            });
+        }
+        // Admins can see all activities (no additional filtering needed)
+
+        // Filter by user (only for admin or if VEO is filtering their own region)
+        if ($request->has('user_id') && $request->user_id) {
+            if ($user->isAdmin() || ($user->isVeo() && $request->user_id == $user->id)) {
+                $query->where('causer_id', $request->user_id);
+            }
         }
 
         // Filter by action
-        if ($request->has('action')) {
+        if ($request->has('action') && $request->action) {
             $query->where('action', $request->action);
         }
 
@@ -45,7 +64,19 @@ class ActivityLogController extends Controller
         }
 
         $logs = $query->paginate(20);
-        $users = \App\Models\User::select('id', 'name', 'email')->get();
+        
+        // Get users for filter dropdown (filtered by role and region)
+        if ($user->isAdmin()) {
+            $users = \App\Models\User::select('id', 'name', 'email', 'role')->get();
+        } else {
+            // VEOs can only see farmers in their region and themselves
+            $users = \App\Models\User::where(function ($q) use ($user) {
+                $q->where('role', 'farmer')
+                  ->where('region_id', $user->region_id)
+                  ->orWhere('id', $user->id);
+            })->select('id', 'name', 'email', 'role')->get();
+        }
+        
         $actions = ActivityLog::distinct()->pluck('action');
 
         return view('activity-logs.index', compact('logs', 'users', 'actions'));

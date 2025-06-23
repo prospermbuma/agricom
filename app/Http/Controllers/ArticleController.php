@@ -81,7 +81,7 @@ class ArticleController extends Controller
         activity()
             ->causedBy(Auth::user())
             ->performedOn($article)
-            ->withProperties(['action' => 'article_viewed', 'ip' => request()->ip()])
+            ->withProperties(['action' => 'article_viewed', 'ip_address' => request()->ip()])
             ->log('User viewed article: ' . $article->title);
 
         return view('articles.show', compact('article'));
@@ -149,7 +149,7 @@ class ArticleController extends Controller
         activity()
             ->causedBy(Auth::user())
             ->performedOn($article)
-            ->withProperties(['action' => 'article_created', 'ip' => request()->ip()])
+            ->withProperties(['action' => 'article_created', 'ip_address' => request()->ip()])
             ->log('Article "' . $validated['title'] . '" was created.');
 
         return redirect()->route('articles.show', $article)
@@ -228,7 +228,7 @@ class ArticleController extends Controller
         activity()
             ->causedBy(Auth::user())
             ->performedOn($article)
-            ->withProperties(['action' => 'article_updated', 'ip' => request()->ip()])
+            ->withProperties(['action' => 'article_updated', 'ip_address' => request()->ip()])
             ->log('Article "' . $article->title . '" was updated.');
 
         return redirect()->route('articles.show', $article)
@@ -256,7 +256,7 @@ class ArticleController extends Controller
         activity()
             ->causedBy(Auth::user())
             ->performedOn($article)
-            ->withProperties(['action' => 'article_deleted', 'ip' => request()->ip()])
+            ->withProperties(['action' => 'article_deleted', 'ip_address' => request()->ip()])
             ->log('Article "' . $article->title . '" was deleted.');
 
         $article->delete();
@@ -279,7 +279,7 @@ class ArticleController extends Controller
         activity()
             ->causedBy(Auth::user())
             ->performedOn($comment)
-            ->withProperties(['action' => 'comment_added', 'ip' => request()->ip()])
+            ->withProperties(['action' => 'comment_added', 'ip_address' => request()->ip()])
             ->log('A comment was added to article "' . $article->title . '".');
 
         return back()->with('success', 'Comment added successfully!');
@@ -300,7 +300,7 @@ class ArticleController extends Controller
         activity()
             ->causedBy(Auth::user())
             ->performedOn($article)
-            ->withProperties(['action' => 'article_published', 'ip' => request()->ip()])
+            ->withProperties(['action' => 'article_published', 'ip_address' => request()->ip()])
             ->log('Article "' . $article->title . '" was published.');
 
         return redirect()->route('articles.edit', $article->id)
@@ -322,7 +322,7 @@ class ArticleController extends Controller
         activity()
             ->causedBy(Auth::user())
             ->performedOn($article)
-            ->withProperties(['action' => 'article_unpublished', 'ip' => request()->ip()])
+            ->withProperties(['action' => 'article_unpublished', 'ip_address' => request()->ip()])
             ->log('Article "' . $article->title . '" was unpublished.');
 
         return redirect()->route('articles.edit', $article->id)

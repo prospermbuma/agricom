@@ -6,28 +6,26 @@ use App\Models\ActivityLog;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Spatie\Activitylog\Models\Activity;
 
 class ActivityLogService
 {
     public function log(string $action, string $description, ?User $user = null, ?Model $model = null, array $properties = [])
     {
-        $user_id = Auth::id();
+        // Add IP address and user agent to properties
+        $properties['ip_address'] = request()->ip();
+        $properties['user_agent'] = request()->userAgent();
 
-        $logData = [
-            'action' => $action,
-            'description' => $description,
-            'user_id' => $user ? $user->id : $user_id,
-            'properties' => $properties,
-            'ip_address' => request()->ip(),
-            'user_agent' => request()->userAgent(),
-        ];
+        $activity = activity()
+            ->withProperties($properties)
+            ->log($description);
 
-        if ($model) {
-            $logData['model_type'] = get_class($model);
-            $logData['model_id'] = $model->id;
+        // Set the action if provided
+        if ($action) {
+            $activity->update(['action' => $action]);
         }
 
-        return ActivityLog::create($logData);
+        return $activity;
     }
 
     public function getUserActivity(User $user, int $limit = 50)

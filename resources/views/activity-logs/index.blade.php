@@ -123,7 +123,7 @@
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <span class="font-monospace">{{ $log->ip_address ?? 'N/A' }}</span>
+                                                    <span class="font-monospace">{{ $log->properties['ip_address'] ?? 'N/A' }}</span>
                                                 </td>
                                                 <td>
                                                     <div>{{ $log->created_at->format('M d, Y') }}</div>
@@ -216,7 +216,7 @@
                                         <h6 class="fw-semibold mb-2">Technical Details</h6>
                                         <div class="d-flex justify-content-between">
                                             <small class="text-muted">IP Address:</small>
-                                            <span class="font-monospace">{{ $log->ip_address ?? 'N/A' }}</span>
+                                            <span class="font-monospace">{{ $log->properties['ip_address'] ?? 'N/A' }}</span>
                                         </div>
                                         <div class="d-flex justify-content-between">
                                             <small class="text-muted">Timestamp:</small>

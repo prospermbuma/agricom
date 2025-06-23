@@ -91,9 +91,16 @@ class DashboardController extends Controller
                 ->take(10)
                 ->get();
         } elseif ($user->isVeo()) {
-            // For VEO, show their own activities and activities related to their articles
+            // For VEO, show their own activities and activities from farmers in their region
             $data['recentActivities'] = ActivityLog::with('user')
-                ->where('causer_id', $user->id)
+                ->where(function ($query) use ($user) {
+                    $query->where('causer_id', $user->id) // Their own activities
+                          ->orWhereHas('user', function ($userQuery) use ($user) {
+                              // Activities from farmers in their region
+                              $userQuery->where('role', 'farmer')
+                                       ->where('region_id', $user->region_id);
+                          });
+                })
                 ->latest()
                 ->take(10)
                 ->get();

@@ -12,6 +12,19 @@ class ActivityLog extends SpatieActivity
 
     protected $table = 'activity_logs';
 
+    protected $fillable = [
+        'log_name',
+        'description',
+        'subject_type',
+        'subject_id',
+        'causer_type',
+        'causer_id',
+        'properties',
+        'ip_address',
+        'user_agent',
+        'action',
+    ];
+
     // Relationships
     public function user()
     {
