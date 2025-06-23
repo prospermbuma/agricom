@@ -66,8 +66,8 @@
                                                 {{ old('category', $article->category) == 'weather' ? 'selected' : '' }}>
                                                 Weather</option>
                                             <option value="market_prices"
-                                                {{ old('category', $article->category) == 'market_prices    ' ? 'selected' : '' }}>
-                                                Market Price</option>
+                                                {{ old('category', $article->category) == 'market_prices' ? 'selected' : '' }}>
+                                                Market Prices</option>
                                             <option value="general"
                                                 {{ old('category', $article->category) == 'general' ? 'selected' : '' }}>
                                                 General Knowledge</option>
@@ -120,6 +120,33 @@
                                 @enderror
                                 <small class="form-text text-muted">
                                     {{ $article->featured_image ? 'Upload a new image to replace the current one.' : 'Supported formats: JPG, PNG, GIF. Max size: 5MB' }}
+                                </small>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Attachments</label>
+                                @if ($article->attachments && count($article->attachments) > 0)
+                                    <div class="mb-2">
+                                        <small class="text-muted">Current attachments:</small>
+                                        <ul class="list-unstyled">
+                                            @foreach ($article->attachments as $attachment)
+                                                <li class="mb-1">
+                                                    <a href="{{ asset('storage/' . $attachment) }}" target="_blank" class="text-decoration-none">
+                                                        <i class="fas fa-file me-1"></i>{{ basename($attachment) }}
+                                                    </a>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                @endif
+                                <input type="file" name="attachments[]"
+                                    class="form-control @error('attachments') is-invalid @enderror" 
+                                    accept=".pdf,.doc,.docx,.xls,.xlsx" multiple>
+                                @error('attachments')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                                <small class="form-text text-muted">
+                                    {{ $article->attachments && count($article->attachments) > 0 ? 'Upload new files to add to existing attachments.' : 'Supported formats: PDF, DOC, DOCX, XLS, XLSX. Max 5 files, 10MB each.' }}
                                 </small>
                             </div>
 

@@ -14,7 +14,7 @@
                         </h3>
                         <p class="text-muted mb-0">Browse agricultural articles and resources</p>
                     </div>
-                    @if (auth()->user()->role === 'veo')
+                    @if (auth()->user()->isVeo() || auth()->user()->isAdmin())
                         <a href="{{ route('articles.create') }}" class="btn btn-primary">
                             <i class="fas fa-plus me-2"></i>Create Article
                         </a>
@@ -161,7 +161,7 @@
                         </div>
                         <h4 class="fw-semibold">No Articles Found</h4>
                         <p class="text-muted mb-4">There are no articles matching your criteria.</p>
-                        @if (auth()->user()->role === 'veo')
+                        @if (auth()->user()->isVeo() || auth()->user()->isAdmin())
                             <a href="{{ route('articles.create') }}" class="btn btn-primary px-4">
                                 <i class="fas fa-plus me-2"></i>Create First Article
                             </a>

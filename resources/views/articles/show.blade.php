@@ -38,8 +38,10 @@
                             <small class="text-muted">
                                 <i class="fas fa-user"></i> By {{ $article->author->name }}
                                 ({{ ucfirst($article->author->role) }})
-                                @if ($article->author->farmerProfile && $article->author->farmerProfile->village)
-                                    from {{ $article->author->farmerProfile->village->name }}, {{ $article->author->farmerProfile->region->name }}
+                                @if ($article->author->role === 'farmer' && $article->author->farmerProfile)
+                                    from {{ $article->author->farmerProfile->village }}, {{ $article->author->farmerProfile->region->name }}
+                                @elseif ($article->author->role === 'veo' && $article->author->region_id)
+                                    from {{ $article->author->region->name }}
                                 @endif
                             </small>
                         </div>
@@ -168,16 +170,20 @@
                     <div class="card-body">
                         <h6>{{ $article->author->name }}</h6>
                         <p class="text-muted mb-1">{{ ucfirst($article->author->role) }}</p>
-                        @if ($article->author->farmerProfile)
+                        @if ($article->author->role === 'farmer' && $article->author->farmerProfile)
                             <p class="text-muted mb-2">
-                                {{ $article->author->farmerProfile->village->name }}, 
+                                {{ $article->author->farmerProfile->village }}, 
                                 {{ $article->author->farmerProfile->region->name }}
                             </p>
+                        @elseif ($article->author->role === 'veo' && $article->author->region_id)
+                            <p class="text-muted mb-2">
+                                {{ $article->author->region->name }}
+                            </p>
                         @endif
-                        @if ($article->author->role === 'farmer' && $article->author->farmerProfile && $article->author->farmerProfile->crops)
+                        @if ($article->author->role === 'farmer' && $article->author->farmerProfile && $article->author->farmerProfile->farmerCrops)
                             <div>
                                 <small class="text-muted">Crops:</small>
-                                @foreach ($article->author->farmerProfile->crops as $farmerCrop)
+                                @foreach ($article->author->farmerProfile->farmerCrops as $farmerCrop)
                                     <span class="badge bg-light text-dark">{{ ucfirst($farmerCrop->crop->name) }}</span>
                                 @endforeach
                             </div>

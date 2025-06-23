@@ -10,8 +10,8 @@ class ArticleRequest extends FormRequest
 {
     public function authorize()
     {
-        return Auth::check() && $this->user()->isVeo();
-    } //
+        return Auth::check() && (Auth::user()->isVeo() || Auth::user()->isAdmin());
+    }
 
     public function rules()
     {

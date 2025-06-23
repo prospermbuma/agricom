@@ -30,7 +30,7 @@ class ActivityLogService
 
     public function getUserActivity(User $user, int $limit = 50)
     {
-        return ActivityLog::where('user_id', $user->id)
+        return ActivityLog::where('causer_id', $user->id)
             ->latest()
             ->take($limit)
             ->get();

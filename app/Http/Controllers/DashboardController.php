@@ -31,7 +31,7 @@ class DashboardController extends Controller
                     ->orderBy('views_count', 'desc')
                     ->take(5)
                     ->get(),
-                'activitiesCount' => ActivityLog::where('user_id', $user->id)
+                'activitiesCount' => ActivityLog::where('causer_id', $user->id)
                     ->whereDate('created_at', now()->toDateString())
                     ->count(),
             ];

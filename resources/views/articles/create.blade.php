@@ -111,6 +111,18 @@
                                 </div>
                             </div>
 
+                            <!-- Attachments Upload -->
+                            <div class="mb-4">
+                                <label for="attachments" class="form-label fw-semibold">Attachments (Optional)</label>
+                                <input type="file" id="attachments" name="attachments[]"
+                                    class="form-control @error('attachments') is-invalid @enderror" 
+                                    accept=".pdf,.doc,.docx,.xls,.xlsx" multiple>
+                                @error('attachments')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                                <small class="form-text text-muted">Supported formats: PDF, DOC, DOCX, XLS, XLSX. Max 5 files, 10MB each.</small>
+                            </div>
+
                             <!-- Content Editor -->
                             <div class="mb-4">
                                 <label for="content" class="form-label fw-semibold">Content <span

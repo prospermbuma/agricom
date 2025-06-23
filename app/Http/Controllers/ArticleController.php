@@ -19,16 +19,24 @@ class ArticleController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Article::with('author'); // Show all articles for now
-
-        // $query = Article::with(['author', 'comments'])
-        //     ->published()
-        //     ->orderBy('published_at', 'desc');
+        $user = $request->user();
+        
+        // Start with base query
+        if ($user->isAdmin()) {
+            // Admins can see all articles
+            $query = Article::with('author');
+        } elseif ($user->isVeo()) {
+            // VEOs can see all articles (they can create and manage articles)
+            $query = Article::with('author');
+        } else {
+            // Farmers can only see published articles
+            $query = Article::with('author')->published();
+        }
 
         // Filter by user's crops if farmer
-        if ($request->user()->isFarmerRole() && !empty($request->user()->crops)) {
-            $query->where(function ($q) use ($request) {
-                $q->forCrops($request->user()->crops)
+        if ($user->isFarmerRole() && !empty($user->crops)) {
+            $query->where(function ($q) use ($user) {
+                $q->forCrops($user->crops)
                     ->orWhere('category', 'general');
             });
         }
@@ -38,12 +46,7 @@ class ArticleController extends Controller
             $query->where('category', $request->category);
         }
 
-        // // Filter by crop (cast to string if stored as string)
-        // if ($request->has('crop') && $request->crop !== '') {
-        //     $query->whereJsonContains('target_crops', $request->crop);
-        // }
-
-        // Filter by crop (cast to to int if stored as int)
+        // Filter by crop (cast to int if stored as int)
         if ($request->filled('crop')) {
             $query->whereJsonContains('target_crops', (int) $request->crop); 
         }
