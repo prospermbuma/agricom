@@ -69,6 +69,17 @@
                                     </div>
                                 </div>
 
+                                <!-- Bio -->
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <textarea name="bio" id="bio" class="form-control @error('bio') is-invalid @enderror" placeholder="Short Bio" style="height: 100px;">{{ old('bio', $user->bio) }}</textarea>
+                                        <label for="bio">Short Bio</label>
+                                        @error('bio')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
                                 <div class="col-md-6">
                                     <div class="form-floating">
                                         <select class="form-select @error('role') is-invalid @enderror" id="role"
@@ -165,6 +176,20 @@
                                             </div>
                                             @error('crops')
                                                 <div class="text-danger small">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+
+                                        <!-- Farming Experience -->
+                                        <div class="mb-3">
+                                            <label for="farming_experience" class="form-label">Farming Experience</label>
+                                            <select name="farming_experience" id="farming_experience" class="form-select @error('farming_experience') is-invalid @enderror" required>
+                                                <option value="">Select Experience</option>
+                                                <option value="beginner" {{ old('farming_experience', $user->farming_experience) == 'beginner' ? 'selected' : '' }}>Beginner</option>
+                                                <option value="intermediate" {{ old('farming_experience', $user->farming_experience) == 'intermediate' ? 'selected' : '' }}>Intermediate</option>
+                                                <option value="expert" {{ old('farming_experience', $user->farming_experience) == 'expert' ? 'selected' : '' }}>Expert</option>
+                                            </select>
+                                            @error('farming_experience')
+                                                <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
                                     </div>

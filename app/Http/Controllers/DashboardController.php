@@ -35,7 +35,7 @@ class DashboardController extends Controller
                     ->whereDate('created_at', now()->toDateString())
                     ->count(),
             ];
-        } elseif ($user->isFarmer()) {
+        } elseif ($user->isFarmerRole()) {
             $relevantArticles = Article::published();
 
             if (!empty($user->crops)) {

@@ -26,7 +26,7 @@ class ArticleController extends Controller
         //     ->orderBy('published_at', 'desc');
 
         // Filter by user's crops if farmer
-        if ($request->user()->isFarmer() && !empty($request->user()->crops)) {
+        if ($request->user()->isFarmerRole() && !empty($request->user()->crops)) {
             $query->where(function ($q) use ($request) {
                 $q->forCrops($request->user()->crops)
                     ->orWhere('category', 'general');

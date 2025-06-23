@@ -27,7 +27,7 @@ class ProfileUpdateRequest extends FormRequest
         ];
 
         // Add farmer-specific validation rules
-        if ($user && $user->isFarmer()) {
+        if ($user && $user->isFarmerRole()) {
             $rules = array_merge($rules, [
                 'region_id' => ['required', 'exists:regions,id'],
                 'village_id' => ['required', 'exists:villages,id'],

@@ -202,4 +202,9 @@ class User extends Authenticatable
     {
         return $this->isVeo() || $this->isAdmin();
     }
+
+    public function isFarmerRole()
+    {
+        return $this->role === 'farmer';
+    }
 }

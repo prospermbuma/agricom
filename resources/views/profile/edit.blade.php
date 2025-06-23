@@ -29,7 +29,7 @@
 
                     <!-- Card Body -->
                     <div class="card-body">
-                        <form method="POST" action="{{ route('profile.update') }}" class="needs-validation" novalidate>
+                        <form method="POST" action="{{ route('profile.update') }}" class="needs-validation" novalidate enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
 
@@ -86,6 +86,26 @@
                                             <input type="hidden" name="role" value="{{ auth()->user()->role }}">
                                             <label for="role">Account Role</label>
                                             <small class="text-muted ms-2">Role cannot be changed</small>
+                                        </div>
+                                    </div>
+
+                                    <!-- Avatar Upload -->
+                                    <div class="col-md-6">
+                                        <label for="avatar" class="form-label">Profile Image</label>
+                                        <input class="form-control @error('avatar') is-invalid @enderror" type="file" id="avatar" name="avatar" accept="image/*">
+                                        @error('avatar')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    <!-- Bio -->
+                                    <div class="col-md-6">
+                                        <div class="form-floating">
+                                            <textarea name="bio" id="bio" class="form-control @error('bio') is-invalid @enderror" placeholder="Short Bio" style="height: 100px;">{{ old('bio', auth()->user()->bio) }}</textarea>
+                                            <label for="bio">Short Bio</label>
+                                            @error('bio')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                     </div>
                                 </div>
@@ -170,6 +190,23 @@
                                                     placeholder="Farm Size">
                                                 <label for="farm_size">Farm Size (Hectares)</label>
                                                 @error('farm_size')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-floating mb-4">
+                                                <select name="farming_experience" id="farming_experience" class="form-select @error('farming_experience') is-invalid @enderror" required>
+                                                    <option value="">Select Experience</option>
+                                                    <option value="beginner" {{ old('farming_experience', auth()->user()->farming_experience) == 'beginner' ? 'selected' : '' }}>Beginner</option>
+                                                    <option value="intermediate" {{ old('farming_experience', auth()->user()->farming_experience) == 'intermediate' ? 'selected' : '' }}>Intermediate</option>
+                                                    <option value="expert" {{ old('farming_experience', auth()->user()->farming_experience) == 'expert' ? 'selected' : '' }}>Expert</option>
+                                                </select>
+                                                <label for="farming_experience">Farming Experience</label>
+                                                @error('farming_experience')
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
                                             </div>

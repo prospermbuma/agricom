@@ -68,6 +68,17 @@
                                         <p class="text-muted">No crops listed.</p>
                                     @endif
                                 </div>
+
+                                <div class="mb-3">
+                                    <strong>Farming Experience:</strong>
+                                    <p class="text-muted mb-0">
+                                        @php
+                                            $exp = auth()->user()->farming_experience ?? null;
+                                            $expLabels = ['beginner' => 'Beginner', 'intermediate' => 'Intermediate', 'expert' => 'Expert'];
+                                        @endphp
+                                        {{ $expLabels[$exp] ?? '-' }}
+                                    </p>
+                                </div>
                             @endif
 
                             <hr class="my-4">

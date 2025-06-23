@@ -268,22 +268,6 @@
             background-color: #f5f7fb;
         }
 
-        .avatar {
-            width: 32px;
-            height: 32px;
-        }
-
-        .avatar-md {
-            width: 48px;
-            height: 48px;
-        }
-
-        .avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
         .table th {
             background-color: #f8f9fa;
             color: #495057;

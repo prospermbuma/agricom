@@ -60,7 +60,7 @@
                                         </div>
                                     </div>
 
-                                    @if ($user->isFarmer())
+                                    @if ($user->isFarmerRole())
                                         <div class="col-md-6">
                                             <div class="bg-light p-4 rounded-4 h-100">
                                                 <h6 class="fw-semibold mb-2">Farming Information</h6>
@@ -75,6 +75,14 @@
                                                         <strong>Farm Size:</strong> {{ $user->farm_size }} hectares
                                                     </p>
                                                 @endif
+                                                <p class="mb-0 mt-2"><i class="fas fa-user-graduate me-2 text-muted"></i>
+                                                    <strong>Farming Experience:</strong>
+                                                    @php
+                                                        $exp = $user->farming_experience ?? null;
+                                                        $expLabels = ['beginner' => 'Beginner', 'intermediate' => 'Intermediate', 'expert' => 'Expert'];
+                                                    @endphp
+                                                    {{ $expLabels[$exp] ?? '-' }}
+                                                </p>
                                             </div>
                                         </div>
                                     @endif
