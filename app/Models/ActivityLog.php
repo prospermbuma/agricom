@@ -10,6 +10,8 @@ class ActivityLog extends SpatieActivity
 {
     use HasFactory;
 
+    protected $table = 'activity_logs';
+
     // Relationships
     public function user()
     {

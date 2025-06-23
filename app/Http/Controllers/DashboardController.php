@@ -83,10 +83,28 @@ class DashboardController extends Controller
         }
 
         // Common stats
-        $data['recent_activity'] = ActivityLog::where('user_id', $user->id)
-            ->latest()
-            ->take(10)
-            ->get();
+        if ($user->isAdmin()) {
+            // For admin, show recent activities from all users
+            $data['recentActivities'] = ActivityLog::with('user')
+                ->whereNotNull('causer_id')
+                ->latest()
+                ->take(10)
+                ->get();
+        } elseif ($user->isVeo()) {
+            // For VEO, show their own activities and activities related to their articles
+            $data['recentActivities'] = ActivityLog::with('user')
+                ->where('causer_id', $user->id)
+                ->latest()
+                ->take(10)
+                ->get();
+        } else {
+            // For farmers, show their own activities
+            $data['recentActivities'] = ActivityLog::with('user')
+                ->where('causer_id', $user->id)
+                ->latest()
+                ->take(10)
+                ->get();
+        }
 
         return view('dashboard.index', $data);
     }

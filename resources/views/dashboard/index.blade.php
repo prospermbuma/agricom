@@ -276,16 +276,16 @@
                                     <div class="list-group-item border-0 py-3 hover-bg-light">
                                         <div class="d-flex">
                                             <div class="avatar avatar-sm me-3">
-                                                <img src="{{ $activity->user->avatar_url }}"
-                                                    class="rounded-circle" alt="{{ $activity->user->name }}">
+                                                <img src="{{ $activity->user ? $activity->user->avatar_url : asset('images/default-avatar.png') }}"
+                                                    class="rounded-circle" alt="{{ $activity->user ? $activity->user->name : 'Unknown User' }}">
                                             </div>
                                             <div class="flex-grow-1">
                                                 <div class="d-flex justify-content-between">
-                                                    <strong>{{ $activity->user->name }}</strong>
+                                                    <strong>{{ $activity->user ? $activity->user->name : 'Unknown User' }}</strong>
                                                     <small
                                                         class="text-muted">{{ $activity->created_at->diffForHumans() }}</small>
                                                 </div>
-                                                <p class="mb-0 small text-muted">{{ $activity->action }}</p>
+                                                <p class="mb-0 small text-muted">{{ $activity->action ?? 'Activity performed' }}</p>
                                             </div>
                                         </div>
                                     </div>

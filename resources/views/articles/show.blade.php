@@ -213,7 +213,17 @@
             } else {
                 // Fallback - copy to clipboard
                 navigator.clipboard.writeText(window.location.href).then(function() {
-                    alert('Article link copied to clipboard!');
+                    // Show success message
+                    const successDiv = $('<div class="alert alert-success alert-dismissible fade show" role="alert">' +
+                        '<i class="fas fa-check-circle me-1"></i> Article link copied to clipboard!' +
+                        '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>' +
+                        '</div>');
+                    $('body').prepend(successDiv);
+                    
+                    // Auto-hide after 5 seconds
+                    setTimeout(function() {
+                        successDiv.alert('close');
+                    }, 5000);
                 });
             }
         }

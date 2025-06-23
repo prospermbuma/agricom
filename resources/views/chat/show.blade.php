@@ -359,7 +359,17 @@
                         scrollToBottom();
                     },
                     error: function(xhr) {
-                        alert('Failed to send message. Please try again.');
+                        // Show error message
+                        const errorDiv = $('<div class="alert alert-danger alert-dismissible fade show" role="alert">' +
+                            '<i class="fas fa-exclamation-circle me-1"></i> Failed to send message. Please try again.' +
+                            '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>' +
+                            '</div>');
+                        $('#chat-messages').prepend(errorDiv);
+                        
+                        // Auto-hide after 5 seconds
+                        setTimeout(function() {
+                            errorDiv.alert('close');
+                        }, 5000);
                     },
                     complete: function() {
                         form.find('button').prop('disabled', false);
