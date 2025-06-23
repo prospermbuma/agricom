@@ -20,8 +20,16 @@
                                     <span class="badge bg-primary bg-opacity-10 text-primary">
                                         {{ ucfirst(auth()->user()->role) }}
                                     </span>
-                                    <i class="fas fa-map-marker-alt ml-1 me-1"></i> {{ auth()->user()->village }},
-                                    {{ auth()->user()->region }}
+                                    <i class="fas fa-map-marker-alt ml-1 me-1"></i> 
+                                    {{ auth()->user()->village ?? '-' }},
+                                    @if (auth()->user()->role === 'farmer' && auth()->user()->farmerProfile)
+                                        {{ optional(auth()->user()->farmerProfile->region)->name ?? '-' }}
+                                    @else
+                                        @php
+                                            $region = \App\Models\Region::find(auth()->user()->region_id);
+                                        @endphp
+                                        {{ $region ? $region->name : '-' }}
+                                    @endif
                                 </p>
                             </div>
                         </div>
@@ -123,7 +131,14 @@
                                             <select name="region_id" id="region_id" class="form-select @error('region_id') is-invalid @enderror" required>
                                                 <option value="">Select Region</option>
                                                 @foreach ($regions as $region)
-                                                    <option value="{{ $region->id }}" {{ old('region_id', optional($profile)->region_id ?? '') == $region->id ? 'selected' : '' }}>{{ $region->name }}</option>
+                                                    <option value="{{ $region->id }}" 
+                                                        {{ old('region_id', 
+                                                            auth()->user()->role === 'farmer' 
+                                                                ? optional($profile)->region_id 
+                                                                : auth()->user()->region_id
+                                                        ) == $region->id ? 'selected' : '' }}>
+                                                        {{ $region->name }}
+                                                    </option>
                                                 @endforeach
                                             </select>
                                             <label for="region_id">Region</label>
@@ -178,11 +193,8 @@
                                                 @enderror
                                             </div>
                                         </div>
-                                    </div>
-
-                                    <div class="row">
                                         <div class="col-md-6">
-                                            <div class="form-floating mb-4">
+                                            <div class="form-floating">
                                                 <select name="farming_experience" id="farming_experience" class="form-select @error('farming_experience') is-invalid @enderror" required>
                                                     <option value="">Select Experience</option>
                                                     <option value="beginner" {{ old('farming_experience', optional($profile)->farming_experience) == 'beginner' ? 'selected' : '' }}>Beginner</option>

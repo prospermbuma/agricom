@@ -50,6 +50,12 @@ class ProfileController extends Controller
         $userFields = [
             'name', 'email', 'phone', 'bio', 'avatar', 'is_active', 'role', 'village', 'password'
         ];
+        
+        // Add region_id to user fields for non-farmers
+        if (!$user->isFarmerRole()) {
+            $userFields[] = 'region_id';
+        }
+        
         $userData = array_intersect_key($validated, array_flip($userFields));
         // Only update password if provided
         if (empty($userData['password'])) {

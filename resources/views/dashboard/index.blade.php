@@ -16,8 +16,16 @@
                                     <i class="fas fa-user-tag me-1"></i> {{ ucfirst(auth()->user()->role) }}
                                 </span>
                                 <span class="text-muted">
-                                    <i class="fas fa-map-marker-alt me-1"></i> {{ auth()->user()->village }},
-                                    {{ auth()->user()->region }}
+                                    <i class="fas fa-map-marker-alt me-1"></i> 
+                                    {{ auth()->user()->village ?? '-' }},
+                                    @if (auth()->user()->role === 'farmer' && auth()->user()->farmerProfile)
+                                        {{ optional(auth()->user()->farmerProfile->region)->name ?? '-' }}
+                                    @else
+                                        @php
+                                            $region = \App\Models\Region::find(auth()->user()->region_id);
+                                        @endphp
+                                        {{ $region ? $region->name : '-' }}
+                                    @endif
                                 </span>
                             </div>
                         </div>

@@ -22,6 +22,7 @@ class User extends Authenticatable
         'password',
         'phone',
         'region',
+        'region_id',
         'village',
         'crops',
         'bio',

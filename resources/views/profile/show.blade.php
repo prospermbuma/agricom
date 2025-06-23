@@ -16,9 +16,18 @@
                                 style="width: 120px; height: 120px; object-fit: cover;">
                             <h4 class="fw-bold">{{ auth()->user()->name }}</h4>
                             <span class="badge bg-light text-success mt-1">{{ ucfirst(auth()->user()->role) }}</span>
-                            <p class="small mt-2"><i
-                                    class="fas fa-map-marker-alt me-1"></i>{{ auth()->user()->village ?? '-' }},
-                                {{ auth()->user()->region ?? '-' }}</p>
+                            <p class="small mt-2">
+                                <i class="fas fa-map-marker-alt me-1"></i>
+                                {{ auth()->user()->village ?? '-' }},
+                                @if (auth()->user()->role === 'farmer' && auth()->user()->farmerProfile)
+                                    {{ optional(auth()->user()->farmerProfile->region)->name ?? '-' }}
+                                @else
+                                    @php
+                                        $region = \App\Models\Region::find(auth()->user()->region_id);
+                                    @endphp
+                                    {{ $region ? $region->name : '-' }}
+                                @endif
+                            </p>
                         </div>
 
                         <!-- Profile Info -->

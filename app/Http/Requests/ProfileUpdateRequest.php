@@ -24,13 +24,13 @@ class ProfileUpdateRequest extends FormRequest
             'phone' => ['nullable', 'string', 'max:20'],
             'bio' => ['nullable', 'string', 'max:500'],
             'avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],
+            'region_id' => ['required', 'exists:regions,id'],
+            'village' => ['required', 'string', 'max:255'],
         ];
 
         // Add farmer-specific validation rules
         if ($user && $user->isFarmerRole()) {
             $rules = array_merge($rules, [
-                'region_id' => ['required', 'exists:regions,id'],
-                'village' => ['required', 'string', 'max:255'],
                 'farm_size_acres' => ['nullable', 'numeric', 'min:0.1', 'max:1000'],
                 'farming_experience' => ['required', Rule::in(['beginner', 'intermediate', 'expert'])],
                 'farming_methods' => ['nullable', 'string', 'max:1000'],
