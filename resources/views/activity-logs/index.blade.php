@@ -256,13 +256,13 @@
 
 @section('styles')
     <style>
-        :root {
+        /* :root {
             --primary-color: #4CAF50;
             --secondary-color: #8BC34A;
             --light-bg: #f8f9fa;
             --dark-text: #2c3e50;
             --light-text: #7f8c8d;
-        }
+        } */
 
         body {
             background-color: #f5f7fb;

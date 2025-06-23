@@ -14,7 +14,8 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between mb-3">
                             <div>
-                                <span class="badge bg-primary">{{ ucfirst(str_replace('_', ' ', $article->category)) }}</span>
+                                <span
+                                    class="badge bg-primary">{{ ucfirst(str_replace('_', ' ', $article->category)) }}</span>
                                 @if ($article->target_crops)
                                     @foreach ($article->target_crops as $cropId)
                                         @php
@@ -38,11 +39,23 @@
                             <small class="text-muted">
                                 <i class="fas fa-user"></i> By {{ $article->author->name }}
                                 ({{ ucfirst($article->author->role) }})
-                                @if ($article->author->role === 'farmer' && $article->author->farmerProfile && is_object($article->author->farmerProfile->village))
-                                    from {{ $article->author->farmerProfile->village->name }}, {{ $article->author->farmerProfile->region->name }}
-                                @elseif ($article->author->role === 'farmer' && $article->author->farmerProfile && is_string($article->author->farmerProfile->village))
-                                    from {{ $article->author->farmerProfile->village }}, {{ $article->author->farmerProfile->region->name }}
-                                @elseif ($article->author->role === 'veo' && $article->author->region_id && $article->author->region && is_object($article->author->region))
+                                @if (
+                                    $article->author->role === 'farmer' &&
+                                        $article->author->farmerProfile &&
+                                        is_object($article->author->farmerProfile->village))
+                                    from {{ $article->author->farmerProfile->village->name }},
+                                    {{ $article->author->farmerProfile->region->name }}
+                                @elseif (
+                                    $article->author->role === 'farmer' &&
+                                        $article->author->farmerProfile &&
+                                        is_string($article->author->farmerProfile->village))
+                                    from {{ $article->author->farmerProfile->village }},
+                                    {{ $article->author->farmerProfile->region->name }}
+                                @elseif (
+                                    $article->author->role === 'veo' &&
+                                        $article->author->region_id &&
+                                        $article->author->region &&
+                                        is_object($article->author->region))
                                     from {{ $article->author->region->name }}
                                 @elseif ($article->author->role === 'veo' && $article->author->region_id)
                                     @php
@@ -50,7 +63,7 @@
                                             'region_id' => $article->author->region_id,
                                             'region' => $article->author->region,
                                             'region_type' => gettype($article->author->region),
-                                            'is_object' => is_object($article->author->region)
+                                            'is_object' => is_object($article->author->region),
                                         ]);
                                     @endphp
                                     @if (is_string($article->author->region))
@@ -71,11 +84,25 @@
                                 <h6><i class="fas fa-paperclip"></i> Attachments</h6>
                                 <div class="list-group">
                                     @foreach ($article->attachments as $attachment)
-                                        <a href="{{ asset('storage/' . $attachment) }}" 
-                                           class="list-group-item list-group-item-action" 
-                                           target="_blank">
-                                            <i class="fas fa-file me-2"></i>
-                                            {{ basename($attachment) }}
+                                        @php
+                                            $extension = strtolower(pathinfo($attachment, PATHINFO_EXTENSION));
+                                            $filename = basename($attachment);
+
+                                            $iconMap = [
+                                                'pdf' => 'fas fa-file-pdf text-danger',
+                                                'doc' => 'fas fa-file-word text-primary',
+                                                'docx' => 'fas fa-file-word text-primary',
+                                                'xls' => 'fas fa-file-excel text-success',
+                                                'xlsx' => 'fas fa-file-excel text-success',
+                                            ];
+                                            $icon = $iconMap[$extension] ?? 'fas fa-file text-secondary';
+                                        @endphp
+                                        <a href="{{ asset('storage/' . $attachment) }}"
+                                            class="list-group-item list-group-item-action d-flex align-items-center"
+                                            target="_blank">
+                                            <i class="{{ $icon }} me-2"></i>
+                                            <span>{{ $filename }}</span>
+                                            <small class="text-muted ms-auto">{{ strtoupper($extension) }}</small>
                                         </a>
                                     @endforeach
                                 </div>
@@ -189,23 +216,32 @@
                         @if ($article->author->role === 'farmer' && $article->author->farmerProfile)
                             <p class="text-muted mb-2">
                                 @if (is_string($article->author->farmerProfile->village))
-                                    {{ $article->author->farmerProfile->village }}, 
+                                    {{ $article->author->farmerProfile->village }},
                                 @elseif (is_object($article->author->farmerProfile->village))
-                                    {{ $article->author->farmerProfile->village->name }}, 
+                                    {{ $article->author->farmerProfile->village->name }},
                                 @endif
                                 {{ $article->author->farmerProfile->region->name }}
                             </p>
-                        @elseif ($article->author->role === 'veo' && $article->author->region_id && $article->author->region && is_object($article->author->region))
+                        @elseif (
+                            $article->author->role === 'veo' &&
+                                $article->author->region_id &&
+                                $article->author->region &&
+                                is_object($article->author->region))
                             <p class="text-muted mb-2">
                                 {{ $article->author->region->name }}
                             </p>
                         @endif
-                        @if ($article->author->role === 'farmer' && $article->author->farmerProfile && $article->author->farmerProfile->farmerCrops && $article->author->farmerProfile->farmerCrops->count() > 0)
+                        @if (
+                            $article->author->role === 'farmer' &&
+                                $article->author->farmerProfile &&
+                                $article->author->farmerProfile->farmerCrops &&
+                                $article->author->farmerProfile->farmerCrops->count() > 0)
                             <div>
                                 <small class="text-muted">Crops:</small>
                                 @foreach ($article->author->farmerProfile->farmerCrops as $farmerCrop)
                                     @if ($farmerCrop->crop)
-                                        <span class="badge bg-light text-dark">{{ ucfirst($farmerCrop->crop->name) }}</span>
+                                        <span
+                                            class="badge bg-light text-dark">{{ ucfirst($farmerCrop->crop->name) }}</span>
                                     @endif
                                 @endforeach
                             </div>
@@ -242,12 +278,13 @@
                 // Fallback - copy to clipboard
                 navigator.clipboard.writeText(window.location.href).then(function() {
                     // Show success message
-                    const successDiv = $('<div class="alert alert-success alert-dismissible fade show" role="alert">' +
+                    const successDiv = $(
+                        '<div class="alert alert-success alert-dismissible fade show" role="alert">' +
                         '<i class="fas fa-check-circle me-1"></i> Article link copied to clipboard!' +
                         '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>' +
                         '</div>');
                     $('body').prepend(successDiv);
-                    
+
                     // Auto-hide after 5 seconds
                     setTimeout(function() {
                         successDiv.alert('close');
@@ -261,4 +298,12 @@
             window.location.href = '/chat?user=' + userId;
         }
     </script>
+@endsection
+
+@section('styles')
+    <style>
+        body {
+            background-color: #f5f7fb;
+        }
+    </style>
 @endsection

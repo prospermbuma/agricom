@@ -164,7 +164,9 @@ class ArticleController extends Controller
         if ($request->hasFile('attachments')) {
             $attachments = [];
             foreach ($request->file('attachments') as $file) {
-                $attachments[] = $file->store('articles/attachments', 'public');
+                $extension = $file->getClientOriginalExtension();
+                $filename = uniqid() . '.' . $extension;
+                $attachments[] = $file->storeAs('articles/attachments', $filename, 'public');
             }
             $validated['attachments'] = $attachments;
         }
@@ -222,12 +224,24 @@ class ArticleController extends Controller
      */
     public function update(ArticleRequest $request, Article $article)
     {
+        \Log::info('Update method called', ['article_id' => $article->id]);
+        
         $this->authorize('update', $article);
+
+        // Debug: Log the request data
+        \Log::info('Article update attempt', [
+            'article_id' => $article->id,
+            'user_id' => Auth::id(),
+            'request_data' => $request->all(),
+            'validated_data' => $request->validated(),
+            'files' => $request->allFiles()
+        ]);
 
         $validated = $request->validated();
 
         // Handle is_published field properly
-        $validated['is_published'] = $request->boolean('is_published', false);
+        $validated['is_published'] = $request->has('is_published');
+        $validated['is_urgent'] = $request->has('is_urgent');
 
         // Convert target_crops to integers
         $validated['target_crops'] = collect($request->input('target_crops', []))
@@ -254,7 +268,9 @@ class ArticleController extends Controller
 
             $attachments = [];
             foreach ($request->file('attachments') as $file) {
-                $attachments[] = $file->store('articles/attachments', 'public');
+                $extension = $file->getClientOriginalExtension();
+                $filename = uniqid() . '.' . $extension;
+                $attachments[] = $file->storeAs('articles/attachments', $filename, 'public');
             }
             $validated['attachments'] = $attachments;
         }
@@ -264,16 +280,28 @@ class ArticleController extends Controller
             $validated['published_at'] = now();
         }
 
-        $article->update($validated);
+        try {
+            $article->update($validated);
+            
+            \Log::info('Article updated successfully', ['article_id' => $article->id]);
 
-        activity()
-            ->causedBy(Auth::user())
-            ->performedOn($article)
-            ->withProperties(['action' => 'article_updated', 'ip_address' => request()->ip()])
-            ->log('Article "' . $article->title . '" was updated.');
+            activity()
+                ->causedBy(Auth::user())
+                ->performedOn($article)
+                ->withProperties(['action' => 'article_updated', 'ip_address' => request()->ip()])
+                ->log('Article "' . $article->title . '" was updated.');
 
-        return redirect()->route('articles.show', $article)
-            ->with('success', 'Article updated successfully!');
+            return redirect()->route('articles.show', $article)
+                ->with('success', 'Article updated successfully!');
+        } catch (\Exception $e) {
+            \Log::error('Article update failed', [
+                'article_id' => $article->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return back()->withInput()->withErrors(['error' => 'Failed to update article: ' . $e->getMessage()]);
+        }
     }
 
     /**
