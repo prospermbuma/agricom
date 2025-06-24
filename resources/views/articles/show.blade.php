@@ -6,12 +6,12 @@
     <div class="container">
         <div class="row">
             <div class="col-md-8">
-                <div class="card">
+                <div class="card border-0 rounded-4 shadow-sm">
                     @if ($article->featured_image)
                         <img src="{{ asset('storage/' . $article->featured_image) }}" class="card-img-top"
                             style="height: 300px; object-fit: cover;">
                     @endif
-                    <div class="card-body">
+                    <div class="card-body pt-4 pb-5 px-5">
                         <div class="d-flex justify-content-between mb-3">
                             <div>
                                 <span
@@ -134,11 +134,11 @@
                 </div>
 
                 <!-- Comments Section -->
-                <div class="card mt-4">
-                    <div class="card-header">
+                <div class="card mt-4 border-0 rounded-4 shadow-sm">
+                    <div class="card-header border-0 rounded-top-4 px-5 pt-3 pb-2">
                         <h5><i class="fas fa-comments"></i> Comments ({{ $article->comments->count() }})</h5>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body pt-4 pb-4 px-5">
                         <!-- Comment Form -->
                         <form method="POST" action="{{ route('articles.comments.store', $article->id) }}" class="mb-4">
                             @csrf
@@ -179,11 +179,11 @@
             <!-- Sidebar -->
             <div class="col-md-4">
                 <!-- Related Articles -->
-                <div class="card">
-                    <div class="card-header">
+                <div class="card border-0 rounded-4 shadow-sm">
+                    <div class="card-header border-0 rounded-top-4 px-4 pt-3 pb-2">
                         <h6><i class="fas fa-newspaper"></i> Related Articles</h6>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body pt-4 pb-4 px-4">
                         @php
                             $relatedArticles = \App\Models\Article::published()
                                 ->where('id', '!=', $article->id)
@@ -206,11 +206,11 @@
                 </div>
 
                 <!-- Author Info -->
-                <div class="card mt-3">
-                    <div class="card-header">
+                <div class="card mt-3 border-0 rounded-4 shadow-sm">
+                    <div class="card-header border-0 rounded-top-4 px-4 pt-3 pb-2">
                         <h6><i class="fas fa-user"></i> About the Author</h6>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body pt-4 pb-4 px-4">
                         <h6>{{ $article->author->name }}</h6>
                         <p class="text-muted mb-1">{{ ucfirst($article->author->role) }}</p>
                         @if ($article->author->role === 'farmer' && $article->author->farmerProfile)
@@ -255,7 +255,7 @@
             </div>
         </div>
 
-        <div class="row mt-3">
+        <div class="row mt-4">
             <div class="col-12">
                 <a href="{{ route('articles.index') }}" class="btn btn-secondary">
                     <i class="fas fa-arrow-left"></i> Back to Articles
