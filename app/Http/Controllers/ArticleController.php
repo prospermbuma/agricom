@@ -146,6 +146,7 @@ class ArticleController extends Controller
         }
         
         $validated['slug'] = $slug;
+        // Handle checkbox values
         $validated['is_published'] = $request->has('is_published');
         $validated['is_urgent'] = $request->has('is_urgent');
 
@@ -239,7 +240,7 @@ class ArticleController extends Controller
 
         $validated = $request->validated();
 
-        // Handle is_published field properly
+        // Handle checkbox values
         $validated['is_published'] = $request->has('is_published');
         $validated['is_urgent'] = $request->has('is_urgent');
 

@@ -356,7 +356,7 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('register') }}">
-                                <span class="register-btn">Get started</span>
+                                <span class="register-btn">Get Started</span>
                             </a>
                         </li>
                     @endauth
