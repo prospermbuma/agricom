@@ -10,6 +10,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Admin\UserManagementController as AdminUserManagementController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Broadcast;
 
 /*
 |--------------------------------------------------------------------------
@@ -63,6 +64,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/chat/users', [ChatController::class, 'getUsers'])->name('chat.users');
     Route::post('/chat/conversations', [ChatController::class, 'createConversation'])->name('chat.conversations.store');
     Route::get('/chat/online-users', [ChatController::class, 'getOnlineUsers'])->name('chat.online-users');
+    Route::get('/chat/{conversation}/messages', [ChatController::class, 'messages'])->name('chat.messages.ajax');
     Route::get('/chat/{conversation}', [ChatController::class, 'show'])->name('chat.show');
     Route::post('/chat/{conversation}/messages', [ChatController::class, 'store'])->name('chat.messages.store');
     Route::post('/chat/{conversation}/participants', [ChatController::class, 'addParticipant'])->name('chat.participants.add');
@@ -84,4 +86,6 @@ Route::middleware('auth')->group(function () {
         Route::resource('users', AdminUserManagementController::class);
         Route::put('users/{user}/toggle-status', [AdminUserManagementController::class, 'toggleStatus'])->name('users.toggle-status');
     });
+
+    Broadcast::routes();
 });

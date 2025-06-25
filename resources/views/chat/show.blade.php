@@ -99,7 +99,7 @@
                 <!-- Message Input -->
                 <div class="card mt-2 sticky-bottom">
                     <div class="card-body">
-                        <form id="message-form" method="POST" action="{{ route('chat.send') }}">
+                        <form id="message-form" method="POST" action="{{ route('chat.messages.store', $conversation->id) }}">
                             @csrf
                             <input type="hidden" name="receiver_id" value="{{ $otherUser->id }}">
 

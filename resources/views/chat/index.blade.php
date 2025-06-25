@@ -59,10 +59,9 @@
                                         <div class="flex-grow-1 overflow-hidden">
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <h6 class="mb-0 text-truncate">{{ $user->name }}</h6>
-                                                <small class="text-muted">2m</small>
                                             </div>
                                             <small class="text-muted text-truncate d-block">
-                                                {{ ucfirst($user->role) }} • {{ $user->village }}
+                                                {{ ucfirst($user->role) }} • {{ $user->village ?? '' }}
                                             </small>
                                         </div>
                                     </div>
@@ -373,6 +372,23 @@
             // Set up periodic message fetching
             setInterval(fetchMessages, 3000); // Fetch every 3 seconds
             setInterval(fetchOnlineUsers, 30000); // Update online users every 30 seconds
+
+            // Add presence channel logic to update the Available Users card
+            window.Echo.join('online-users')
+                .here((users) => {
+                    console.log('Presence users:', users);
+                    displayOnlineUsers(users);
+                })
+                .joining((user) => {
+                    let currentUsers = getCurrentOnlineUsers();
+                    currentUsers.push(user);
+                    displayOnlineUsers(currentUsers);
+                })
+                .leaving((user) => {
+                    let currentUsers = getCurrentOnlineUsers();
+                    currentUsers = currentUsers.filter(u => u.id !== user.id);
+                    displayOnlineUsers(currentUsers);
+                });
         }
 
         function selectUser(userId, userName) {
@@ -408,12 +424,12 @@
 
             // Send via AJAX
             $.ajax({
-                url: '/chat/send',
+                url: `/chat/${currentReceiverId}/messages`,
                 method: 'POST',
                 data: {
                     _token: $('meta[name="csrf-token"]').attr('content'),
-                    receiver_id: currentReceiverId,
-                    message: message
+                    message: message,
+                    type: 'text'
                 },
                 success: function(response) {
                     // Message sent successfully
@@ -439,7 +455,7 @@
             if (!currentReceiverId) return;
 
             $.ajax({
-                url: `/chat/history/${currentReceiverId}`,
+                url: `/chat/${currentReceiverId}/messages`,
                 method: 'GET',
                 success: function(messages) {
                     displayMessages(messages);
@@ -451,7 +467,7 @@
             if (!currentReceiverId) return;
 
             $.ajax({
-                url: `/chat/messages/${currentReceiverId}`,
+                url: `/chat/${currentReceiverId}/messages`,
                 method: 'GET',
                 success: function(messages) {
                     // Only update if there are new messages
@@ -583,6 +599,18 @@
             });
         }
 
+        function getCurrentOnlineUsers() {
+            return $('.chat-user').map(function() {
+                return {
+                    id: $(this).data('user-id'),
+                    name: $(this).data('user-name'),
+                    avatar_url: $(this).find('img').attr('src'),
+                    role: $(this).find('small').text().split('•')[0].trim().toLowerCase(),
+                    village: $(this).find('small').text().split('•')[1]?.trim() || ''
+                };
+            }).get();
+        }
+
         function showToast(message, type = 'success') {
             // Implement a toast notification system
             const toast = `<div class="toast align-items-center text-white bg-${type} border-0 position-fixed bottom-0 end-0 m-3" role="alert" aria-live="assertive" aria-atomic="true">
@@ -608,37 +636,5 @@
                 sendMessage();
             }
         });
-
-        // Presence channel for real-time online users
-        window.Echo.join('online-users')
-            .here((users) => {
-                displayOnlineUsers(users);
-            })
-            .joining((user) => {
-                // Add user to the list
-                let currentUsers = getCurrentOnlineUsers();
-                currentUsers.push(user);
-                displayOnlineUsers(currentUsers);
-            })
-            .leaving((user) => {
-                // Remove user from the list
-                let currentUsers = getCurrentOnlineUsers();
-                currentUsers = currentUsers.filter(u => u.id !== user.id);
-                displayOnlineUsers(currentUsers);
-            });
-
-        // Helper to get current users from the sidebar
-        function getCurrentOnlineUsers() {
-            // This is a simple way to keep state in the DOM
-            return $('.chat-user').map(function() {
-                return {
-                    id: $(this).data('user-id'),
-                    name: $(this).data('user-name'),
-                    avatar_url: $(this).find('img').attr('src'),
-                    role: $(this).find('small').text().split('•')[0].trim().toLowerCase(),
-                    village: $(this).find('small').text().split('•')[1]?.trim() || ''
-                };
-            }).get();
-        }
     </script>
 @endsection

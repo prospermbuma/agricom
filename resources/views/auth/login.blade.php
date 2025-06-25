@@ -118,6 +118,7 @@
             background-color: #1e7e34;
             color: #fff;
             transition: all ease .4s;
+            border: none;
         }
 
         .loginBtn:hover {

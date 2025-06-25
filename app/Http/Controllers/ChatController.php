@@ -10,6 +10,7 @@ use App\Services\ActivityLogService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
+use App\Events\MessageSent;
 
 class ChatController extends Controller
 {
@@ -161,6 +162,9 @@ class ChatController extends Controller
 
         $message = ChatMessage::create($messageData);
 
+        // Broadcast the message event for real-time updates
+        event(new MessageSent($message));
+
         // Update conversation's last message timestamp
         $conversation->updateLastMessage();
 
@@ -254,6 +258,35 @@ class ChatController extends Controller
                 $user->avatar_url = $user->avatar_url;
                 return $user;
             });
+            
         return response()->json($users);
+    }
+
+    /**
+     * Return messages for a conversation as JSON (AJAX endpoint)
+     */
+    public function messages(Request $request, ChatConversation $conversation)
+    {
+        $user = $request->user();
+        if (!$conversation) {
+            return response()->json(['error' => 'Conversation not found.'], 404);
+        }
+        if (!$conversation->hasParticipant($user->id)) {
+            return response()->json(['error' => 'You are not a participant in this conversation.'], 403);
+        }
+        $messages = $conversation->messages()
+            ->with('user')
+            ->orderBy('created_at', 'asc')
+            ->get()
+            ->map(function ($message) {
+                return [
+                    'id' => $message->id,
+                    'message' => $message->message,
+                    'sender_id' => $message->user_id,
+                    'sender_name' => $message->user->name,
+                    'created_at' => $message->created_at->toDateTimeString(),
+                ];
+            });
+        return response()->json($messages);
     }
 }
