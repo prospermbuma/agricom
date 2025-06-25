@@ -62,6 +62,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/chat', [ChatController::class, 'index'])->name('chat.index');
     Route::get('/chat/users', [ChatController::class, 'getUsers'])->name('chat.users');
     Route::post('/chat/conversations', [ChatController::class, 'createConversation'])->name('chat.conversations.store');
+    Route::get('/chat/online-users', [ChatController::class, 'getOnlineUsers'])->name('chat.online-users');
     Route::get('/chat/{conversation}', [ChatController::class, 'show'])->name('chat.show');
     Route::post('/chat/{conversation}/messages', [ChatController::class, 'store'])->name('chat.messages.store');
     Route::post('/chat/{conversation}/participants', [ChatController::class, 'addParticipant'])->name('chat.participants.add');

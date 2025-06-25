@@ -444,6 +444,25 @@
                     }
                 });
             }
+
+            // Real-time message listening with Laravel Echo
+            window.Echo.join('chat.{{ $conversation->id }}')
+                .here((users) => {
+                    // Optionally handle presence
+                })
+                .joining((user) => {
+                    // Optionally handle user joining
+                })
+                .leaving((user) => {
+                    // Optionally handle user leaving
+                })
+                .listen('MessageSent', (e) => {
+                    // Only append if the message is not from the current user
+                    if (e.message.user.id !== {{ auth()->id() }}) {
+                        appendMessage(e.message.content, 'received');
+                        scrollToBottom();
+                    }
+                });
         </script>
     @endpush
 @endsection

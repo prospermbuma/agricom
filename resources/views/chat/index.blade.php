@@ -539,7 +539,48 @@
         }
 
         function displayOnlineUsers(users) {
-            // Implement if needed
+            const userList = $('.list-group.list-group-flush');
+            userList.empty();
+
+            if (!users.length) {
+                userList.html(`
+                    <div class="p-4 text-center text-muted">
+                        <i class="fas fa-users-slash fa-2x mb-3 opacity-25"></i>
+                        <p class="mb-0">No users available for chat</p>
+                    </div>
+                `);
+                return;
+            }
+
+            users.forEach(function(user) {
+                userList.append(`
+                    <a href="#" class="list-group-item list-group-item-action border-0 py-3 chat-user"
+                        data-user-id="${user.id}" data-user-name="${user.name}">
+                        <div class="d-flex align-items-center">
+                            <div class="position-relative me-3">
+                                <img src="${user.avatar_url}" class="rounded-circle avatar-sm" alt="${user.name}">
+                                <span class="position-absolute bottom-0 end-0 bg-success rounded-circle border border-2 border-white" style="width: 10px; height: 10px;"></span>
+                            </div>
+                            <div class="flex-grow-1 overflow-hidden">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h6 class="mb-0 text-truncate">${user.name}</h6>
+                                </div>
+                                <small class="text-muted text-truncate d-block">
+                                    ${user.role.charAt(0).toUpperCase() + user.role.slice(1)} • ${user.village ?? ''}
+                                </small>
+                            </div>
+                        </div>
+                    </a>
+                `);
+            });
+
+            // Re-bind click event for new user elements
+            $('.chat-user').off('click').on('click', function(e) {
+                e.preventDefault();
+                const userId = $(this).data('user-id');
+                const userName = $(this).data('user-name');
+                selectUser(userId, userName);
+            });
         }
 
         function showToast(message, type = 'success') {
@@ -567,5 +608,37 @@
                 sendMessage();
             }
         });
+
+        // Presence channel for real-time online users
+        window.Echo.join('online-users')
+            .here((users) => {
+                displayOnlineUsers(users);
+            })
+            .joining((user) => {
+                // Add user to the list
+                let currentUsers = getCurrentOnlineUsers();
+                currentUsers.push(user);
+                displayOnlineUsers(currentUsers);
+            })
+            .leaving((user) => {
+                // Remove user from the list
+                let currentUsers = getCurrentOnlineUsers();
+                currentUsers = currentUsers.filter(u => u.id !== user.id);
+                displayOnlineUsers(currentUsers);
+            });
+
+        // Helper to get current users from the sidebar
+        function getCurrentOnlineUsers() {
+            // This is a simple way to keep state in the DOM
+            return $('.chat-user').map(function() {
+                return {
+                    id: $(this).data('user-id'),
+                    name: $(this).data('user-name'),
+                    avatar_url: $(this).find('img').attr('src'),
+                    role: $(this).find('small').text().split('•')[0].trim().toLowerCase(),
+                    village: $(this).find('small').text().split('•')[1]?.trim() || ''
+                };
+            }).get();
+        }
     </script>
 @endsection

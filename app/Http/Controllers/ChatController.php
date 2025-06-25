@@ -240,4 +240,20 @@ class ChatController extends Controller
 
         return redirect()->back()->with('success', 'Participant added successfully.');
     }
+
+    /**
+     * Return a list of online/active users for chat (excluding the current user).
+     */
+    public function getOnlineUsers(Request $request)
+    {
+        $users = \App\Models\User::where('id', '!=', $request->user()->id)
+            ->where('is_active', true)
+            ->select('id', 'name', 'role', 'region', 'village')
+            ->get()
+            ->map(function ($user) {
+                $user->avatar_url = $user->avatar_url;
+                return $user;
+            });
+        return response()->json($users);
+    }
 }

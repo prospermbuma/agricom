@@ -42,7 +42,7 @@ A comprehensive web application enabling two-way communication between farmers a
 1. Clone the repository:
 ```bash
 git clone <repository-url>
-cd agricom_02
+cd agricom
 ```
 
 2. Install PHP dependencies:
